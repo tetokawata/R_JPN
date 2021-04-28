@@ -5,9 +5,9 @@ library(AER)
 
 # Data
 
-data("CPSSW9298")
+data("NMES1988")
 
-raw <- CPSSW9298
+raw <- NMES1988
 
 # Summary table
 
@@ -16,8 +16,8 @@ summary(raw)
 # Histogram
 
 ggplot(raw, 
-       aes(x = earnings,
-           fill = degree)
+       aes(x = visits,
+           fill = medicaid)
        ) +
   geom_histogram(position = "identity",
                  alpha = 0.5)
@@ -25,8 +25,8 @@ ggplot(raw,
 # Histogram with facet
 
 ggplot(raw, 
-       aes(x = earnings,
-           fill = degree)
+       aes(x = visits,
+           fill = medicaid)
        ) +
   geom_histogram(position = "identity",
                  alpha = 0.5
@@ -36,8 +36,8 @@ ggplot(raw,
 # Density
 
 ggplot(raw, 
-       aes(x = earnings,
-           fill = degree)
+       aes(x = visits,
+           fill = medicaid)
        ) +
   geom_density(position = "identity",
                  alpha = 0.5
@@ -47,8 +47,8 @@ ggplot(raw,
 # Heatmap
 
 ggplot(raw,
-       aes(x = age,
-           y = earnings)
+       aes(x = income,
+           y = visits)
        ) +
   geom_bin2d() +
   facet_wrap(~ gender)

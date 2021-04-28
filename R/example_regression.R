@@ -6,11 +6,11 @@ library(estimatr)
 
 # Data
 
-data("CPSSW9298")
+data("NMES1988")
 
-raw <- CPSSW9298
+raw <- NMES1988
 
 # OLS
 
-lm_robust(earnings ~ degree + year + gender + age,
+lm_robust(visits ~ income + age + gender + school,
           data = raw) # Regress earnings on degree, year, gender, and age
