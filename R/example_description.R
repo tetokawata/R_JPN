@@ -1,7 +1,6 @@
 # Environment
 
 library(tidyverse)
-library(estimatr)
 library(AER)
 
 # Data
