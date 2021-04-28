@@ -1,24 +1,20 @@
-# 環境
+# Environment
 
 library(tidyverse)
 library(estimatr)
 library(AER)
 
-# データ
+# Data
 
 data("CPSSW9298")
 
 raw <- CPSSW9298
 
-# 記述統計量
-
-## 記述統計表
+# Summary table
 
 summary(raw)
 
-## 作図
-
-### 学歴間賃金分布
+# Histogram
 
 ggplot(raw, 
        aes(x = earnings,
@@ -27,7 +23,7 @@ ggplot(raw,
   geom_histogram(position = "identity",
                  alpha = 0.5)
 
-### 男女別学歴間賃金分布
+# Histogram with facet
 
 ggplot(raw, 
        aes(x = earnings,
@@ -37,3 +33,4 @@ ggplot(raw,
                  alpha = 0.5
                  ) +
   facet_wrap(~gender)
+
