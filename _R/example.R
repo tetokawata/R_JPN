@@ -32,5 +32,24 @@ ggplot(raw,
   geom_histogram(position = "identity",
                  alpha = 0.5
                  ) +
-  facet_wrap(~gender)
+  facet_wrap(~ gender)
 
+# Density
+
+ggplot(raw, 
+       aes(x = earnings,
+           fill = degree)
+       ) +
+  geom_density(position = "identity",
+                 alpha = 0.5
+  ) +
+  facet_wrap(~ gender)
+
+# Heatmap
+
+ggplot(raw,
+       aes(x = age,
+           y = earnings)
+       ) +
+  geom_bin2d() +
+  facet_wrap(~ gender)
