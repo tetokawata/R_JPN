@@ -1,5 +1,5 @@
 --- 
-title: "Rによる比較・予測・因果推論入門"
+title: "Rによる比較・予測・因果推論入門 ver0.1"
 author: "川田恵介"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -10,13 +10,35 @@ link-citations: yes
 description: "Rによる比較、予測、因果推論についての簡単な紹介です"
 ---
 
-# はじめに{-}
-
-本ページでは、定量的な比較、（反実仮想）因果推定、予測分析をRによって行う方法を紹介します。
-
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       warning = FALSE,
                       message = FALSE)
 ```
+
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(
+  c(.packages(), 
+    'bookdown', 
+    'knitr', 
+    'rmarkdown',
+    "tidyverse",
+    "ranger",
+    "glmnet",
+    "grf"),
+  'packages.bib')
+```
+
+
+# はじめに{-}
+
+本ページでは、定量的な比較、（反実仮想）因果推定、予測分析をRによって行う方法を紹介します。
+データインポート、整理、可視化を行う関数群を統合的に提供するtidyverseパッケージ[@tidyverse2019]の利用を前提にします。
+
+無料で公開されている有力な教科書として、以下を推薦します。
+
+- 機械学習を用いた予測：@james2013introduction [公開ページ](https://www.statlearning.com/)
+
+- tidyverseパッケージの利用： [公式ページ](https://www.tidyverse.org/learn/#books)
