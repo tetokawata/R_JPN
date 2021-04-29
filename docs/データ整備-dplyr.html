@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 因果推論 | Rによる比較・予測・因果推論入門 ver0.1</title>
+  <title>Chapter 2 データ整備: dplyr | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 因果推論 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:title" content="Chapter 2 データ整備: dplyr | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 因果推論 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta name="twitter:title" content="Chapter 2 データ整備: dplyr | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="比較-estimatr.html"/>
-<link rel="next" href="references.html"/>
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="可視化-ggplot2.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -180,18 +180,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="因果推論" class="section level1" number="6">
-<h1><span class="header-section-number">Chapter 6</span> 因果推論</h1>
-<p>TBA</p>
+<div id="データ整備-dplyr" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> データ整備: dplyr</h1>
+<ul>
+<li>AERパッケージに含まれるNMES1988を利用</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="データ整備-dplyr.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
+<span id="cb1-2"><a href="データ整備-dplyr.html#cb1-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
+<span id="cb1-3"><a href="データ整備-dplyr.html#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="データ整備-dplyr.html#cb1-4" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span></code></pre></div>
+<ul>
+<li>tidyverseパッケージに含まれるdplyrパッケージは、有用な関数を提供</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="データ整備-dplyr.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div id="新しい変数の作成-mutate" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 新しい変数の作成: mutate</h2>
+<ul>
+<li>mutate関数の利用</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="データ整備-dplyr.html#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
+<span id="cb3-2"><a href="データ整備-dplyr.html#cb3-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">square_age =</span> age<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb3-3"><a href="データ整備-dplyr.html#cb3-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">log_age =</span> <span class="fu">log</span>(age),</span>
+<span id="cb3-4"><a href="データ整備-dplyr.html#cb3-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">total_visit =</span> visits <span class="sc">+</span> nvisits <span class="sc">+</span> ovisits <span class="sc">+</span> novisits</span>
+<span id="cb3-5"><a href="データ整備-dplyr.html#cb3-5" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
+</div>
+<div id="変数の限定-select" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> 変数の限定: select</h2>
+<ul>
+<li>select関数の利用</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="データ整備-dplyr.html#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">select</span>(raw,</span>
+<span id="cb4-2"><a href="データ整備-dplyr.html#cb4-2" aria-hidden="true" tabindex="-1"></a>             age,</span>
+<span id="cb4-3"><a href="データ整備-dplyr.html#cb4-3" aria-hidden="true" tabindex="-1"></a>             visits</span>
+<span id="cb4-4"><a href="データ整備-dplyr.html#cb4-4" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
+<ul>
+<li>特定の変数の除外</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="データ整備-dplyr.html#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">select</span>(raw,</span>
+<span id="cb5-2"><a href="データ整備-dplyr.html#cb5-2" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>age,</span>
+<span id="cb5-3"><a href="データ整備-dplyr.html#cb5-3" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>visits</span>
+<span id="cb5-4"><a href="データ整備-dplyr.html#cb5-4" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
+</div>
+<div id="サンプルの除外filter" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> サンプルの除外:filter</h2>
+<ul>
+<li>filter関数の利用</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="データ整備-dplyr.html#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">filter</span>(raw,</span>
+<span id="cb6-2"><a href="データ整備-dplyr.html#cb6-2" aria-hidden="true" tabindex="-1"></a>             visits <span class="sc">&gt;=</span> <span class="dv">5</span></span>
+<span id="cb6-3"><a href="データ整備-dplyr.html#cb6-3" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="比較-estimatr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="可視化-ggplot2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

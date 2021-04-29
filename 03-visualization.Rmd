@@ -1,4 +1,4 @@
-# 可視化
+# 可視化: ggplot2
 
 - tidyverseに含まれるggplot2パッケージを利用
 
@@ -6,7 +6,7 @@
 library(tidyverse)
 ```
 
-## ヒストグラム
+## ヒストグラム: geom_histogram
 
 - 医療機関の利用回数
 
@@ -41,7 +41,7 @@ ggplot(raw,
   facet_wrap(~ gender)
 ```
 
-## 密度
+## 密度: geom_density
 
 - 男女・メディケイド保有別の利用回数
 
@@ -56,7 +56,7 @@ ggplot(raw,
   facet_wrap(~ gender)
 ```
 
-## Boxplot
+## Boxplot: geom_boxplot
 
 ```{r}
 ggplot(raw,
@@ -66,7 +66,7 @@ ggplot(raw,
   geom_boxplot()
 ```
 
-## 散布図・ヒートマップ
+## 散布図・ヒートマップ: geom_point・geom_bin2d
 
 - 散布図：連続変数間の関係性を可視化する図
 

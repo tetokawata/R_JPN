@@ -1,16 +1,15 @@
-# 比較
-
-## 統計的推論
+# 比較: estimatr
 
 - ここでは（条件付き）平均差を、線形モデルを仮定し、信頼区間こみで推定する。
-
-### OLS
 
 - robust standard errorを計算するためにestimatrパッケージを利用
 
 ```{r}
 library(estimatr)
 ```
+
+## OLS:lm_robust
+
 
 - 条件なし平均差$\tau=E[Y|D=d']-E[Y|D=d]$を推定するために、
 
@@ -39,11 +38,11 @@ lm_robust(visits ~ medicaid + age + gender,
           data = raw)
 ```
 
-#### 発展{-}
+### 発展{-}
 
 - tidy関数により推定結果data.frameに変化することで、kable関数(knitrパッケージ)による推計結果表の整形、geom_pointrange関数による可視化が可能
 
-#### 推計結果表{-}
+### 推計結果表{-}
 
 - 点推定値(estimate)、標準誤差(std.error)のみを残した推計結果表
 
@@ -61,9 +60,9 @@ kable(fit, digits = 2)
 ```
 
 
-#### Dot-wisher図による可視化{-}
+### Dot-wisher図による可視化{-}
 
-- dot-wisher図による可視化
+- dot-wisher図により点推定量と信頼区間を可視化
 
 ```{r}
 fit <- lm_robust(visits ~ medicaid + gender,

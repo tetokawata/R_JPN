@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-04-29" />
+<meta name="date" content="2021-04-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -135,7 +135,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>はじめに</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 準備</a></li>
-<li class="chapter" data-level="2" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>2</b> データ整備</a></li>
+<li class="chapter" data-level="2" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>2</b> データ整備</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="データ整備.html"><a href="データ整備.html#新しい変数の作成"><i class="fa fa-check"></i><b>2.1</b> 新しい変数の作成</a></li>
+<li class="chapter" data-level="2.2" data-path="データ整備.html"><a href="データ整備.html#変数の限定"><i class="fa fa-check"></i><b>2.2</b> 変数の限定</a></li>
+<li class="chapter" data-level="2.3" data-path="データ整備.html"><a href="データ整備.html#サンプルの除外"><i class="fa fa-check"></i><b>2.3</b> サンプルの除外</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="可視化.html"><a href="可視化.html"><i class="fa fa-check"></i><b>3</b> 可視化</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム"><i class="fa fa-check"></i><b>3.1</b> ヒストグラム</a></li>
@@ -178,85 +183,85 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>tidyverseに含まれるggplot2パッケージを利用</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="可視化.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="可視化.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
 <div id="ヒストグラム" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> ヒストグラム</h2>
 <ul>
 <li>医療機関の利用回数</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="可視化.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb3-2"><a href="可視化.html#cb3-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits)</span>
-<span id="cb3-3"><a href="可視化.html#cb3-3" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb3-4"><a href="可視化.html#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="可視化.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
+<span id="cb8-2"><a href="可視化.html#cb8-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits)</span>
+<span id="cb8-3"><a href="可視化.html#cb8-3" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="可視化.html#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <ul>
 <li>メディケイド保有別の利用回数</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="可視化.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb4-2"><a href="可視化.html#cb4-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
-<span id="cb4-3"><a href="可視化.html#cb4-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> medicaid)</span>
-<span id="cb4-4"><a href="可視化.html#cb4-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb4-5"><a href="可視化.html#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
-<span id="cb4-6"><a href="可視化.html#cb4-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="可視化.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
+<span id="cb9-2"><a href="可視化.html#cb9-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
+<span id="cb9-3"><a href="可視化.html#cb9-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> medicaid)</span>
+<span id="cb9-4"><a href="可視化.html#cb9-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="可視化.html#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
+<span id="cb9-6"><a href="可視化.html#cb9-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <ul>
 <li>男女・メディケイド保有別の利用回数</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="可視化.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb5-2"><a href="可視化.html#cb5-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
-<span id="cb5-3"><a href="可視化.html#cb5-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> medicaid)</span>
-<span id="cb5-4"><a href="可視化.html#cb5-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="可視化.html#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
-<span id="cb5-6"><a href="可視化.html#cb5-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span></span>
-<span id="cb5-7"><a href="可視化.html#cb5-7" aria-hidden="true" tabindex="-1"></a>                 ) <span class="sc">+</span></span>
-<span id="cb5-8"><a href="可視化.html#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> gender)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="可視化.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
+<span id="cb10-2"><a href="可視化.html#cb10-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
+<span id="cb10-3"><a href="可視化.html#cb10-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> medicaid)</span>
+<span id="cb10-4"><a href="可視化.html#cb10-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="可視化.html#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
+<span id="cb10-6"><a href="可視化.html#cb10-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span></span>
+<span id="cb10-7"><a href="可視化.html#cb10-7" aria-hidden="true" tabindex="-1"></a>                 ) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="可視化.html#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> gender)</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 <div id="密度" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> 密度</h2>
 <ul>
 <li>男女・メディケイド保有別の利用回数</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="可視化.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb6-2"><a href="可視化.html#cb6-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
-<span id="cb6-3"><a href="可視化.html#cb6-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> medicaid)</span>
-<span id="cb6-4"><a href="可視化.html#cb6-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb6-5"><a href="可視化.html#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
-<span id="cb6-6"><a href="可視化.html#cb6-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span></span>
-<span id="cb6-7"><a href="可視化.html#cb6-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb6-8"><a href="可視化.html#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> gender)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="可視化.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
+<span id="cb11-2"><a href="可視化.html#cb11-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
+<span id="cb11-3"><a href="可視化.html#cb11-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> medicaid)</span>
+<span id="cb11-4"><a href="可視化.html#cb11-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="可視化.html#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
+<span id="cb11-6"><a href="可視化.html#cb11-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span></span>
+<span id="cb11-7"><a href="可視化.html#cb11-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-8"><a href="可視化.html#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> gender)</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 <div id="boxplot" class="section level2" number="3.3">
 <h2><span class="header-section-number">3.3</span> Boxplot</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="可視化.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb7-2"><a href="可視化.html#cb7-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> visits,</span>
-<span id="cb7-3"><a href="可視化.html#cb7-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> medicaid)</span>
-<span id="cb7-4"><a href="可視化.html#cb7-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb7-5"><a href="可視化.html#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="可視化.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
+<span id="cb12-2"><a href="可視化.html#cb12-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> visits,</span>
+<span id="cb12-3"><a href="可視化.html#cb12-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> medicaid)</span>
+<span id="cb12-4"><a href="可視化.html#cb12-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="可視化.html#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 <div id="散布図ヒートマップ" class="section level2" number="3.4">
 <h2><span class="header-section-number">3.4</span> 散布図・ヒートマップ</h2>
 <ul>
 <li>散布図：連続変数間の関係性を可視化する図</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="可視化.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb8-2"><a href="可視化.html#cb8-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> income,</span>
-<span id="cb8-3"><a href="可視化.html#cb8-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
-<span id="cb8-4"><a href="可視化.html#cb8-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb8-5"><a href="可視化.html#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="可視化.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
+<span id="cb13-2"><a href="可視化.html#cb13-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> income,</span>
+<span id="cb13-3"><a href="可視化.html#cb13-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
+<span id="cb13-4"><a href="可視化.html#cb13-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="可視化.html#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <ul>
 <li><p>サンプルサイズが大きくなると機能しない</p></li>
 <li><p>代替案はヒートマップ</p></li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="可視化.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb9-2"><a href="可視化.html#cb9-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> income,</span>
-<span id="cb9-3"><a href="可視化.html#cb9-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
-<span id="cb9-4"><a href="可視化.html#cb9-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb9-5"><a href="可視化.html#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bin2d</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="可視化.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
+<span id="cb14-2"><a href="可視化.html#cb14-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> income,</span>
+<span id="cb14-3"><a href="可視化.html#cb14-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
+<span id="cb14-4"><a href="可視化.html#cb14-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="可視化.html#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bin2d</span>()</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 
 </div>
 </div>

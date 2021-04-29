@@ -1,4 +1,4 @@
-# データ整備
+# データ整備: dplyr
 
 - AERパッケージに含まれるNMES1988を利用
 
@@ -9,4 +9,52 @@ data("NMES1988",
 raw <- NMES1988
 ```
 
+- tidyverseパッケージに含まれるdplyrパッケージは、有用な関数を提供
+
+```{r}
+library(tidyverse)
+```
+
+## 新しい変数の作成: mutate
+
+- mutate関数の利用
+
+```{r}
+df <- mutate(raw,
+             square_age = age^2,
+             log_age = log(age),
+             total_visit = visits + nvisits + ovisits + novisits
+             )
+```
+
+
+## 変数の限定: select
+
+- select関数の利用
+
+```{r}
+df <- select(raw,
+             age,
+             visits
+             )
+```
+
+- 特定の変数の除外
+
+```{r}
+df <- select(raw,
+             -age,
+             -visits
+             )
+```
+
+## サンプルの除外:filter
+
+- filter関数の利用
+
+```{r}
+df <- filter(raw,
+             visits >= 5
+             )
+```
 

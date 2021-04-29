@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-04-29" />
+<meta name="date" content="2021-04-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -135,7 +135,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>はじめに</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 準備</a></li>
-<li class="chapter" data-level="2" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>2</b> データ整備</a></li>
+<li class="chapter" data-level="2" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>2</b> データ整備</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="データ整備.html"><a href="データ整備.html#新しい変数の作成"><i class="fa fa-check"></i><b>2.1</b> 新しい変数の作成</a></li>
+<li class="chapter" data-level="2.2" data-path="データ整備.html"><a href="データ整備.html#変数の限定"><i class="fa fa-check"></i><b>2.2</b> 変数の限定</a></li>
+<li class="chapter" data-level="2.3" data-path="データ整備.html"><a href="データ整備.html#サンプルの除外"><i class="fa fa-check"></i><b>2.3</b> サンプルの除外</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="可視化.html"><a href="可視化.html"><i class="fa fa-check"></i><b>3</b> 可視化</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム"><i class="fa fa-check"></i><b>3.1</b> ヒストグラム</a></li>
@@ -182,7 +187,48 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-2"><a href="データ整備.html#cb1-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
 <span id="cb1-3"><a href="データ整備.html#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="データ整備.html#cb1-4" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span></code></pre></div>
+<ul>
+<li>tidyverseパッケージに含まれるdplyrパッケージは、有用な関数を提供</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="データ整備.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div id="新しい変数の作成" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 新しい変数の作成</h2>
+<ul>
+<li>mutate関数の利用</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="データ整備.html#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
+<span id="cb3-2"><a href="データ整備.html#cb3-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">square_age =</span> age<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb3-3"><a href="データ整備.html#cb3-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">log_age =</span> <span class="fu">log</span>(age),</span>
+<span id="cb3-4"><a href="データ整備.html#cb3-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">total_visit =</span> visits <span class="sc">+</span> nvisits <span class="sc">+</span> ovisits <span class="sc">+</span> novisits</span>
+<span id="cb3-5"><a href="データ整備.html#cb3-5" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
+</div>
+<div id="変数の限定" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> 変数の限定</h2>
+<ul>
+<li>select関数の利用</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="データ整備.html#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">select</span>(raw,</span>
+<span id="cb4-2"><a href="データ整備.html#cb4-2" aria-hidden="true" tabindex="-1"></a>             age,</span>
+<span id="cb4-3"><a href="データ整備.html#cb4-3" aria-hidden="true" tabindex="-1"></a>             visits</span>
+<span id="cb4-4"><a href="データ整備.html#cb4-4" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
+<ul>
+<li>特定の変数の除外</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="データ整備.html#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">select</span>(raw,</span>
+<span id="cb5-2"><a href="データ整備.html#cb5-2" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>age,</span>
+<span id="cb5-3"><a href="データ整備.html#cb5-3" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>visits</span>
+<span id="cb5-4"><a href="データ整備.html#cb5-4" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
+</div>
+<div id="サンプルの除外" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> サンプルの除外</h2>
+<ul>
+<li>filter関数の利用</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="データ整備.html#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">filter</span>(raw,</span>
+<span id="cb6-2"><a href="データ整備.html#cb6-2" aria-hidden="true" tabindex="-1"></a>             visits <span class="sc">&gt;=</span> <span class="dv">5</span></span>
+<span id="cb6-3"><a href="データ整備.html#cb6-3" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
 
+</div>
 </div>
             </section>
 

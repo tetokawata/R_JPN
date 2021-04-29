@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 因果推論 | Rによる比較・予測・因果推論入門 ver0.1</title>
+  <title>Chapter 5 比較: estimatr | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 因果推論 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:title" content="Chapter 5 比較: estimatr | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 因果推論 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta name="twitter:title" content="Chapter 5 比較: estimatr | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="比較-estimatr.html"/>
-<link rel="next" href="references.html"/>
+<link rel="prev" href="予測.html"/>
+<link rel="next" href="因果推論.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -180,18 +180,124 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="因果推論" class="section level1" number="6">
-<h1><span class="header-section-number">Chapter 6</span> 因果推論</h1>
-<p>TBA</p>
+<div id="比較-estimatr" class="section level1" number="5">
+<h1><span class="header-section-number">Chapter 5</span> 比較: estimatr</h1>
+<ul>
+<li><p>ここでは（条件付き）平均差を、線形モデルを仮定し、信頼区間こみで推定する。</p></li>
+<li><p>robust standard errorを計算するためにestimatrパッケージを利用</p></li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="比較-estimatr.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span></code></pre></div>
+<div id="olslm_robust" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> OLS:lm_robust</h2>
+<ul>
+<li>条件なし平均差<span class="math inline">\(\tau=E[Y|D=d&#39;]-E[Y|D=d]\)</span>を推定するために、</li>
+</ul>
+<p><span class="math display">\[E[Y|D=d]=\beta_0 + \tau\times D\]</span></p>
+<p>を仮定し推定</p>
+<ul>
+<li><p><span class="math inline">\(D\)</span>が2値変数であればノンパラメトリックな推定</p></li>
+<li><p>それ以外の場合は線形近似モデルを推定</p></li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="比較-estimatr.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid,</span>
+<span id="cb16-2"><a href="比較-estimatr.html#cb16-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
+<pre><code>##             Estimate Std. Error   t value    Pr(&gt;|t|)  CI Lower CI Upper   DF
+## (Intercept)  5.68007  0.1065151 53.326444 0.000000000 5.4712468 5.888893 4404
+## medicaidyes  1.03386  0.3595968  2.875054 0.004058953 0.3288698 1.738851 4404</code></pre>
+<ul>
+<li>条件付き平均差<span class="math inline">\(\tau=E[Y|D=d&#39;, X_1,...,X_L]-E[Y|D=d,X_1,...,X_L]\)</span>を推定するために、</li>
+</ul>
+<p><span class="math display">\[E[Y|D=d,X_1,...,X_L]=\beta_0 + \tau\times D + \beta_1 X_1+...+\beta_L X_L\]</span></p>
+<p>を仮定し推定</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="比較-estimatr.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> age <span class="sc">+</span> gender,</span>
+<span id="cb18-2"><a href="比較-estimatr.html#cb18-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
+<pre><code>##                Estimate Std. Error    t value     Pr(&gt;|t|)   CI Lower
+## (Intercept)  6.09459718  1.1362142  5.3639507 8.559768e-08  3.8670457
+## medicaidyes  0.92367669  0.3616363  2.5541590 1.067785e-02  0.2146876
+## age         -0.02596731  0.1513204 -0.1716048 8.637561e-01 -0.3226315
+## gendermale  -0.52597827  0.2095122 -2.5104898 1.209196e-02 -0.9367276
+##               CI Upper   DF
+## (Intercept)  8.3221486 4402
+## medicaidyes  1.6326658 4402
+## age          0.2706969 4402
+## gendermale  -0.1152289 4402</code></pre>
+<div id="発展" class="section level3 unnumbered">
+<h3>発展</h3>
+<ul>
+<li>tidy関数により推定結果data.frameに変化することで、kable関数(knitrパッケージ)による推計結果表の整形、geom_pointrange関数による可視化が可能</li>
+</ul>
+</div>
+<div id="推計結果表" class="section level3 unnumbered">
+<h3>推計結果表</h3>
+<ul>
+<li>点推定値(estimate)、標準誤差(std.error)のみを残した推計結果表</li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="比較-estimatr.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb20-2"><a href="比較-estimatr.html#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="比較-estimatr.html#cb20-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> gender,</span>
+<span id="cb20-4"><a href="比較-estimatr.html#cb20-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw)</span>
+<span id="cb20-5"><a href="比較-estimatr.html#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="比較-estimatr.html#cb20-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
+<span id="cb20-7"><a href="比較-estimatr.html#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="比較-estimatr.html#cb20-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">select</span>(fit, term, estimate, std.error)</span>
+<span id="cb20-9"><a href="比較-estimatr.html#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="比較-estimatr.html#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">5.90</td>
+<td align="right">0.13</td>
+</tr>
+<tr class="even">
+<td align="left">medicaidyes</td>
+<td align="right">0.92</td>
+<td align="right">0.36</td>
+</tr>
+<tr class="odd">
+<td align="left">gendermale</td>
+<td align="right">-0.52</td>
+<td align="right">0.21</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="dot-wisher図による可視化" class="section level3 unnumbered">
+<h3>Dot-wisher図による可視化</h3>
+<ul>
+<li>dot-wisher図により点推定量と信頼区間を可視化</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="比較-estimatr.html#cb21-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> gender,</span>
+<span id="cb21-2"><a href="比較-estimatr.html#cb21-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw)</span>
+<span id="cb21-3"><a href="比較-estimatr.html#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="比較-estimatr.html#cb21-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
+<span id="cb21-5"><a href="比較-estimatr.html#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="比較-estimatr.html#cb21-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
+<span id="cb21-7"><a href="比較-estimatr.html#cb21-7" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">!=</span> <span class="st">&quot;(Intercept)&quot;</span>)</span>
+<span id="cb21-8"><a href="比較-estimatr.html#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="比較-estimatr.html#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fit, <span class="fu">aes</span>(<span class="at">y =</span> term,</span>
+<span id="cb21-10"><a href="比較-estimatr.html#cb21-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> estimate,</span>
+<span id="cb21-11"><a href="比較-estimatr.html#cb21-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low,</span>
+<span id="cb21-12"><a href="比較-estimatr.html#cb21-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb21-13"><a href="比較-estimatr.html#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>()</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="比較-estimatr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="予測.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="因果推論.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

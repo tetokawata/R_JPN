@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-04-29" />
+<meta name="date" content="2021-04-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -135,13 +135,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>はじめに</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 準備</a></li>
-<li class="chapter" data-level="2" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>2</b> データ整備</a></li>
-<li class="chapter" data-level="3" data-path="可視化.html"><a href="可視化.html"><i class="fa fa-check"></i><b>3</b> 可視化</a>
+<li class="chapter" data-level="2" data-path="データ整備-dplyr.html"><a href="データ整備-dplyr.html"><i class="fa fa-check"></i><b>2</b> データ整備: dplyr</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム"><i class="fa fa-check"></i><b>3.1</b> ヒストグラム</a></li>
-<li class="chapter" data-level="3.2" data-path="可視化.html"><a href="可視化.html#密度"><i class="fa fa-check"></i><b>3.2</b> 密度</a></li>
-<li class="chapter" data-level="3.3" data-path="可視化.html"><a href="可視化.html#boxplot"><i class="fa fa-check"></i><b>3.3</b> Boxplot</a></li>
-<li class="chapter" data-level="3.4" data-path="可視化.html"><a href="可視化.html#散布図ヒートマップ"><i class="fa fa-check"></i><b>3.4</b> 散布図・ヒートマップ</a></li>
+<li class="chapter" data-level="2.1" data-path="データ整備-dplyr.html"><a href="データ整備-dplyr.html#新しい変数の作成-mutate"><i class="fa fa-check"></i><b>2.1</b> 新しい変数の作成: mutate</a></li>
+<li class="chapter" data-level="2.2" data-path="データ整備-dplyr.html"><a href="データ整備-dplyr.html#変数の限定-select"><i class="fa fa-check"></i><b>2.2</b> 変数の限定: select</a></li>
+<li class="chapter" data-level="2.3" data-path="データ整備-dplyr.html"><a href="データ整備-dplyr.html#サンプルの除外filter"><i class="fa fa-check"></i><b>2.3</b> サンプルの除外:filter</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="可視化-ggplot2.html"><a href="可視化-ggplot2.html"><i class="fa fa-check"></i><b>3</b> 可視化: ggplot2</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="可視化-ggplot2.html"><a href="可視化-ggplot2.html#ヒストグラム"><i class="fa fa-check"></i><b>3.1</b> ヒストグラム</a></li>
+<li class="chapter" data-level="3.2" data-path="可視化-ggplot2.html"><a href="可視化-ggplot2.html#密度"><i class="fa fa-check"></i><b>3.2</b> 密度</a></li>
+<li class="chapter" data-level="3.3" data-path="可視化-ggplot2.html"><a href="可視化-ggplot2.html#boxplot"><i class="fa fa-check"></i><b>3.3</b> Boxplot</a></li>
+<li class="chapter" data-level="3.4" data-path="可視化-ggplot2.html"><a href="可視化-ggplot2.html#散布図ヒートマップ"><i class="fa fa-check"></i><b>3.4</b> 散布図・ヒートマップ</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="予測.html"><a href="予測.html"><i class="fa fa-check"></i><b>4</b> 予測</a></li>
 <li class="chapter" data-level="5" data-path="比較.html"><a href="比較.html"><i class="fa fa-check"></i><b>5</b> 比較</a>
@@ -185,7 +190,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>robust standard errorを計算するためにestimatrパッケージを利用</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="比較.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="比較.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span></code></pre></div>
 <ul>
 <li>条件なし平均差<span class="math inline">\(\tau=E[Y|D=d&#39;]-E[Y|D=d]\)</span>を推定するために、</li>
 </ul>
@@ -195,8 +200,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p><span class="math inline">\(D\)</span>が2値変数であればノンパラメトリックな推定</p></li>
 <li><p>それ以外の場合は線形近似モデルを推定</p></li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="比較.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid,</span>
-<span id="cb11-2"><a href="比較.html#cb11-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="比較.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid,</span>
+<span id="cb16-2"><a href="比較.html#cb16-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
 <pre><code>##             Estimate Std. Error   t value    Pr(&gt;|t|)  CI Lower CI Upper   DF
 ## (Intercept)  5.68007  0.1065151 53.326444 0.000000000 5.4712468 5.888893 4404
 ## medicaidyes  1.03386  0.3595968  2.875054 0.004058953 0.3288698 1.738851 4404</code></pre>
@@ -205,8 +210,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <p><span class="math display">\[E[Y|D=d,X_1,...,X_L]=\beta_0 + \tau\times D + \beta_1 X_1+...+\beta_L X_L\]</span></p>
 <p>を仮定し推定</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="比較.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> age <span class="sc">+</span> gender,</span>
-<span id="cb13-2"><a href="比較.html#cb13-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="比較.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> age <span class="sc">+</span> gender,</span>
+<span id="cb18-2"><a href="比較.html#cb18-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
 <pre><code>##                Estimate Std. Error    t value     Pr(&gt;|t|)   CI Lower
 ## (Intercept)  6.09459718  1.1362142  5.3639507 8.559768e-08  3.8670457
 ## medicaidyes  0.92367669  0.3616363  2.5541590 1.067785e-02  0.2146876
@@ -228,16 +233,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>点推定値(estimate)、標準誤差(std.error)のみを残した推計結果表</li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="比較.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb15-2"><a href="比較.html#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="比較.html#cb15-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> gender,</span>
-<span id="cb15-4"><a href="比較.html#cb15-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw)</span>
-<span id="cb15-5"><a href="比較.html#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="比較.html#cb15-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
-<span id="cb15-7"><a href="比較.html#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="比較.html#cb15-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">select</span>(fit, term, estimate, std.error)</span>
-<span id="cb15-9"><a href="比較.html#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="比較.html#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="比較.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb20-2"><a href="比較.html#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="比較.html#cb20-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> gender,</span>
+<span id="cb20-4"><a href="比較.html#cb20-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw)</span>
+<span id="cb20-5"><a href="比較.html#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="比較.html#cb20-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
+<span id="cb20-7"><a href="比較.html#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="比較.html#cb20-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">select</span>(fit, term, estimate, std.error)</span>
+<span id="cb20-9"><a href="比較.html#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="比較.html#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -270,20 +275,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>dot-wisher図による可視化</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="比較.html#cb16-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> gender,</span>
-<span id="cb16-2"><a href="比較.html#cb16-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw)</span>
-<span id="cb16-3"><a href="比較.html#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="比較.html#cb16-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
-<span id="cb16-5"><a href="比較.html#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="比較.html#cb16-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
-<span id="cb16-7"><a href="比較.html#cb16-7" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">!=</span> <span class="st">&quot;(Intercept)&quot;</span>)</span>
-<span id="cb16-8"><a href="比較.html#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-9"><a href="比較.html#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fit, <span class="fu">aes</span>(<span class="at">y =</span> term,</span>
-<span id="cb16-10"><a href="比較.html#cb16-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> estimate,</span>
-<span id="cb16-11"><a href="比較.html#cb16-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low,</span>
-<span id="cb16-12"><a href="比較.html#cb16-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
-<span id="cb16-13"><a href="比較.html#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="比較.html#cb21-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> gender,</span>
+<span id="cb21-2"><a href="比較.html#cb21-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw)</span>
+<span id="cb21-3"><a href="比較.html#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="比較.html#cb21-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
+<span id="cb21-5"><a href="比較.html#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="比較.html#cb21-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
+<span id="cb21-7"><a href="比較.html#cb21-7" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">!=</span> <span class="st">&quot;(Intercept)&quot;</span>)</span>
+<span id="cb21-8"><a href="比較.html#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="比較.html#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fit, <span class="fu">aes</span>(<span class="at">y =</span> term,</span>
+<span id="cb21-10"><a href="比較.html#cb21-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> estimate,</span>
+<span id="cb21-11"><a href="比較.html#cb21-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low,</span>
+<span id="cb21-12"><a href="比較.html#cb21-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb21-13"><a href="比較.html#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>()</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 
 </div>
 </div>
