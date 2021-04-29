@@ -80,7 +80,11 @@ ggplot(raw,
 library(estimatr)
 ```
 
-- 条件なし平均差$\tau=E[Y|D=d']-E[Y|D=d]$を推定するために、$E[Y|D=d]=\beta_0 + \tau\times D$を仮定し推定
+- 条件なし平均差$\tau=E[Y|D=d']-E[Y|D=d]$を推定するために、
+
+$$E[Y|D=d]=\beta_0 + \tau\times D$$
+
+を仮定し推定
   
   - $D$が2値変数であればノンパラメトリックな推定
   
@@ -90,4 +94,59 @@ library(estimatr)
 lm_robust(visits ~ medicaid,
           data = raw)
 ```
+
+- 条件付き平均差$\tau=E[Y|D=d', X_1,...,X_L]-E[Y|D=d,X_1,...,X_L]$を推定するために、
+
+$$E[Y|D=d,X_1,...,X_L]=\beta_0 + \tau\times D + \beta_1 X_1+...+\beta_L X_L$$
+
+を仮定し推定
+  
+
+```{r}
+lm_robust(visits ~ medicaid + age + gender,
+          data = raw)
+```
+
+#### 発展{-}
+
+- tidy関数により推定結果data.frameに変化することで、kable関数(knitrパッケージ)による推計結果表の整形、geom_pointrange関数による可視化が可能
+
+#### 推計結果表{-}
+
+- 点推定値(estimate)、標準誤差(std.error)のみを残した推計結果表
+
+```{r}
+library(knitr)
+
+fit <- lm_robust(visits ~ medicaid + gender,
+                 data = raw)
+
+fit <- tidy(fit)
+
+fit <- select(fit, term, estimate, std.error)
+
+kable(fit, digits = 2)
+```
+
+
+#### Dot-wisher図による可視化{-}
+
+- dot-wisher図による可視化
+
+```{r}
+fit <- lm_robust(visits ~ medicaid + gender,
+                 data = raw)
+
+fit <- tidy(fit)
+
+fit <- filter(fit,
+              term != "(Intercept)")
+
+ggplot(fit, aes(y = term,
+                x = estimate,
+                xmin = conf.low,
+                xmax = conf.high)) +
+  geom_pointrange()
+```
+
 
