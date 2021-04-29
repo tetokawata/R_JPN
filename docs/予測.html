@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 予測 | Rによる比較・予測・因果推論入門</title>
+  <title>Chapter 3 予測 | Rによる比較・予測・因果推論入門</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 予測 | Rによる比較・予測・因果推論入門" />
+  <meta property="og:title" content="Chapter 3 予測 | Rによる比較・予測・因果推論入門" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 予測 | Rによる比較・予測・因果推論入門" />
+  <meta name="twitter:title" content="Chapter 3 予測 | Rによる比較・予測・因果推論入門" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="比較.html"/>
-<link rel="next" href="因果推論.html"/>
+<link rel="prev" href="データ整備.html"/>
+<link rel="next" href="比較.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -136,20 +136,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>はじめに</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 準備</a></li>
 <li class="chapter" data-level="2" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>2</b> データ整備</a></li>
-<li class="chapter" data-level="3" data-path="比較.html"><a href="比較.html"><i class="fa fa-check"></i><b>3</b> 比較</a>
+<li class="chapter" data-level="3" data-path="予測.html"><a href="予測.html"><i class="fa fa-check"></i><b>3</b> 予測</a></li>
+<li class="chapter" data-level="4" data-path="比較.html"><a href="比較.html"><i class="fa fa-check"></i><b>4</b> 比較</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="比較.html"><a href="比較.html#可視化"><i class="fa fa-check"></i><b>3.1</b> 可視化</a>
+<li class="chapter" data-level="4.1" data-path="比較.html"><a href="比較.html#可視化"><i class="fa fa-check"></i><b>4.1</b> 可視化</a>
 <ul>
-<li class="chapter" data-level="3.1.1" data-path="比較.html"><a href="比較.html#ヒストグラム"><i class="fa fa-check"></i><b>3.1.1</b> ヒストグラム</a></li>
-<li class="chapter" data-level="3.1.2" data-path="比較.html"><a href="比較.html#密度"><i class="fa fa-check"></i><b>3.1.2</b> 密度</a></li>
-<li class="chapter" data-level="3.1.3" data-path="比較.html"><a href="比較.html#boxplot"><i class="fa fa-check"></i><b>3.1.3</b> Boxplot</a></li>
+<li class="chapter" data-level="4.1.1" data-path="比較.html"><a href="比較.html#ヒストグラム"><i class="fa fa-check"></i><b>4.1.1</b> ヒストグラム</a></li>
+<li class="chapter" data-level="4.1.2" data-path="比較.html"><a href="比較.html#密度"><i class="fa fa-check"></i><b>4.1.2</b> 密度</a></li>
+<li class="chapter" data-level="4.1.3" data-path="比較.html"><a href="比較.html#boxplot"><i class="fa fa-check"></i><b>4.1.3</b> Boxplot</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="比較.html"><a href="比較.html#統計的推論"><i class="fa fa-check"></i><b>3.2</b> 統計的推論</a>
+<li class="chapter" data-level="4.2" data-path="比較.html"><a href="比較.html#統計的推論"><i class="fa fa-check"></i><b>4.2</b> 統計的推論</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="比較.html"><a href="比較.html#ols"><i class="fa fa-check"></i><b>3.2.1</b> OLS</a></li>
+<li class="chapter" data-level="4.2.1" data-path="比較.html"><a href="比較.html#ols"><i class="fa fa-check"></i><b>4.2.1</b> OLS</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="予測.html"><a href="予測.html"><i class="fa fa-check"></i><b>4</b> 予測</a></li>
 <li class="chapter" data-level="5" data-path="因果推論.html"><a href="因果推論.html"><i class="fa fa-check"></i><b>5</b> 因果推論</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -172,8 +172,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="予測" class="section level1" number="4">
-<h1><span class="header-section-number">Chapter 4</span> 予測</h1>
+<div id="予測" class="section level1" number="3">
+<h1><span class="header-section-number">Chapter 3</span> 予測</h1>
 <p>TBA</p>
 
 </div>
@@ -182,8 +182,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="比較.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="因果推論.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="データ整備.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="比較.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
