@@ -1,3 +1,12 @@
 # データ整備
 
-Here is a review of existing methods.
+- AERパッケージに含まれるNMES1988を利用
+
+```{r}
+data("NMES1988",
+     package = "AER")
+
+raw <- NMES1988
+```
+
+

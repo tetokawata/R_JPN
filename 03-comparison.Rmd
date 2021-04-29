@@ -1,3 +1,93 @@
 # 比較
 
-We describe our methods in this chapter.
+## 可視化
+
+- tidyverseに含まれるggplot2パッケージを利用
+
+```{r}
+library(tidyverse)
+```
+
+### ヒストグラム
+
+- 医療機関の利用回数
+
+```{r}
+ggplot(raw, 
+       aes(x = visits)
+       ) +
+  geom_histogram()
+```
+
+- メディケイド保有別の利用回数
+
+```{r}
+ggplot(raw, 
+       aes(x = visits,
+           fill = medicaid)
+       ) +
+  geom_histogram(position = "identity",
+                 alpha = 0.5)
+```
+
+- 男女・メディケイド保有別の利用回数
+
+```{r}
+ggplot(raw, 
+       aes(x = visits,
+           fill = medicaid)
+       ) +
+  geom_histogram(position = "identity",
+                 alpha = 0.5
+                 ) +
+  facet_wrap(~ gender)
+```
+
+### 密度
+
+- 男女・メディケイド保有別の利用回数
+
+```{r}
+ggplot(raw, 
+       aes(x = visits,
+           fill = medicaid)
+       ) +
+  geom_density(position = "identity",
+                 alpha = 0.5
+  ) +
+  facet_wrap(~ gender)
+```
+
+### Boxplot
+
+```{r}
+ggplot(raw,
+       aes(y = visits,
+           x = medicaid)
+       ) +
+  geom_boxplot()
+```
+
+## 統計的推論
+
+- ここでは（条件付き）平均差を、信頼区間こみで推定する。
+
+### OLS
+
+- robust standard errorを計算するためにestimatrパッケージを利用
+
+```{r}
+library(estimatr)
+```
+
+- 条件なし平均差$\tau=E[Y|D=d']-E[Y|D=d]$を推定するために、$E[Y|D=d]=\beta_0 + \tau\times D$を仮定し推定
+  
+  - $D$が2値変数であればノンパラメトリックな推定
+  
+  - それ以外の場合は線形近似モデルを推定
+
+```{r}
+lm_robust(visits ~ medicaid,
+          data = raw)
+```
+
