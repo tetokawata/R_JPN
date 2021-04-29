@@ -60,9 +60,9 @@ kable(fit, digits = 2)
 ```
 
 
-### Dot-wisher図による可視化{-}
+### Dot-and-Whisker plotによる可視化{-}
 
-- dot-wisher図により点推定量と信頼区間を可視化
+- Dot-and-Whisker図により点推定量と信頼区間を可視化
 
 ```{r}
 fit <- lm_robust(visits ~ medicaid + gender,
