@@ -1,8 +1,6 @@
-prerequisites
+はじめに
 intro
-data-management
-comparison
-prediction
-example-one
-example-two
-causal-inference
+データ整備
+比較
+予測
+因果推論

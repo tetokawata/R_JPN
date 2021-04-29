@@ -1,3 +1,11 @@
-# Introduction {#intro}
+# 準備 {#intro}
 
-TBA
+- オフライン環境の整備
+
+  - Rの[インストール](https://cran.ism.ac.jp/)
+
+  - R studioの[インストール](https://www.rstudio.com/products/rstudio/#rstudio-desktop)
+
+- オンライン環境の整備
+
+  - R cloudへの[登録](https://rstudio.cloud/)
