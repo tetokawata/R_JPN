@@ -1,8 +1,0 @@
-prerequisites
-intro
-data-management
-comparison
-prediction
-example-one
-example-two
-causal-inference
