@@ -1,13 +1,13 @@
 --- 
-title: "Introduction to comparison, prediction, and causal inference with R"
-author: "Keisuke Kawata (University of Tokyo)"
+title: "Rによる比較、予測、因果推論入門"
+author: "川田恵介(東京大学)"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-description: "This is a short introduction of statistical works including comparison, prediction, and causal inference."
+description: "Rによる比較、予測、因果推論についての簡単な紹介です"
 ---
 
 # Prerequisites
