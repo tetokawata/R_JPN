@@ -1,0 +1,67 @@
+# 可視化
+
+- tidyverseに含まれるggplot2パッケージを利用
+
+```{r}
+library(tidyverse)
+```
+
+## ヒストグラム
+
+- 医療機関の利用回数
+
+```{r}
+ggplot(raw, 
+       aes(x = visits)
+       ) +
+  geom_histogram()
+```
+
+- メディケイド保有別の利用回数
+
+```{r}
+ggplot(raw, 
+       aes(x = visits,
+           fill = medicaid)
+       ) +
+  geom_histogram(position = "identity",
+                 alpha = 0.5)
+```
+
+- 男女・メディケイド保有別の利用回数
+
+```{r}
+ggplot(raw, 
+       aes(x = visits,
+           fill = medicaid)
+       ) +
+  geom_histogram(position = "identity",
+                 alpha = 0.5
+                 ) +
+  facet_wrap(~ gender)
+```
+
+## 密度
+
+- 男女・メディケイド保有別の利用回数
+
+```{r}
+ggplot(raw, 
+       aes(x = visits,
+           fill = medicaid)
+       ) +
+  geom_density(position = "identity",
+                 alpha = 0.5
+  ) +
+  facet_wrap(~ gender)
+```
+
+## Boxplot
+
+```{r}
+ggplot(raw,
+       aes(y = visits,
+           x = medicaid)
+       ) +
+  geom_boxplot()
+```
