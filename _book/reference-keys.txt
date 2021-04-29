@@ -1,8 +1,8 @@
 prerequisites
 intro
-literature
-methods
-applications
+data-management
+comparison
+prediction
 example-one
 example-two
-final-words
+causal-inference

@@ -1,3 +1,3 @@
-# Methods
+# Comparison
 
 We describe our methods in this chapter.
