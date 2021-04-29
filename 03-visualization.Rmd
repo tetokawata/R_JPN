@@ -65,3 +65,28 @@ ggplot(raw,
        ) +
   geom_boxplot()
 ```
+
+## 散布図・ヒートマップ
+
+- 散布図：連続変数間の関係性を可視化する図
+
+```{r}
+ggplot(raw,
+       aes(x = income,
+           y = visits)
+       ) +
+  geom_point()
+```
+
+- サンプルサイズが大きくなると機能しない
+
+- 代替案はヒートマップ
+
+
+```{r}
+ggplot(raw,
+       aes(x = income,
+           y = visits)
+       ) +
+  geom_bin2d()
+```
