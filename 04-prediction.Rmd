@@ -1,3 +1,8 @@
 # 予測
 
-TBA
+```{r}
+data("NMES1988",
+     package = "AER")
+
+raw <- NMES1988
+```
