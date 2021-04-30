@@ -1,4 +1,4 @@
-# データ整備: dplyr
+# データ整備
 
 - AERパッケージに含まれるNMES1988を利用
 
@@ -15,7 +15,7 @@ raw <- NMES1988
 library(tidyverse)
 ```
 
-## 新しい変数の作成: mutate
+## 新しい変数の作成: mutate (tidyverse)
 
 - mutate関数の利用
 
@@ -28,7 +28,7 @@ df <- mutate(raw,
 ```
 
 
-## 変数の限定: select
+## 変数の限定: select (tidyverse)
 
 - select関数の利用
 
@@ -48,7 +48,7 @@ df <- select(raw,
              )
 ```
 
-## サンプルの除外:filter
+## サンプルの除外:filter (tidyverse)
 
 - filter関数の利用
 

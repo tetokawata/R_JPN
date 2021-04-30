@@ -46,8 +46,10 @@ knitr::write_bib(
 
 - AERパッケージ[@AER2008]に含まれるNMES1988を例として使用します。
 
-- 無料で公開されている有力な教科書として、以下を推薦します。
+- 無料で公開されている有力な参考文献として、以下を推薦します。
 
   - 機械学習を用いた予測：@james2013introduction [公開ページ](https://www.statlearning.com/)
-
+  
+  - 日本語によるR入門：[私たちのR: ベストプラクティスの探究](https://www.jaysong.net/RBook/)
+  
   - tidyverseパッケージの利用： [公式ページ](https://www.tidyverse.org/learn/#books)

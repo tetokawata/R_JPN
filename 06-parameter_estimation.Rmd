@@ -3,7 +3,7 @@
 
 - ここでは（条件付き）平均差を、線形モデルを仮定し、信頼区間こみで推定する。
 
-## OLS:estimatr
+## OLS:lm_robust (estimatr)
 
 - robust standard errorを計算するためにestimatrパッケージ[@R-estimatr]を利用
 

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 可視化 | Rによる比較・予測・因果推論入門 ver0.1</title>
+  <title>Chapter 4 可視化 | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 可視化 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:title" content="Chapter 4 可視化 | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 可視化 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta name="twitter:title" content="Chapter 4 可視化 | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="データ整備.html"/>
-<link rel="next" href="予測.html"/>
+<link rel="next" href="予測関数の推定.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -135,28 +135,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>はじめに</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 準備</a></li>
-<li class="chapter" data-level="2" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>2</b> データ整備</a>
+<li class="chapter" data-level="2" data-path="識別.html"><a href="識別.html"><i class="fa fa-check"></i><b>2</b> 識別</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="データ整備.html"><a href="データ整備.html#新しい変数の作成"><i class="fa fa-check"></i><b>2.1</b> 新しい変数の作成</a></li>
-<li class="chapter" data-level="2.2" data-path="データ整備.html"><a href="データ整備.html#変数の限定"><i class="fa fa-check"></i><b>2.2</b> 変数の限定</a></li>
-<li class="chapter" data-level="2.3" data-path="データ整備.html"><a href="データ整備.html#サンプルの除外"><i class="fa fa-check"></i><b>2.3</b> サンプルの除外</a></li>
+<li class="chapter" data-level="2.1" data-path="識別.html"><a href="識別.html#予測"><i class="fa fa-check"></i><b>2.1</b> 予測</a></li>
+<li class="chapter" data-level="2.2" data-path="識別.html"><a href="識別.html#比較"><i class="fa fa-check"></i><b>2.2</b> 比較</a></li>
+<li class="chapter" data-level="2.3" data-path="識別.html"><a href="識別.html#因果効果"><i class="fa fa-check"></i><b>2.3</b> 因果効果</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="可視化.html"><a href="可視化.html"><i class="fa fa-check"></i><b>3</b> 可視化</a>
+<li class="chapter" data-level="3" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>3</b> データ整備</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム"><i class="fa fa-check"></i><b>3.1</b> ヒストグラム</a></li>
-<li class="chapter" data-level="3.2" data-path="可視化.html"><a href="可視化.html#密度"><i class="fa fa-check"></i><b>3.2</b> 密度</a></li>
-<li class="chapter" data-level="3.3" data-path="可視化.html"><a href="可視化.html#boxplot"><i class="fa fa-check"></i><b>3.3</b> Boxplot</a></li>
-<li class="chapter" data-level="3.4" data-path="可視化.html"><a href="可視化.html#散布図ヒートマップ"><i class="fa fa-check"></i><b>3.4</b> 散布図・ヒートマップ</a></li>
+<li class="chapter" data-level="3.1" data-path="データ整備.html"><a href="データ整備.html#新しい変数の作成-mutate-tidyverse"><i class="fa fa-check"></i><b>3.1</b> 新しい変数の作成: mutate (tidyverse)</a></li>
+<li class="chapter" data-level="3.2" data-path="データ整備.html"><a href="データ整備.html#変数の限定-select-tidyverse"><i class="fa fa-check"></i><b>3.2</b> 変数の限定: select (tidyverse)</a></li>
+<li class="chapter" data-level="3.3" data-path="データ整備.html"><a href="データ整備.html#サンプルの除外filter-tidyverse"><i class="fa fa-check"></i><b>3.3</b> サンプルの除外:filter (tidyverse)</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="予測.html"><a href="予測.html"><i class="fa fa-check"></i><b>4</b> 予測</a></li>
-<li class="chapter" data-level="5" data-path="比較.html"><a href="比較.html"><i class="fa fa-check"></i><b>5</b> 比較</a>
+<li class="chapter" data-level="4" data-path="可視化.html"><a href="可視化.html"><i class="fa fa-check"></i><b>4</b> 可視化</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="比較.html"><a href="比較.html#統計的推論"><i class="fa fa-check"></i><b>5.1</b> 統計的推論</a>
+<li class="chapter" data-level="4.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム-geom_histogram-tidyverse"><i class="fa fa-check"></i><b>4.1</b> ヒストグラム: geom_histogram (tidyverse)</a></li>
+<li class="chapter" data-level="4.2" data-path="可視化.html"><a href="可視化.html#密度-geom_density-tidyverse"><i class="fa fa-check"></i><b>4.2</b> 密度: geom_density (tidyverse)</a></li>
+<li class="chapter" data-level="4.3" data-path="可視化.html"><a href="可視化.html#boxplot-geom_boxplot-tidyverse"><i class="fa fa-check"></i><b>4.3</b> Boxplot: geom_boxplot (tidyverse)</a></li>
+<li class="chapter" data-level="4.4" data-path="可視化.html"><a href="可視化.html#散布図-geom_point-tidyverse"><i class="fa fa-check"></i><b>4.4</b> 散布図: geom_point (tidyverse)</a></li>
+<li class="chapter" data-level="4.5" data-path="可視化.html"><a href="可視化.html#ヒートマップ-geom_bin2d-tidyverse"><i class="fa fa-check"></i><b>4.5</b> ヒートマップ: geom_bin2d (tidyverse)</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="予測関数の推定.html"><a href="予測関数の推定.html"><i class="fa fa-check"></i><b>5</b> 予測関数の推定</a>
 <ul>
-<li class="chapter" data-level="5.1.1" data-path="比較.html"><a href="比較.html#ols"><i class="fa fa-check"></i><b>5.1.1</b> OLS</a></li>
+<li class="chapter" data-level="5.1" data-path="予測関数の推定.html"><a href="予測関数の推定.html#データの導入"><i class="fa fa-check"></i><b>5.1</b> データの導入</a></li>
+<li class="chapter" data-level="5.2" data-path="予測関数の推定.html"><a href="予測関数の推定.html#データ分割"><i class="fa fa-check"></i><b>5.2</b> データ分割</a></li>
+<li class="chapter" data-level="5.3" data-path="予測関数の推定.html"><a href="予測関数の推定.html#ols"><i class="fa fa-check"></i><b>5.3</b> OLS</a></li>
+<li class="chapter" data-level="5.4" data-path="予測関数の推定.html"><a href="予測関数の推定.html#lassoridge"><i class="fa fa-check"></i><b>5.4</b> LASSO/Ridge</a></li>
+<li class="chapter" data-level="5.5" data-path="予測関数の推定.html"><a href="予測関数の推定.html#random-forestbagging"><i class="fa fa-check"></i><b>5.5</b> Random Forest/Bagging</a></li>
 </ul></li>
+<li class="chapter" data-level="6" data-path="パラメータの推定.html"><a href="パラメータの推定.html"><i class="fa fa-check"></i><b>6</b> パラメータの推定</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="パラメータの推定.html"><a href="パラメータの推定.html#olslm_robust-estimatr"><i class="fa fa-check"></i><b>6.1</b> OLS:lm_robust (estimatr)</a>
+<ul>
+<li class="chapter" data-level="" data-path="パラメータの推定.html"><a href="パラメータの推定.html#発展"><i class="fa fa-check"></i>発展</a></li>
+<li class="chapter" data-level="" data-path="パラメータの推定.html"><a href="パラメータの推定.html#推計結果表"><i class="fa fa-check"></i>推計結果表</a></li>
+<li class="chapter" data-level="" data-path="パラメータの推定.html"><a href="パラメータの推定.html#dot-and-whisker-plotによる可視化"><i class="fa fa-check"></i>Dot-and-Whisker plotによる可視化</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="因果推論.html"><a href="因果推論.html"><i class="fa fa-check"></i><b>6</b> 因果推論</a></li>
+<li class="chapter" data-level="6.2" data-path="パラメータの推定.html"><a href="パラメータの推定.html#double-selection"><i class="fa fa-check"></i><b>6.2</b> Double selection</a></li>
+<li class="chapter" data-level="6.3" data-path="パラメータの推定.html"><a href="パラメータの推定.html#double-machine-learning"><i class="fa fa-check"></i><b>6.3</b> Double Machine Learning</a></li>
+<li class="chapter" data-level="6.4" data-path="パラメータの推定.html"><a href="パラメータの推定.html#generalized-random-forest"><i class="fa fa-check"></i><b>6.4</b> Generalized Random Forest</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -178,14 +196,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="可視化" class="section level1" number="3">
-<h1><span class="header-section-number">Chapter 3</span> 可視化</h1>
+<div id="可視化" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> 可視化</h1>
 <ul>
-<li>tidyverseに含まれるggplot2パッケージを利用</li>
+<li>tidyverseに含まれるggplot2パッケージ<span class="citation">(<a href="references.html#ref-R-ggplot2" role="doc-biblioref">Wickham et al. 2020</a>)</span>を利用</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="可視化.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
-<div id="ヒストグラム" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> ヒストグラム</h2>
+<div id="ヒストグラム-geom_histogram-tidyverse" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> ヒストグラム: geom_histogram (tidyverse)</h2>
 <ul>
 <li>医療機関の利用回数</li>
 </ul>
@@ -217,8 +235,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-8"><a href="可視化.html#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> gender)</span></code></pre></div>
 <p><img src="R_book_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
-<div id="密度" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> 密度</h2>
+<div id="密度-geom_density-tidyverse" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> 密度: geom_density (tidyverse)</h2>
 <ul>
 <li>男女・メディケイド保有別の利用回数</li>
 </ul>
@@ -232,8 +250,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-8"><a href="可視化.html#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> gender)</span></code></pre></div>
 <p><img src="R_book_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
-<div id="boxplot" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> Boxplot</h2>
+<div id="boxplot-geom_boxplot-tidyverse" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Boxplot: geom_boxplot (tidyverse)</h2>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="可視化.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
 <span id="cb12-2"><a href="可視化.html#cb12-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> visits,</span>
 <span id="cb12-3"><a href="可視化.html#cb12-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> medicaid)</span>
@@ -241,8 +259,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb12-5"><a href="可視化.html#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div>
 <p><img src="R_book_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
-<div id="散布図ヒートマップ" class="section level2" number="3.4">
-<h2><span class="header-section-number">3.4</span> 散布図・ヒートマップ</h2>
+<div id="散布図-geom_point-tidyverse" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> 散布図: geom_point (tidyverse)</h2>
 <ul>
 <li>散布図：連続変数間の関係性を可視化する図</li>
 </ul>
@@ -253,8 +271,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb13-5"><a href="可視化.html#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
 <p><img src="R_book_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <ul>
-<li><p>サンプルサイズが大きくなると機能しない</p></li>
-<li><p>代替案はヒートマップ</p></li>
+<li>サンプルサイズが大きくなると機能しない</li>
+</ul>
+</div>
+<div id="ヒートマップ-geom_bin2d-tidyverse" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> ヒートマップ: geom_bin2d (tidyverse)</h2>
+<ul>
+<li>代替案はヒートマップ</li>
 </ul>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="可視化.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
 <span id="cb14-2"><a href="可視化.html#cb14-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> income,</span>
@@ -271,7 +294,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="データ整備.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="予測.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="予測関数の推定.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
