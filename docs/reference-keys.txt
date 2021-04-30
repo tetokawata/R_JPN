@@ -1,4 +1,5 @@
 intro
+識別
 データ整備-dplyr
 新しい変数の作成-mutate
 変数の限定-select
@@ -8,8 +9,14 @@ intro
 密度-geom_density
 boxplot-geom_boxplot
 散布図ヒートマップ-geom_pointgeom_bin2d
-予測
-パッケージ
-比較-estimatr
-olslm_robust
-因果推論
+予測関数の推定
+データの導入
+データ分割
+ols
+lassoridge
+random-forestbagging
+パラメータの推定
+olsestimatr
+double-selection
+double-machine-learning
+generalized-random-forest

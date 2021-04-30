@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | Rによる比較・予測・因果推論入門 ver0.1</title>
+  <title>Chapter 5 予測関数の推定 | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:title" content="Chapter 5 予測関数の推定 | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta name="twitter:title" content="Chapter 5 予測関数の推定 | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="パラメータの推定.html"/>
-
+<link rel="prev" href="可視化-ggplot2.html"/>
+<link rel="next" href="パラメータの推定.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -190,43 +190,66 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
+<div id="予測関数の推定" class="section level1" number="5">
+<h1><span class="header-section-number">Chapter 5</span> 予測関数の推定</h1>
+<div id="データの導入" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> データの導入</h2>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="予測関数の推定.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
+<span id="cb15-2"><a href="予測関数の推定.html#cb15-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
+<span id="cb15-3"><a href="予測関数の推定.html#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="予測関数の推定.html#cb15-4" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span></code></pre></div>
+</div>
+<div id="データ分割" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> データ分割</h2>
+<ul>
+<li>ここでは5個のデータに分割する。</li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="予測関数の推定.html#cb16-1" aria-hidden="true" tabindex="-1"></a>group <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,</span>
+<span id="cb16-2"><a href="予測関数の推定.html#cb16-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">size =</span> <span class="fu">nrow</span>(raw),</span>
+<span id="cb16-3"><a href="予測関数の推定.html#cb16-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">replace =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+<div id="ols" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> OLS</h2>
+<ul>
+<li>線形予測関数<span class="math inline">\(f(X)=\beta_0 + \beta_1X_1+...+\beta_LX_L\)</span>を仮定し、最小二乗法にて推定する。</li>
+</ul>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="予測関数の推定.html#cb17-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(visits <span class="sc">~</span> .,</span>
+<span id="cb17-2"><a href="予測関数の推定.html#cb17-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw[group <span class="sc">!=</span> <span class="dv">1</span>,])</span>
+<span id="cb17-3"><a href="予測関数の推定.html#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="予測関数の推定.html#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)</span></code></pre></div>
+<pre><code>##     (Intercept)         nvisits         ovisits        novisits       emergency 
+##      3.18436899      0.23280079      0.01541181      0.08515956      0.05628292 
+##        hospital      healthpoor healthexcellent         chronic      adllimited 
+##      1.40156110      1.69890018     -1.15057853      0.90097950      0.47006085 
+## regionnortheast   regionmidwest      regionwest             age         afamyes 
+##      0.39324495     -0.23919620      0.32832926     -0.33495588      0.12002397 
+##      gendermale      marriedyes          school          income     employedyes 
+##     -0.33983650     -0.08828535      0.13756262     -0.02243965      0.28792003 
+##    insuranceyes     medicaidyes 
+##      1.46581150      1.37191285</code></pre>
+<ul>
+<li>予測値の導出</li>
+</ul>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="予測関数の推定.html#cb19-1" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,raw)</span></code></pre></div>
+<ul>
+<li>テストデータへの適合</li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="予測関数の推定.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 36.61739</code></pre>
+<ul>
+<li>訓練データへの適合</li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="予測関数の推定.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 38.05425</code></pre>
+</div>
+<div id="lassoridge" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> LASSO/Ridge</h2>
+<p><span class="citation"><a href="references.html#ref-R-glmnet" role="doc-biblioref">Friedman et al.</a> (<a href="references.html#ref-R-glmnet" role="doc-biblioref">2021</a>)</span></p>
+</div>
+<div id="random-forestbagging" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> Random Forest/Bagging</h2>
+<p><span class="citation"><a href="references.html#ref-R-ranger" role="doc-biblioref">Wright, Wager, and Probst</a> (<a href="references.html#ref-R-ranger" role="doc-biblioref">2020</a>)</span></p>
 
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-R-DoubleML" class="csl-entry">
-Bach, Philipp, Victor Chernozhukov, Malte S. Kurz, and Martin Spindler. 2021. <em>DoubleML: Double Machine Learning in r</em>. <a href="https://CRAN.R-project.org/package=DoubleML">https://CRAN.R-project.org/package=DoubleML</a>.
-</div>
-<div id="ref-R-estimatr" class="csl-entry">
-Blair, Graeme, Jasper Cooper, Alexander Coppock, Macartan Humphreys, and Luke Sonnet. 2021. <em>Estimatr: Fast Estimators for Design-Based Inference</em>. <a href="https://CRAN.R-project.org/package=estimatr">https://CRAN.R-project.org/package=estimatr</a>.
-</div>
-<div id="ref-R-glmnet" class="csl-entry">
-Friedman, Jerome, Trevor Hastie, Rob Tibshirani, Balasubramanian Narasimhan, Kenneth Tay, and Noah Simon. 2021. <em>Glmnet: Lasso and Elastic-Net Regularized Generalized Linear Models</em>. <a href="https://CRAN.R-project.org/package=glmnet">https://CRAN.R-project.org/package=glmnet</a>.
-</div>
-<div id="ref-james2013introduction" class="csl-entry">
-James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. Vol. 112. Springer.
-</div>
-<div id="ref-AER2008" class="csl-entry">
-Kleiber, Christian, and Achim Zeileis. 2008. <em>Applied Econometrics with <span>R</span></em>. New York: Springer-Verlag. <a href="https://CRAN.R-project.org/package=AER">https://CRAN.R-project.org/package=AER</a>.
-</div>
-<div id="ref-R-hdm" class="csl-entry">
-Spindler, Martin, Victor Chernozhukov, and Christian Hansen. 2019. <em>Hdm: High-Dimensional Metrics</em>. <a href="https://CRAN.R-project.org/package=hdm">https://CRAN.R-project.org/package=hdm</a>.
-</div>
-<div id="ref-R-grf" class="csl-entry">
-Tibshirani, Julie, Susan Athey, and Stefan Wager. 2020. <em>Grf: Generalized Random Forests</em>. <a href="https://github.com/grf-labs/grf">https://github.com/grf-labs/grf</a>.
-</div>
-<div id="ref-tidyverse2019" class="csl-entry">
-Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain Francois, Garrett Grolemund, et al. 2019. <span>“Welcome to the <span class="nocase">tidyverse</span>.”</span> <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
-</div>
-<div id="ref-R-ggplot2" class="csl-entry">
-Wickham, Hadley, Winston Chang, Lionel Henry, Thomas Lin Pedersen, Kohske Takahashi, Claus Wilke, Kara Woo, Hiroaki Yutani, and Dewey Dunnington. 2020. <em>Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>. <a href="https://CRAN.R-project.org/package=ggplot2">https://CRAN.R-project.org/package=ggplot2</a>.
-</div>
-<div id="ref-R-dplyr" class="csl-entry">
-Wickham, Hadley, Romain Francois, Lionel Henry, and Kirill Muller. 2021. <em>Dplyr: A Grammar of Data Manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr">https://CRAN.R-project.org/package=dplyr</a>.
-</div>
-<div id="ref-R-ranger" class="csl-entry">
-Wright, Marvin N., Stefan Wager, and Philipp Probst. 2020. <em>Ranger: A Fast Implementation of Random Forests</em>. <a href="https://github.com/imbs-hl/ranger">https://github.com/imbs-hl/ranger</a>.
-</div>
 </div>
 </div>
             </section>
@@ -234,8 +257,8 @@ Wright, Marvin N., Stefan Wager, and Philipp Probst. 2020. <em>Ranger: A Fast Im
           </div>
         </div>
       </div>
-<a href="パラメータの推定.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="可視化-ggplot2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="パラメータの推定.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | Rによる比較・予測・因果推論入門 ver0.1</title>
+  <title>Chapter 6 パラメータの推定 | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:title" content="Chapter 6 パラメータの推定 | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta name="twitter:title" content="Chapter 6 パラメータの推定 | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="パラメータの推定.html"/>
-
+<link rel="prev" href="予測関数の推定.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -190,43 +190,129 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
+<div id="パラメータの推定" class="section level1" number="6">
+<h1><span class="header-section-number">Chapter 6</span> パラメータの推定</h1>
+<ul>
+<li>ここでは（条件付き）平均差を、線形モデルを仮定し、信頼区間こみで推定する。</li>
+</ul>
+<div id="olsestimatr" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> OLS:estimatr</h2>
+<ul>
+<li>robust standard errorを計算するためにestimatrパッケージ<span class="citation">(<a href="references.html#ref-R-estimatr" role="doc-biblioref">Blair et al. 2021</a>)</span>を利用</li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="パラメータの推定.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span></code></pre></div>
+<ul>
+<li>条件なし平均差<span class="math inline">\(\tau=E[Y|D=d&#39;]-E[Y|D=d]\)</span>を推定するために、</li>
+</ul>
+<p><span class="math display">\[E[Y|D=d]=\beta_0 + \tau\times D\]</span></p>
+<p>を仮定し推定</p>
+<ul>
+<li><p><span class="math inline">\(D\)</span>が2値変数であればノンパラメトリックな推定</p></li>
+<li><p>それ以外の場合は線形近似モデルを推定</p></li>
+</ul>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="パラメータの推定.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid,</span>
+<span id="cb25-2"><a href="パラメータの推定.html#cb25-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
+<pre><code>##             Estimate Std. Error   t value    Pr(&gt;|t|)  CI Lower CI Upper   DF
+## (Intercept)  5.68007  0.1065151 53.326444 0.000000000 5.4712468 5.888893 4404
+## medicaidyes  1.03386  0.3595968  2.875054 0.004058953 0.3288698 1.738851 4404</code></pre>
+<ul>
+<li>条件付き平均差<span class="math inline">\(\tau=E[Y|D=d&#39;, X_1,...,X_L]-E[Y|D=d,X_1,...,X_L]\)</span>を推定するために、</li>
+</ul>
+<p><span class="math display">\[E[Y|D=d,X_1,...,X_L]=\beta_0 + \tau\times D + \beta_1 X_1+...+\beta_L X_L\]</span></p>
+<p>を仮定し推定</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="パラメータの推定.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> age <span class="sc">+</span> gender,</span>
+<span id="cb27-2"><a href="パラメータの推定.html#cb27-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
+<pre><code>##                Estimate Std. Error    t value     Pr(&gt;|t|)   CI Lower
+## (Intercept)  6.09459718  1.1362142  5.3639507 8.559768e-08  3.8670457
+## medicaidyes  0.92367669  0.3616363  2.5541590 1.067785e-02  0.2146876
+## age         -0.02596731  0.1513204 -0.1716048 8.637561e-01 -0.3226315
+## gendermale  -0.52597827  0.2095122 -2.5104898 1.209196e-02 -0.9367276
+##               CI Upper   DF
+## (Intercept)  8.3221486 4402
+## medicaidyes  1.6326658 4402
+## age          0.2706969 4402
+## gendermale  -0.1152289 4402</code></pre>
+<div id="発展" class="section level3 unnumbered">
+<h3>発展</h3>
+<ul>
+<li>tidy関数により推定結果data.frameに変化することで、kable関数(knitrパッケージ)による推計結果表の整形、geom_pointrange関数による可視化が可能</li>
+</ul>
+</div>
+<div id="推計結果表" class="section level3 unnumbered">
+<h3>推計結果表</h3>
+<ul>
+<li>点推定値(estimate)、標準誤差(std.error)のみを残した推計結果表</li>
+</ul>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="パラメータの推定.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb29-2"><a href="パラメータの推定.html#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="パラメータの推定.html#cb29-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> gender,</span>
+<span id="cb29-4"><a href="パラメータの推定.html#cb29-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw)</span>
+<span id="cb29-5"><a href="パラメータの推定.html#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="パラメータの推定.html#cb29-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
+<span id="cb29-7"><a href="パラメータの推定.html#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="パラメータの推定.html#cb29-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">select</span>(fit, term, estimate, std.error)</span>
+<span id="cb29-9"><a href="パラメータの推定.html#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="パラメータの推定.html#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">5.90</td>
+<td align="right">0.13</td>
+</tr>
+<tr class="even">
+<td align="left">medicaidyes</td>
+<td align="right">0.92</td>
+<td align="right">0.36</td>
+</tr>
+<tr class="odd">
+<td align="left">gendermale</td>
+<td align="right">-0.52</td>
+<td align="right">0.21</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="dot-and-whisker-plotによる可視化" class="section level3 unnumbered">
+<h3>Dot-and-Whisker plotによる可視化</h3>
+<ul>
+<li>Dot-and-Whisker図により点推定量と信頼区間を可視化</li>
+</ul>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="パラメータの推定.html#cb30-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(visits <span class="sc">~</span> medicaid <span class="sc">+</span> gender,</span>
+<span id="cb30-2"><a href="パラメータの推定.html#cb30-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw)</span>
+<span id="cb30-3"><a href="パラメータの推定.html#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="パラメータの推定.html#cb30-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
+<span id="cb30-5"><a href="パラメータの推定.html#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="パラメータの推定.html#cb30-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
+<span id="cb30-7"><a href="パラメータの推定.html#cb30-7" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">!=</span> <span class="st">&quot;(Intercept)&quot;</span>)</span>
+<span id="cb30-8"><a href="パラメータの推定.html#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="パラメータの推定.html#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fit, <span class="fu">aes</span>(<span class="at">y =</span> term,</span>
+<span id="cb30-10"><a href="パラメータの推定.html#cb30-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> estimate,</span>
+<span id="cb30-11"><a href="パラメータの推定.html#cb30-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low,</span>
+<span id="cb30-12"><a href="パラメータの推定.html#cb30-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb30-13"><a href="パラメータの推定.html#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>()</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+</div>
+</div>
+<div id="double-selection" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Double selection</h2>
+<p><span class="citation"><a href="references.html#ref-R-hdm" role="doc-biblioref">Spindler, Chernozhukov, and Hansen</a> (<a href="references.html#ref-R-hdm" role="doc-biblioref">2019</a>)</span></p>
+</div>
+<div id="double-machine-learning" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Double Machine Learning</h2>
+<p><span class="citation"><a href="references.html#ref-R-DoubleML" role="doc-biblioref">Bach et al.</a> (<a href="references.html#ref-R-DoubleML" role="doc-biblioref">2021</a>)</span></p>
+</div>
+<div id="generalized-random-forest" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> Generalized Random Forest</h2>
+<p><span class="citation"><a href="references.html#ref-R-grf" role="doc-biblioref">Tibshirani, Athey, and Wager</a> (<a href="references.html#ref-R-grf" role="doc-biblioref">2020</a>)</span></p>
 
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-R-DoubleML" class="csl-entry">
-Bach, Philipp, Victor Chernozhukov, Malte S. Kurz, and Martin Spindler. 2021. <em>DoubleML: Double Machine Learning in r</em>. <a href="https://CRAN.R-project.org/package=DoubleML">https://CRAN.R-project.org/package=DoubleML</a>.
-</div>
-<div id="ref-R-estimatr" class="csl-entry">
-Blair, Graeme, Jasper Cooper, Alexander Coppock, Macartan Humphreys, and Luke Sonnet. 2021. <em>Estimatr: Fast Estimators for Design-Based Inference</em>. <a href="https://CRAN.R-project.org/package=estimatr">https://CRAN.R-project.org/package=estimatr</a>.
-</div>
-<div id="ref-R-glmnet" class="csl-entry">
-Friedman, Jerome, Trevor Hastie, Rob Tibshirani, Balasubramanian Narasimhan, Kenneth Tay, and Noah Simon. 2021. <em>Glmnet: Lasso and Elastic-Net Regularized Generalized Linear Models</em>. <a href="https://CRAN.R-project.org/package=glmnet">https://CRAN.R-project.org/package=glmnet</a>.
-</div>
-<div id="ref-james2013introduction" class="csl-entry">
-James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. Vol. 112. Springer.
-</div>
-<div id="ref-AER2008" class="csl-entry">
-Kleiber, Christian, and Achim Zeileis. 2008. <em>Applied Econometrics with <span>R</span></em>. New York: Springer-Verlag. <a href="https://CRAN.R-project.org/package=AER">https://CRAN.R-project.org/package=AER</a>.
-</div>
-<div id="ref-R-hdm" class="csl-entry">
-Spindler, Martin, Victor Chernozhukov, and Christian Hansen. 2019. <em>Hdm: High-Dimensional Metrics</em>. <a href="https://CRAN.R-project.org/package=hdm">https://CRAN.R-project.org/package=hdm</a>.
-</div>
-<div id="ref-R-grf" class="csl-entry">
-Tibshirani, Julie, Susan Athey, and Stefan Wager. 2020. <em>Grf: Generalized Random Forests</em>. <a href="https://github.com/grf-labs/grf">https://github.com/grf-labs/grf</a>.
-</div>
-<div id="ref-tidyverse2019" class="csl-entry">
-Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain Francois, Garrett Grolemund, et al. 2019. <span>“Welcome to the <span class="nocase">tidyverse</span>.”</span> <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
-</div>
-<div id="ref-R-ggplot2" class="csl-entry">
-Wickham, Hadley, Winston Chang, Lionel Henry, Thomas Lin Pedersen, Kohske Takahashi, Claus Wilke, Kara Woo, Hiroaki Yutani, and Dewey Dunnington. 2020. <em>Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>. <a href="https://CRAN.R-project.org/package=ggplot2">https://CRAN.R-project.org/package=ggplot2</a>.
-</div>
-<div id="ref-R-dplyr" class="csl-entry">
-Wickham, Hadley, Romain Francois, Lionel Henry, and Kirill Muller. 2021. <em>Dplyr: A Grammar of Data Manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr">https://CRAN.R-project.org/package=dplyr</a>.
-</div>
-<div id="ref-R-ranger" class="csl-entry">
-Wright, Marvin N., Stefan Wager, and Philipp Probst. 2020. <em>Ranger: A Fast Implementation of Random Forests</em>. <a href="https://github.com/imbs-hl/ranger">https://github.com/imbs-hl/ranger</a>.
-</div>
 </div>
 </div>
             </section>
@@ -234,8 +320,8 @@ Wright, Marvin N., Stefan Wager, and Philipp Probst. 2020. <em>Ranger: A Fast Im
           </div>
         </div>
       </div>
-<a href="パラメータの推定.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="予測関数の推定.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

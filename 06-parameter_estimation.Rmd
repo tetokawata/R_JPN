@@ -1,15 +1,15 @@
-# 比較: estimatr
+
+# パラメータの推定
 
 - ここでは（条件付き）平均差を、線形モデルを仮定し、信頼区間こみで推定する。
 
-- robust standard errorを計算するためにestimatrパッケージを利用
+## OLS:estimatr
+
+- robust standard errorを計算するためにestimatrパッケージ[@R-estimatr]を利用
 
 ```{r}
 library(estimatr)
 ```
-
-## OLS:lm_robust
-
 
 - 条件なし平均差$\tau=E[Y|D=d']-E[Y|D=d]$を推定するために、
 
@@ -79,5 +79,20 @@ ggplot(fit, aes(y = term,
                 xmax = conf.high)) +
   geom_pointrange()
 ```
+
+## Double selection
+
+@R-hdm
+
+## Double Machine Learning
+
+@R-DoubleML
+
+## Generalized Random Forest
+
+@R-grf
+
+
+
 
 

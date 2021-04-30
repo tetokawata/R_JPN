@@ -9,7 +9,7 @@ data("NMES1988",
 raw <- NMES1988
 ```
 
-- tidyverseパッケージに含まれるdplyrパッケージは、有用な関数を提供
+- tidyverseパッケージに含まれるdplyrパッケージ[@R-dplyr]は、有用な関数を提供
 
 ```{r}
 library(tidyverse)

@@ -1,6 +1,6 @@
 # 可視化: ggplot2
 
-- tidyverseに含まれるggplot2パッケージを利用
+- tidyverseに含まれるggplot2パッケージ[@R-ggplot2]を利用
 
 ```{r}
 library(tidyverse)

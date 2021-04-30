@@ -1,0 +1,60 @@
+
+# 予測関数の推定
+
+## データの導入
+
+```{r}
+data("NMES1988",
+     package = "AER")
+
+raw <- NMES1988
+```
+
+## データ分割
+
+- ここでは5個のデータに分割する。
+
+```{r}
+group <- sample(1:5,
+                size = nrow(raw),
+                replace = TRUE)
+```
+
+
+## OLS
+
+- 線形予測関数$f(X)=\beta_0 + \beta_1X_1+...+\beta_LX_L$を仮定し、最小二乗法にて推定する。
+
+```{r}
+fit <- lm(visits ~ .,
+          data = raw[group != 1,])
+
+coef(fit)
+```
+
+- 予測値の導出
+
+```{r}
+Y.hat <- predict(fit,raw)
+```
+
+- テストデータへの適合
+
+```{r}
+mean((raw$visits - Y.hat)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((raw$visits - Y.hat)[group != 1]^2)
+```
+
+## LASSO/Ridge
+
+@R-glmnet
+
+## Random Forest/Bagging
+
+@R-ranger
+
