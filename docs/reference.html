@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Rによる比較・予測・因果推論入門 ver0.1</title>
+  <title>Reference | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:title" content="Reference | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta name="twitter:title" content="Reference | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -31,7 +31,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
+<link rel="prev" href="index.html"/>
 <link rel="next" href="intro.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -134,6 +134,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>はじめに</a></li>
+<li class="chapter" data-level="" data-path="reference.html"><a href="reference.html"><i class="fa fa-check"></i>Reference</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 準備</a></li>
 <li class="chapter" data-level="2" data-path="データ整備-dplyr.html"><a href="データ整備-dplyr.html"><i class="fa fa-check"></i><b>2</b> データ整備: dplyr</a>
 <ul>
@@ -149,17 +150,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.4" data-path="可視化-ggplot2.html"><a href="可視化-ggplot2.html#散布図ヒートマップ-geom_pointgeom_bin2d"><i class="fa fa-check"></i><b>3.4</b> 散布図・ヒートマップ: geom_point・geom_bin2d</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="予測.html"><a href="予測.html"><i class="fa fa-check"></i><b>4</b> 予測</a></li>
-<li class="chapter" data-level="5" data-path="パッケージ.html"><a href="パッケージ.html"><i class="fa fa-check"></i><b>5</b> パッケージ</a></li>
-<li class="chapter" data-level="6" data-path="比較-estimatr.html"><a href="比較-estimatr.html"><i class="fa fa-check"></i><b>6</b> 比較: estimatr</a>
+<li class="chapter" data-level="5" data-path="比較-estimatr.html"><a href="比較-estimatr.html"><i class="fa fa-check"></i><b>5</b> 比較: estimatr</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="比較-estimatr.html"><a href="比較-estimatr.html#olslm_robust"><i class="fa fa-check"></i><b>6.1</b> OLS:lm_robust</a>
+<li class="chapter" data-level="5.1" data-path="比較-estimatr.html"><a href="比較-estimatr.html#olslm_robust"><i class="fa fa-check"></i><b>5.1</b> OLS:lm_robust</a>
 <ul>
 <li class="chapter" data-level="" data-path="比較-estimatr.html"><a href="比較-estimatr.html#発展"><i class="fa fa-check"></i>発展</a></li>
 <li class="chapter" data-level="" data-path="比較-estimatr.html"><a href="比較-estimatr.html#推計結果表"><i class="fa fa-check"></i>推計結果表</a></li>
 <li class="chapter" data-level="" data-path="比較-estimatr.html"><a href="比較-estimatr.html#dot-and-whisker-plotによる可視化"><i class="fa fa-check"></i>Dot-and-Whisker plotによる可視化</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="因果推論.html"><a href="因果推論.html"><i class="fa fa-check"></i><b>7</b> 因果推論</a></li>
+<li class="chapter" data-level="6" data-path="因果推論.html"><a href="因果推論.html"><i class="fa fa-check"></i><b>6</b> 因果推論</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -181,20 +181,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Rによる比較・予測・因果推論入門 ver0.1</h1>
-<p class="author"><em>川田恵介</em></p>
-<p class="date"><em>2021-04-30</em></p>
-</div>
-<div id="はじめに" class="section level1 unnumbered">
-<h1>はじめに</h1>
-<p>本ページでは、定量的な比較、（反実仮想）因果推定、予測分析をRによって行う方法を紹介します。
-データインポート、整理、可視化を行う関数群を統合的に提供するtidyverseパッケージ<span class="citation">(<a href="references.html#ref-tidyverse2019" role="doc-biblioref">Wickham et al. 2019</a>)</span>の利用を前提にします。</p>
-<p>無料で公開されている有力な教科書として、以下を推薦します。</p>
-<ul>
-<li><p>機械学習を用いた予測：<span class="citation"><a href="references.html#ref-james2013introduction" role="doc-biblioref">James et al.</a> (<a href="references.html#ref-james2013introduction" role="doc-biblioref">2013</a>)</span> <a href="https://www.statlearning.com/">公開ページ</a></p></li>
-<li><p>tidyverseパッケージの利用： <a href="https://www.tidyverse.org/learn/#books">公式ページ</a></p></li>
-</ul>
+<div id="reference" class="section level1 unnumbered">
+<h1>Reference</h1>
 
 </div>
             </section>
@@ -202,8 +190,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-
-<a href="intro.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="intro.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

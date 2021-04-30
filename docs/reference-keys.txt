@@ -9,6 +9,7 @@ intro
 boxplot-geom_boxplot
 散布図ヒートマップ-geom_pointgeom_bin2d
 予測
+パッケージ
 比較-estimatr
 olslm_robust
 因果推論

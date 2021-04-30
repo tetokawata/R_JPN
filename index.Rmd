@@ -27,7 +27,8 @@ knitr::write_bib(
     "tidyverse",
     "ranger",
     "glmnet",
-    "grf"),
+    "grf",
+    "DoubleML"),
   'packages.bib')
 ```
 
