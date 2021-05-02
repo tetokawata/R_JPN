@@ -229,15 +229,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb17-3"><a href="予測関数の推定.html#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="予測関数の推定.html#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)</span></code></pre></div>
 <pre><code>##     (Intercept)         nvisits         ovisits        novisits       emergency 
-##     3.966635027     0.260773780     0.006164638     0.116178971     0.032085793 
+##    3.5014100898    0.2576828719   -0.0453509606    0.1372888145    0.1892500533 
 ##        hospital      healthpoor healthexcellent         chronic      adllimited 
-##     1.468862573     1.604930485    -1.003457676     0.879409407     0.239667604 
+##    1.3609261355    1.5727858884   -0.9717213919    0.8556982311    0.4036471076 
 ## regionnortheast   regionmidwest      regionwest             age         afamyes 
-##     0.387014546    -0.159441052     0.663717665    -0.389845707    -0.058725434 
+##    0.3806363192   -0.1437148389    0.6417665270   -0.3104051096   -0.1650980735 
 ##      gendermale      marriedyes          school          income     employedyes 
-##    -0.316655114    -0.340939636     0.128634680    -0.038048524    -0.006535711 
+##   -0.4694332718   -0.1260516096    0.1152921235   -0.0349975985    0.0002681303 
 ##    insuranceyes     medicaidyes 
-##     1.382911562     1.596612153</code></pre>
+##    1.2589436144    0.9803465252</code></pre>
 <ul>
 <li>予測値の導出</li>
 </ul>
@@ -246,12 +246,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>テストデータへの適合</li>
 </ul>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="予測関数の推定.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 43.04935</code></pre>
+<pre><code>## [1] 52.85247</code></pre>
 <ul>
 <li>訓練データへの適合</li>
 </ul>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="予測関数の推定.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 36.4238</code></pre>
+<pre><code>## [1] 33.90549</code></pre>
 </div>
 <div id="lassoridge" class="section level2" number="5.4">
 <h2><span class="header-section-number">5.4</span> LASSO/Ridge</h2>
