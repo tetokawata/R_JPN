@@ -20,7 +20,9 @@ ols
 lassoridge
 random-forestbagging
 パラメータの推定
-olslm_robust-estimatr
+データ
+部分線形モデルに基づく推定
+ols-by-lm_robust-estimatr
 double-selection
 double-machine-learning
 generalized-random-forest

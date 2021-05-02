@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-04-30" />
+<meta name="date" content="2021-05-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -165,15 +165,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="パラメータの推定.html"><a href="パラメータの推定.html"><i class="fa fa-check"></i><b>6</b> パラメータの推定</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="パラメータの推定.html"><a href="パラメータの推定.html#olslm_robust-estimatr"><i class="fa fa-check"></i><b>6.1</b> OLS:lm_robust (estimatr)</a>
+<li class="chapter" data-level="6.1" data-path="パラメータの推定.html"><a href="パラメータの推定.html#データ"><i class="fa fa-check"></i><b>6.1</b> データ</a></li>
+<li class="chapter" data-level="6.2" data-path="パラメータの推定.html"><a href="パラメータの推定.html#部分線形モデルに基づく推定"><i class="fa fa-check"></i><b>6.2</b> 部分線形モデルに基づく推定</a>
 <ul>
-<li class="chapter" data-level="" data-path="パラメータの推定.html"><a href="パラメータの推定.html#発展"><i class="fa fa-check"></i>発展</a></li>
-<li class="chapter" data-level="" data-path="パラメータの推定.html"><a href="パラメータの推定.html#推計結果表"><i class="fa fa-check"></i>推計結果表</a></li>
-<li class="chapter" data-level="" data-path="パラメータの推定.html"><a href="パラメータの推定.html#dot-and-whisker-plotによる可視化"><i class="fa fa-check"></i>Dot-and-Whisker plotによる可視化</a></li>
+<li class="chapter" data-level="6.2.1" data-path="パラメータの推定.html"><a href="パラメータの推定.html#ols-by-lm_robust-estimatr"><i class="fa fa-check"></i><b>6.2.1</b> OLS by lm_robust (estimatr)</a></li>
+<li class="chapter" data-level="6.2.2" data-path="パラメータの推定.html"><a href="パラメータの推定.html#double-selection"><i class="fa fa-check"></i><b>6.2.2</b> Double selection</a></li>
+<li class="chapter" data-level="6.2.3" data-path="パラメータの推定.html"><a href="パラメータの推定.html#double-machine-learning"><i class="fa fa-check"></i><b>6.2.3</b> Double Machine Learning</a></li>
+<li class="chapter" data-level="6.2.4" data-path="パラメータの推定.html"><a href="パラメータの推定.html#generalized-random-forest"><i class="fa fa-check"></i><b>6.2.4</b> Generalized Random Forest</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="パラメータの推定.html"><a href="パラメータの推定.html#double-selection"><i class="fa fa-check"></i><b>6.2</b> Double selection</a></li>
-<li class="chapter" data-level="6.3" data-path="パラメータの推定.html"><a href="パラメータの推定.html#double-machine-learning"><i class="fa fa-check"></i><b>6.3</b> Double Machine Learning</a></li>
-<li class="chapter" data-level="6.4" data-path="パラメータの推定.html"><a href="パラメータの推定.html#generalized-random-forest"><i class="fa fa-check"></i><b>6.4</b> Generalized Random Forest</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -224,15 +223,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb17-3"><a href="予測関数の推定.html#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="予測関数の推定.html#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)</span></code></pre></div>
 <pre><code>##     (Intercept)         nvisits         ovisits        novisits       emergency 
-##      3.68133619      0.24035535      0.01665125      0.02242835      0.21370559 
+##     3.203007658     0.257426965     0.025671757     0.081666939     0.272595970 
 ##        hospital      healthpoor healthexcellent         chronic      adllimited 
-##      1.47678275      1.84880957     -1.29254395      0.87467649      0.41121460 
+##     1.420447563     1.699851617    -1.518502376     0.817940538     0.296934997 
 ## regionnortheast   regionmidwest      regionwest             age         afamyes 
-##      0.55178270     -0.36941665      0.30332372     -0.33656667     -0.47897234 
+##     0.650968188    -0.090343557     0.252677034    -0.248747417    -0.430558685 
 ##      gendermale      marriedyes          school          income     employedyes 
-##     -0.44862534     -0.12599146      0.13088446     -0.03569521      0.29689805 
+##    -0.439803602    -0.271696992     0.104719318    -0.005527631     0.388346250 
 ##    insuranceyes     medicaidyes 
-##      1.26289316      1.16362618</code></pre>
+##     1.231075177     1.111029460</code></pre>
 <ul>
 <li>予測値の導出</li>
 </ul>
@@ -241,12 +240,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>テストデータへの適合</li>
 </ul>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="予測関数の推定.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 34.4625</code></pre>
+<pre><code>## [1] 45.74972</code></pre>
 <ul>
 <li>訓練データへの適合</li>
 </ul>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="予測関数の推定.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 38.63441</code></pre>
+<pre><code>## [1] 35.8748</code></pre>
 </div>
 <div id="lassoridge" class="section level2" number="5.4">
 <h2><span class="header-section-number">5.4</span> LASSO/Ridge</h2>
