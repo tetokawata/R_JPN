@@ -101,7 +101,9 @@ ggplot(fit, aes(y = term,
 
 ### Double selection
 
-@R-hdm
+- 2重選択法[@belloni2014inference]を紹介
+
+- hdmパッケージ[@R-hdm]を利用
 
 ```{r}
 library(hdm)
@@ -120,10 +122,13 @@ fit <-
                method = "double selection")
 ```
 
+- 推定結果
+
 ```{r}
 summary(fit)
 ```
 
+- 選択されたコントロール変数
 
 ```{r}
 fit$selection.index
@@ -132,13 +137,12 @@ fit$selection.index
 
 ### Double Machine Learning
 
-@R-DoubleML
+- Double Machine Learning法[@chernozhukov2018double]を紹介
 
-### Generalized Random Forest
+- DoubleMLパッケージ[@R-DoubleML]を利用
 
-@R-grf
+### Causal Forest
 
+- Causal Forest法[@wager2018estimation, @athey2019generalized]を紹介
 
-
-
-
+- grfパッケージ[@R-grf]を利用

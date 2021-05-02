@@ -52,9 +52,9 @@ mean((raw$visits - Y.hat)[group != 1]^2)
 
 ## LASSO/Ridge
 
-@R-glmnet
+- glmentパッケージ[@R-glmnet]を利用
 
 ## Random Forest/Bagging
 
-@R-ranger
+- rangerパッケージ[@R-ranger]を利用
 
