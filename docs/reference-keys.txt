@@ -8,9 +8,11 @@ intro
 変数の限定-select-tidyverse
 サンプルの除外filter-tidyverse
 可視化
+y連続xカテゴリ
 ヒストグラム-geom_histogram-tidyverse
 密度-geom_density-tidyverse
 boxplot-geom_boxplot-tidyverse
+y連続x連続
 散布図-geom_point-tidyverse
 ヒートマップ-geom_bin2d-tidyverse
 予測関数の推定
@@ -25,4 +27,4 @@ random-forestbagging
 ols-by-lm_robust-estimatr
 double-selection
 double-machine-learning
-generalized-random-forest
+causal-forest

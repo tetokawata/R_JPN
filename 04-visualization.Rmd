@@ -6,7 +6,9 @@
 library(tidyverse)
 ```
 
-## ヒストグラム: geom_histogram (tidyverse)
+## Y=連続、X＝カテゴリ
+
+### ヒストグラム: geom_histogram (tidyverse)
 
 - 医療機関の利用回数
 
@@ -41,7 +43,7 @@ ggplot(raw,
   facet_wrap(~ gender)
 ```
 
-## 密度: geom_density (tidyverse)
+### 密度: geom_density (tidyverse)
 
 - 男女・メディケイド保有別の利用回数
 
@@ -56,7 +58,7 @@ ggplot(raw,
   facet_wrap(~ gender)
 ```
 
-## Boxplot: geom_boxplot (tidyverse)
+### Boxplot: geom_boxplot (tidyverse)
 
 ```{r}
 ggplot(raw,
@@ -66,7 +68,9 @@ ggplot(raw,
   geom_boxplot()
 ```
 
-## 散布図: geom_point (tidyverse)
+## Y=連続、X=連続
+
+### 散布図: geom_point (tidyverse)
 
 - 散布図：連続変数間の関係性を可視化する図
 
@@ -80,8 +84,7 @@ ggplot(raw,
 
 - サンプルサイズが大きくなると機能しない
 
-
-## ヒートマップ: geom_bin2d (tidyverse)
+### ヒートマップ: geom_bin2d (tidyverse)
 
 - 代替案はヒートマップ
 

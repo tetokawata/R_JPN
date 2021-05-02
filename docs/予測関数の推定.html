@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-05-02" />
+<meta name="date" content="2021-05-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -149,11 +149,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="可視化.html"><a href="可視化.html"><i class="fa fa-check"></i><b>4</b> 可視化</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム-geom_histogram-tidyverse"><i class="fa fa-check"></i><b>4.1</b> ヒストグラム: geom_histogram (tidyverse)</a></li>
-<li class="chapter" data-level="4.2" data-path="可視化.html"><a href="可視化.html#密度-geom_density-tidyverse"><i class="fa fa-check"></i><b>4.2</b> 密度: geom_density (tidyverse)</a></li>
-<li class="chapter" data-level="4.3" data-path="可視化.html"><a href="可視化.html#boxplot-geom_boxplot-tidyverse"><i class="fa fa-check"></i><b>4.3</b> Boxplot: geom_boxplot (tidyverse)</a></li>
-<li class="chapter" data-level="4.4" data-path="可視化.html"><a href="可視化.html#散布図-geom_point-tidyverse"><i class="fa fa-check"></i><b>4.4</b> 散布図: geom_point (tidyverse)</a></li>
-<li class="chapter" data-level="4.5" data-path="可視化.html"><a href="可視化.html#ヒートマップ-geom_bin2d-tidyverse"><i class="fa fa-check"></i><b>4.5</b> ヒートマップ: geom_bin2d (tidyverse)</a></li>
+<li class="chapter" data-level="4.1" data-path="可視化.html"><a href="可視化.html#y連続xカテゴリ"><i class="fa fa-check"></i><b>4.1</b> Y=連続、X＝カテゴリ</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム-geom_histogram-tidyverse"><i class="fa fa-check"></i><b>4.1.1</b> ヒストグラム: geom_histogram (tidyverse)</a></li>
+<li class="chapter" data-level="4.1.2" data-path="可視化.html"><a href="可視化.html#密度-geom_density-tidyverse"><i class="fa fa-check"></i><b>4.1.2</b> 密度: geom_density (tidyverse)</a></li>
+<li class="chapter" data-level="4.1.3" data-path="可視化.html"><a href="可視化.html#boxplot-geom_boxplot-tidyverse"><i class="fa fa-check"></i><b>4.1.3</b> Boxplot: geom_boxplot (tidyverse)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="可視化.html"><a href="可視化.html#y連続x連続"><i class="fa fa-check"></i><b>4.2</b> Y=連続、X=連続</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="可視化.html"><a href="可視化.html#散布図-geom_point-tidyverse"><i class="fa fa-check"></i><b>4.2.1</b> 散布図: geom_point (tidyverse)</a></li>
+<li class="chapter" data-level="4.2.2" data-path="可視化.html"><a href="可視化.html#ヒートマップ-geom_bin2d-tidyverse"><i class="fa fa-check"></i><b>4.2.2</b> ヒートマップ: geom_bin2d (tidyverse)</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="予測関数の推定.html"><a href="予測関数の推定.html"><i class="fa fa-check"></i><b>5</b> 予測関数の推定</a>
 <ul>
@@ -171,7 +177,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.2.1" data-path="パラメータの推定.html"><a href="パラメータの推定.html#ols-by-lm_robust-estimatr"><i class="fa fa-check"></i><b>6.2.1</b> OLS by lm_robust (estimatr)</a></li>
 <li class="chapter" data-level="6.2.2" data-path="パラメータの推定.html"><a href="パラメータの推定.html#double-selection"><i class="fa fa-check"></i><b>6.2.2</b> Double selection</a></li>
 <li class="chapter" data-level="6.2.3" data-path="パラメータの推定.html"><a href="パラメータの推定.html#double-machine-learning"><i class="fa fa-check"></i><b>6.2.3</b> Double Machine Learning</a></li>
-<li class="chapter" data-level="6.2.4" data-path="パラメータの推定.html"><a href="パラメータの推定.html#generalized-random-forest"><i class="fa fa-check"></i><b>6.2.4</b> Generalized Random Forest</a></li>
+<li class="chapter" data-level="6.2.4" data-path="パラメータの推定.html"><a href="パラメータの推定.html#causal-forest"><i class="fa fa-check"></i><b>6.2.4</b> Causal Forest</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -223,15 +229,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb17-3"><a href="予測関数の推定.html#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="予測関数の推定.html#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)</span></code></pre></div>
 <pre><code>##     (Intercept)         nvisits         ovisits        novisits       emergency 
-##     3.203007658     0.257426965     0.025671757     0.081666939     0.272595970 
+##     3.966635027     0.260773780     0.006164638     0.116178971     0.032085793 
 ##        hospital      healthpoor healthexcellent         chronic      adllimited 
-##     1.420447563     1.699851617    -1.518502376     0.817940538     0.296934997 
+##     1.468862573     1.604930485    -1.003457676     0.879409407     0.239667604 
 ## regionnortheast   regionmidwest      regionwest             age         afamyes 
-##     0.650968188    -0.090343557     0.252677034    -0.248747417    -0.430558685 
+##     0.387014546    -0.159441052     0.663717665    -0.389845707    -0.058725434 
 ##      gendermale      marriedyes          school          income     employedyes 
-##    -0.439803602    -0.271696992     0.104719318    -0.005527631     0.388346250 
+##    -0.316655114    -0.340939636     0.128634680    -0.038048524    -0.006535711 
 ##    insuranceyes     medicaidyes 
-##     1.231075177     1.111029460</code></pre>
+##     1.382911562     1.596612153</code></pre>
 <ul>
 <li>予測値の導出</li>
 </ul>
@@ -240,20 +246,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>テストデータへの適合</li>
 </ul>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="予測関数の推定.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 45.74972</code></pre>
+<pre><code>## [1] 43.04935</code></pre>
 <ul>
 <li>訓練データへの適合</li>
 </ul>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="予測関数の推定.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 35.8748</code></pre>
+<pre><code>## [1] 36.4238</code></pre>
 </div>
 <div id="lassoridge" class="section level2" number="5.4">
 <h2><span class="header-section-number">5.4</span> LASSO/Ridge</h2>
-<p><span class="citation"><a href="references.html#ref-R-glmnet" role="doc-biblioref">Friedman et al.</a> (<a href="references.html#ref-R-glmnet" role="doc-biblioref">2021</a>)</span></p>
+<ul>
+<li>glmentパッケージ<span class="citation">(<a href="references.html#ref-R-glmnet" role="doc-biblioref">Friedman et al. 2021</a>)</span>を利用</li>
+</ul>
 </div>
 <div id="random-forestbagging" class="section level2" number="5.5">
 <h2><span class="header-section-number">5.5</span> Random Forest/Bagging</h2>
-<p><span class="citation"><a href="references.html#ref-R-ranger" role="doc-biblioref">Wright, Wager, and Probst</a> (<a href="references.html#ref-R-ranger" role="doc-biblioref">2020</a>)</span></p>
+<ul>
+<li>rangerパッケージ<span class="citation">(<a href="references.html#ref-R-ranger" role="doc-biblioref">Wright, Wager, and Probst 2020</a>)</span>を利用</li>
+</ul>
 
 </div>
 </div>
