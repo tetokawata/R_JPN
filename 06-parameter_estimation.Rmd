@@ -8,6 +8,8 @@
 ## データ
 
 ```{r}
+library(tidyverse)
+
 data("NMES1988",
      package = "AER")
 
@@ -18,7 +20,7 @@ raw <- NMES1988
 
 - 部分線形モデルに関心のあるパラメータを埋め込む
 
-$$E[Y|D=d,X=x]=\underbrace{\tau(x)}_{Interest}\times d+\underbrace{f(x)}_{Nuisance}$$
+$$E[Y|D=d,X=x]=\underbrace{\tau(x)}_{Interest\ function}\times d+\underbrace{f(x)}_{Nuisance\ function}$$
 
 ### OLS by lm_robust (estimatr)
 
@@ -140,6 +142,37 @@ fit$selection.index
 - Double Machine Learning法[@chernozhukov2018double]を紹介
 
 - DoubleMLパッケージ[@R-DoubleML]を利用
+
+```{r}
+library(DoubleML)
+library(mlr3)
+library(mlr3learners)
+library(data.table)
+
+dt <- model.matrix(~-1 +.,
+                   raw)
+
+dt <- as.data.table(dt)
+
+learner <- lrn("regr.ranger", num.trees = 100) # Require bigger num.trees in practice
+
+ml_g <- learner$clone()
+
+ml_m <- learner$clone()
+
+obj_dml_data <- DoubleMLData$new(dt, y_col="visits", d_cols="medicaidyes")
+
+data <- make_plr_CCDDHNR2018(alpha=0.5, return_type='data.table')
+
+dml_plr_obj <- DoubleMLPLR$new(obj_dml_data, ml_g, ml_m, dml_procedure="dml1")
+
+dml_plr_obj$fit()
+```
+
+```{r}
+dml_plr_obj$summary()
+```
+
 
 ### Causal Forest
 

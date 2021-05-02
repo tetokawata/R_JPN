@@ -209,17 +209,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <div id="データ" class="section level2" number="6.1">
 <h2><span class="header-section-number">6.1</span> データ</h2>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="パラメータの推定.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
-<span id="cb24-2"><a href="パラメータの推定.html#cb24-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
-<span id="cb24-3"><a href="パラメータの推定.html#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="パラメータの推定.html#cb24-4" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="パラメータの推定.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb24-2"><a href="パラメータの推定.html#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="パラメータの推定.html#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
+<span id="cb24-4"><a href="パラメータの推定.html#cb24-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
+<span id="cb24-5"><a href="パラメータの推定.html#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="パラメータの推定.html#cb24-6" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span></code></pre></div>
 </div>
 <div id="部分線形モデルに基づく推定" class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> 部分線形モデルに基づく推定</h2>
 <ul>
 <li>部分線形モデルに関心のあるパラメータを埋め込む</li>
 </ul>
-<p><span class="math display">\[E[Y|D=d,X=x]=\underbrace{\tau(x)}_{Interest}\times d+\underbrace{f(x)}_{Nuisance}\]</span></p>
+<p><span class="math display">\[E[Y|D=d,X=x]=\underbrace{\tau(x)}_{Interest\ function}\times d+\underbrace{f(x)}_{Nuisance\ function}\]</span></p>
 <div id="ols-by-lm_robust-estimatr" class="section level3" number="6.2.1">
 <h3><span class="header-section-number">6.2.1</span> OLS by lm_robust (estimatr)</h3>
 <ul>
@@ -445,6 +447,45 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>Double Machine Learning法<span class="citation">(<a href="references.html#ref-chernozhukov2018double" role="doc-biblioref">Chernozhukov et al. 2018</a>)</span>を紹介</p></li>
 <li><p>DoubleMLパッケージ<span class="citation">(<a href="references.html#ref-R-DoubleML" role="doc-biblioref">Bach et al. 2021</a>)</span>を利用</p></li>
 </ul>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="パラメータの推定.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoubleML)</span>
+<span id="cb37-2"><a href="パラメータの推定.html#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3)</span>
+<span id="cb37-3"><a href="パラメータの推定.html#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3learners)</span>
+<span id="cb37-4"><a href="パラメータの推定.html#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb37-5"><a href="パラメータの推定.html#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="パラメータの推定.html#cb37-6" aria-hidden="true" tabindex="-1"></a>dt <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~-</span><span class="dv">1</span> <span class="sc">+</span>.,</span>
+<span id="cb37-7"><a href="パラメータの推定.html#cb37-7" aria-hidden="true" tabindex="-1"></a>                   raw)</span>
+<span id="cb37-8"><a href="パラメータの推定.html#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-9"><a href="パラメータの推定.html#cb37-9" aria-hidden="true" tabindex="-1"></a>dt <span class="ot">&lt;-</span> <span class="fu">as.data.table</span>(dt)</span>
+<span id="cb37-10"><a href="パラメータの推定.html#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="パラメータの推定.html#cb37-11" aria-hidden="true" tabindex="-1"></a>learner <span class="ot">&lt;-</span> <span class="fu">lrn</span>(<span class="st">&quot;regr.ranger&quot;</span>, <span class="at">num.trees =</span> <span class="dv">2000</span>)</span>
+<span id="cb37-12"><a href="パラメータの推定.html#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="パラメータの推定.html#cb37-13" aria-hidden="true" tabindex="-1"></a>ml_g <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
+<span id="cb37-14"><a href="パラメータの推定.html#cb37-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-15"><a href="パラメータの推定.html#cb37-15" aria-hidden="true" tabindex="-1"></a>ml_m <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
+<span id="cb37-16"><a href="パラメータの推定.html#cb37-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-17"><a href="パラメータの推定.html#cb37-17" aria-hidden="true" tabindex="-1"></a>obj_dml_data <span class="ot">&lt;-</span> DoubleMLData<span class="sc">$</span><span class="fu">new</span>(dt, <span class="at">y_col=</span><span class="st">&quot;visits&quot;</span>, <span class="at">d_cols=</span><span class="st">&quot;medicaidyes&quot;</span>)</span>
+<span id="cb37-18"><a href="パラメータの推定.html#cb37-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-19"><a href="パラメータの推定.html#cb37-19" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">make_plr_CCDDHNR2018</span>(<span class="at">alpha=</span><span class="fl">0.5</span>, <span class="at">return_type=</span><span class="st">&#39;data.table&#39;</span>)</span>
+<span id="cb37-20"><a href="パラメータの推定.html#cb37-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-21"><a href="パラメータの推定.html#cb37-21" aria-hidden="true" tabindex="-1"></a>dml_plr_obj <span class="ot">&lt;-</span> DoubleMLPLR<span class="sc">$</span><span class="fu">new</span>(obj_dml_data, ml_g, ml_m, <span class="at">dml_procedure=</span><span class="st">&quot;dml1&quot;</span>)</span>
+<span id="cb37-22"><a href="パラメータの推定.html#cb37-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-23"><a href="パラメータの推定.html#cb37-23" aria-hidden="true" tabindex="-1"></a>dml_plr_obj<span class="sc">$</span><span class="fu">fit</span>()</span></code></pre></div>
+<pre><code>## INFO  [03:27:29.152] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [03:27:37.027] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [03:27:43.534] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [03:27:50.284] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [03:27:56.891] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [03:28:05.435] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [03:28:08.457] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [03:28:11.410] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [03:28:14.364] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [03:28:17.325] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5)</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="パラメータの推定.html#cb39-1" aria-hidden="true" tabindex="-1"></a>dml_plr_obj<span class="sc">$</span><span class="fu">summary</span>()</span></code></pre></div>
+<pre><code>## [1] &quot;Estimates and significance testing of the effect of target variables&quot;
+##             Estimate. Std. Error t value Pr(&gt;|t|)    
+## medicaidyes    1.3426     0.3954   3.395 0.000686 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
 <div id="causal-forest" class="section level3" number="6.2.4">
 <h3><span class="header-section-number">6.2.4</span> Causal Forest</h3>
