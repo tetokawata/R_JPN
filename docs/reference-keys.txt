@@ -1,6 +1,8 @@
 intro
-識別
+問題意識
 予測
+損失関数
+bias-variance-tradeoff
 比較
 因果効果
 データ整備
@@ -15,13 +17,13 @@ boxplot-geom_boxplot-tidyverse
 y連続x連続
 散布図-geom_point-tidyverse
 ヒートマップ-geom_bin2d-tidyverse
-予測関数の推定
+prediction
 データの導入
 データ分割
 ols
 lassoridge
 random-forestbagging
-単一のパラメータの推定
+unique
 データ
 部分線形モデルに基づく推定
 ols-by-lm_robust-estimatr

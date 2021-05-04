@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 可視化 | Rによる比較・予測・因果推論入門 ver0.1</title>
+  <title>Chapter 2 問題意識 | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 可視化 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:title" content="Chapter 2 問題意識 | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 可視化 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta name="twitter:title" content="Chapter 2 問題意識 | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="データ整備.html"/>
-<link rel="next" href="prediction.html"/>
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="データ整備.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -203,102 +203,72 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="可視化" class="section level1" number="4">
-<h1><span class="header-section-number">Chapter 4</span> 可視化</h1>
+<div id="問題意識" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> 問題意識</h1>
 <ul>
-<li>tidyverseに含まれるggplot2パッケージ<span class="citation">(<a href="references.html#ref-R-ggplot2" role="doc-biblioref">Wickham et al. 2020</a>)</span>を利用</li>
+<li><p>経済学におけるデータ分析の大部分は、複数の変数間での関係性の理解・利用を目的とします。</p></li>
+<li><p>ここではある結果変数<span class="math inline">\(Y\)</span>と独立変数（群）<span class="math inline">\(X=X_1,...,X_L\)</span>の関係性に焦点を当てます。</p></li>
+<li><p>より具体的な目標は大きく（予測）<span class="math inline">\(Y\)</span>の予測関数の推定、（比較）異なる<span class="math inline">\(X\)</span>間での<span class="math inline">\(Y\)</span>の比較、（因果効果）<span class="math inline">\(X\)</span>の変化が<span class="math inline">\(Y\)</span>に与える因果効果の推定、に大別できます。</p></li>
+<li><p><span class="math inline">\(Y\)</span>と<span class="math inline">\(X\)</span>がともに観察でき、関心のある母集団からランダムサンプリングされたデータが入手出来ているとします。</p></li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="可視化.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
-<div id="y連続xカテゴリ" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Y=連続、X＝カテゴリ</h2>
-<div id="ヒストグラム-geom_histogram-tidyverse" class="section level3" number="4.1.1">
-<h3><span class="header-section-number">4.1.1</span> ヒストグラム: geom_histogram (tidyverse)</h3>
+<div id="予測" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 予測</h2>
 <ul>
-<li>医療機関の利用回数</li>
+<li><p>Chapter <a href="prediction.html#prediction">5</a> の背後にある問題意識・方針を紹介します。</p></li>
+<li><p>問題設定：データと同じ母集団から新しくランダムサンプリングされ、<span class="math inline">\(X\)</span>のみが観察できるサンプルについて<span class="math inline">\(Y\)</span>の値を予測します。</p></li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="可視化.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb8-2"><a href="可視化.html#cb8-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits)</span>
-<span id="cb8-3"><a href="可視化.html#cb8-3" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb8-4"><a href="可視化.html#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<div id="損失関数" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> 損失関数</h3>
+<p>具体的には、事前に定義する損失関数の期待値を最小化するような、予測関数<span class="math inline">\(f(X)\)</span>の推定をめざします。
+以下ではMean squared errorを損失関数として用います。
+所与の<span class="math inline">\(f(X)\)</span>、母分布に従う確率変数<span class="math inline">\(Y,X\)</span>についてMSEは以下のように定義されます。</p>
+<p><span class="math display">\[MSE = E_{X,Y}[(Y_i-f(X_i))^2]\]</span></p>
 <ul>
-<li>メディケイド保有別の利用回数</li>
+<li>一般にMSEは以下のように書き換えられます。</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="可視化.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb9-2"><a href="可視化.html#cb9-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
-<span id="cb9-3"><a href="可視化.html#cb9-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> medicaid)</span>
-<span id="cb9-4"><a href="可視化.html#cb9-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb9-5"><a href="可視化.html#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
-<span id="cb9-6"><a href="可視化.html#cb9-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><span class="math display">\[MSE = \underbrace{E_{X,Y}[(Y_i-\bar{Y}(X_i))^2]}_{Irreducible\ error}+\underbrace{E_{X,Y}[(\bar{Y}(X_i)-f(X_i))^2]}_{Reducible\ error}\]</span>
+ただし<span class="math inline">\(\bar{Y}(X_i)=E[Y_i|X_i]\)</span>。
+上記式から</p>
 <ul>
-<li>男女・メディケイド保有別の利用回数</li>
-</ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="可視化.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb10-2"><a href="可視化.html#cb10-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
-<span id="cb10-3"><a href="可視化.html#cb10-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> medicaid)</span>
-<span id="cb10-4"><a href="可視化.html#cb10-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb10-5"><a href="可視化.html#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
-<span id="cb10-6"><a href="可視化.html#cb10-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span></span>
-<span id="cb10-7"><a href="可視化.html#cb10-7" aria-hidden="true" tabindex="-1"></a>                 ) <span class="sc">+</span></span>
-<span id="cb10-8"><a href="可視化.html#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> gender)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-</div>
-<div id="密度-geom_density-tidyverse" class="section level3" number="4.1.2">
-<h3><span class="header-section-number">4.1.2</span> 密度: geom_density (tidyverse)</h3>
-<ul>
-<li>男女・メディケイド保有別の利用回数</li>
-</ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="可視化.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb11-2"><a href="可視化.html#cb11-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
-<span id="cb11-3"><a href="可視化.html#cb11-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> medicaid)</span>
-<span id="cb11-4"><a href="可視化.html#cb11-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb11-5"><a href="可視化.html#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
-<span id="cb11-6"><a href="可視化.html#cb11-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span></span>
-<span id="cb11-7"><a href="可視化.html#cb11-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb11-8"><a href="可視化.html#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> gender)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-</div>
-<div id="boxplot-geom_boxplot-tidyverse" class="section level3" number="4.1.3">
-<h3><span class="header-section-number">4.1.3</span> Boxplot: geom_boxplot (tidyverse)</h3>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="可視化.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb12-2"><a href="可視化.html#cb12-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> visits,</span>
-<span id="cb12-3"><a href="可視化.html#cb12-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> medicaid)</span>
-<span id="cb12-4"><a href="可視化.html#cb12-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb12-5"><a href="可視化.html#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-</div>
-</div>
-<div id="y連続x連続" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> Y=連続、X=連続</h2>
-<div id="散布図-geom_point-tidyverse" class="section level3" number="4.2.1">
-<h3><span class="header-section-number">4.2.1</span> 散布図: geom_point (tidyverse)</h3>
-<ul>
-<li>散布図：連続変数間の関係性を可視化する図</li>
-</ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="可視化.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb13-2"><a href="可視化.html#cb13-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> income,</span>
-<span id="cb13-3"><a href="可視化.html#cb13-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
-<span id="cb13-4"><a href="可視化.html#cb13-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb13-5"><a href="可視化.html#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<ul>
-<li>サンプルサイズが大きくなると機能しない</li>
+<li><p>最善の予測関数は条件付き母平均<span class="math inline">\(\bar{Y}(X_i)\)</span></p></li>
+<li><p>最善の予測関数のもとでも削減不可能なエラー(Irreducible error)が存在</p></li>
+<li><p>予測関数の推定 <span class="math inline">\(=\)</span> Reducible errorの削減 <span class="math inline">\(=\)</span> 条件付き母平均との乖離(MSE)の削減</p></li>
 </ul>
 </div>
-<div id="ヒートマップ-geom_bin2d-tidyverse" class="section level3" number="4.2.2">
-<h3><span class="header-section-number">4.2.2</span> ヒートマップ: geom_bin2d (tidyverse)</h3>
+<div id="bias-variance-tradeoff" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Bias-Variance tradeoff</h3>
 <ul>
-<li>代替案はヒートマップ</li>
+<li><p>実際の<span class="math inline">\(f(X_i)\)</span>はランダムサンプリングされたデータから推定される必要があり、実際には確率的に決定される。</p></li>
+<li><p>Reducible errorは一般に以下のように書き換えられる。</p></li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="可視化.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb14-2"><a href="可視化.html#cb14-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> income,</span>
-<span id="cb14-3"><a href="可視化.html#cb14-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
-<span id="cb14-4"><a href="可視化.html#cb14-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="可視化.html#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bin2d</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><span class="math display">\[E_{Y,X,f(X)}[(\bar{Y}(X_i)-f(X_i))^2]\]</span></p>
+<p><span class="math display">\[=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E_{Y,X,f(X)}[(\bar{f}(X_i)-f(X_i))^2]}_{Variance}.\]</span>
+ただし<span class="math inline">\(\bar{f}(X_i)=f(X_i)\)</span>。</p>
+<ul>
+<li><p>母平均<span class="math inline">\(\bar Y(X_i)\)</span>が単純な既知の関数形に従い、かつサンプルサイズが大きい場合、OLS推定された<span class="math inline">\(f(X_i)\)</span>は<span class="math inline">\(Bias=0\)</span>かつ小さいVarianceを達成する。</p></li>
+<li><p>社会科学における応用においては、<span class="math inline">\(\bar Y(X_i)\)</span>は未知かつ複雑であることが想定され、その複雑さに対してサンプルサイズが小さいことが想定される。</p></li>
+<li><p>OLSやサブサンプル平均により推定された予測モデルは、Bias-Variance tradeoffに直面する</p>
+<ul>
+<li><p>少ないパラメータ（短い回帰式、少ないサブサンプル分割）を推定する場合、大きなBiasを持つ</p></li>
+<li><p>多くのパラメータ（長い回帰式、多いサブサンプル分割）を推定する場合、大きなVarianceを持つ。</p></li>
+</ul></li>
+<li><p>Bias-variance tradeoffを分析者が解くこと（最善のモデル設定を行うこと）は困難</p></li>
+<li><p>Chapter <a href="prediction.html#prediction">5</a> で紹介するLASSO/Ridge/Random Forestなどの手法は、よりデータ主導型のアプローチを現実的な計算時間で行う。</p></li>
+</ul>
+</div>
+</div>
+<div id="比較" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> 比較</h2>
+<ul>
+<li>Chapter <a href="unique.html#unique">6</a> の背後にある問題意識・方針を紹介します。</li>
+</ul>
+</div>
+<div id="因果効果" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> 因果効果</h2>
+<ul>
+<li>Chapter <a href="unique.html#unique">6</a> の背後にある問題意識・方針を紹介します。</li>
+</ul>
 
-</div>
 </div>
 </div>
             </section>
@@ -306,8 +276,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="データ整備.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="prediction.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="データ整備.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

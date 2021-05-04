@@ -137,7 +137,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 準備</a></li>
 <li class="chapter" data-level="2" data-path="識別.html"><a href="識別.html"><i class="fa fa-check"></i><b>2</b> 識別</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="識別.html"><a href="識別.html#予測"><i class="fa fa-check"></i><b>2.1</b> 予測</a></li>
+<li class="chapter" data-level="2.1" data-path="識別.html"><a href="識別.html#予測"><i class="fa fa-check"></i><b>2.1</b> 予測</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="識別.html"><a href="識別.html#損失関数"><i class="fa fa-check"></i><b>2.1.1</b> 損失関数</a></li>
+<li class="chapter" data-level="2.1.2" data-path="識別.html"><a href="識別.html#過剰適合過少適合問題"><i class="fa fa-check"></i><b>2.1.2</b> 過剰適合・過少適合問題</a></li>
+</ul></li>
 <li class="chapter" data-level="2.2" data-path="識別.html"><a href="識別.html#比較"><i class="fa fa-check"></i><b>2.2</b> 比較</a></li>
 <li class="chapter" data-level="2.3" data-path="識別.html"><a href="識別.html#因果効果"><i class="fa fa-check"></i><b>2.3</b> 因果効果</a></li>
 </ul></li>
@@ -227,15 +231,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb17-3"><a href="予測関数の推定.html#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="予測関数の推定.html#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)</span></code></pre></div>
 <pre><code>##     (Intercept)         nvisits         ovisits        novisits       emergency 
-##      3.03433846      0.25114664     -0.01685720      0.15045233      0.18106878 
+##      2.51584825      0.22092505     -0.00903624      0.08231936      0.02633319 
 ##        hospital      healthpoor healthexcellent         chronic      adllimited 
-##      1.51178187      1.71621110     -1.40611225      0.78975380      0.70378631 
+##      1.43658658      1.46146734     -1.23537201      0.85101409      0.43817838 
 ## regionnortheast   regionmidwest      regionwest             age         afamyes 
-##      0.72783414     -0.07727023      0.73907964     -0.26784051     -0.28379060 
+##      0.73259476     -0.18228887      0.62253219     -0.21723821     -0.15715569 
 ##      gendermale      marriedyes          school          income     employedyes 
-##     -0.41229255     -0.24555157      0.11966824     -0.01425030      0.65975272 
+##     -0.33493167     -0.14281537      0.11738720     -0.02719680      0.28969189 
 ##    insuranceyes     medicaidyes 
-##      1.29210221      1.24792922</code></pre>
+##      1.50625989      1.39791376</code></pre>
 <ul>
 <li>予測値の導出</li>
 </ul>
@@ -244,12 +248,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>テストデータへの適合</li>
 </ul>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="予測関数の推定.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 38.77489</code></pre>
+<pre><code>## [1] 39.99937</code></pre>
 <ul>
 <li>訓練データへの適合</li>
 </ul>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="予測関数の推定.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 37.57541</code></pre>
+<pre><code>## [1] 37.29484</code></pre>
 </div>
 <div id="lassoridge" class="section level2" number="5.4">
 <h2><span class="header-section-number">5.4</span> LASSO/Ridge</h2>
