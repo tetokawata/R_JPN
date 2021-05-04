@@ -1,5 +1,5 @@
 
-# パラメータの推定
+# 単一のパラメータの推定
 
 - （条件付き）平均差を推定する。
 
@@ -20,9 +20,14 @@ raw <- NMES1988
 
 - 部分線形モデルに関心のあるパラメータを埋め込む
 
-$$E[Y|D=d,X=x]=\underbrace{\tau(x)}_{Interest\ function}\times d+\underbrace{f(x)}_{Nuisance\ function}$$
+$$E[Y|D=d,X=x]=\underbrace{\tau}_{Interest\ parameter}\times d+\underbrace{f(x)}_{Nuisance\ function}$$
 
 ### OLS by lm_robust (estimatr)
+
+
+- $\tau(x)=\tau,f(x)=\beta_0+\beta_1x_1+...+\beta_Lx_L$と特定化
+
+- サンプル内MSEを最大化するように推定
 
 - robust standard errorを計算するためにestimatrパッケージ[@R-estimatr]を利用
 
@@ -30,12 +35,10 @@ $$E[Y|D=d,X=x]=\underbrace{\tau(x)}_{Interest\ function}\times d+\underbrace{f(x
 library(estimatr)
 ```
 
-- $\tau(x)=\tau,f(x)=\beta_0+\beta_1x_1+...+\beta_Lx_L$と特定化
-
-- サンプル内MSEを最大化するように推定
+- lm_robust関数で推定
 
 ```{r}
-lm_robust(visits ~ medicaid + age + gender + school + income + employed + region + afam + married,
+lm_robust(visits ~ insurance + age + gender + school + income + employed + region + afam + married,
           data = raw)
 ```
 
@@ -50,7 +53,7 @@ library(knitr)
 library(tidyverse)
 
 fit <- 
-  lm_robust(visits ~ medicaid + age + gender + school + income + employed + region + afam + married,
+  lm_robust(visits ~ insurance + age + gender + school + income + employed + region + afam + married,
             data = raw)
 
 fit <- tidy(fit)
@@ -62,7 +65,7 @@ kable(fit, digits = 2)
 
 ```{r}
 fit <- filter(fit,
-              term == "medicaidyes")
+              term == "insuranceyes")
 kable(fit, digits = 2)
 ```
 
@@ -73,7 +76,7 @@ kable(fit, digits = 2)
 
 ```{r}
 fit <- 
-  lm_robust(visits ~ medicaid + age + gender + school + income + employed + region + afam + married,
+  lm_robust(visits ~ insurance + age + gender + school + income + employed + region + afam + married,
             data = raw)
 
 fit <- tidy(fit)
@@ -91,7 +94,7 @@ ggplot(fit, aes(y = term,
 
 ```{r}
 fit <- filter(fit,
-              term == "medicaidyes")
+              term == "insuranceyes")
 
 ggplot(fit, aes(y = term,
                 x = estimate,
@@ -101,9 +104,23 @@ ggplot(fit, aes(y = term,
   geom_vline(xintercept = 0)
 ```
 
-### Double selection
+### ロビンソン変換[@robinson1988root]
+
+- 部分線形モデルをロビンソン変換[@robinson1988root]
+
+$$Y_i-\underbrace{E[Y_i|X_i]}_{Nuisance\ term}=\tau\times [D_i-\underbrace{E[D_i|X_i]}_{Nuisance\ term}]+u_i$$
+
+- $E[Y_i|X_i],E[D_i|X_i]$を予測関数として推定し、予測誤差間を単回帰すればよい
+
+- 実際には$E[Y_i|X_i],E[D_i|X_i]$は未知の関数なので何らかの方法で推定する必要がある。関数の推定なので予測の手法が適用できる。
+
+#### Double selection: rlassoEffect (hdm)
 
 - 2重選択法[@belloni2014inference]を紹介
+
+- LASSOにより$Y_i,D_i$の両方あるいはどちらか一方を予測する上でrelevantな$X^c$を特定しコントロールする
+
+  - $Y_i,D_i$どちらの予測にもrelevantではない変数は除外する
 
 - hdmパッケージ[@R-hdm]を利用
 
@@ -112,7 +129,7 @@ library(hdm)
 
 Y <- raw$visits
 
-D <- if_else(raw$medicaid == "yes", 1, 0)
+D <- if_else(raw$insurance == "yes", 1, 0)
 
 X <- model.matrix(~ - 1+ age + gender + school + income + employed + region + afam + married,
                   raw)
@@ -137,9 +154,11 @@ fit$selection.index
 ```
 
 
-### Double Machine Learning
+#### Double Machine Learning (DoubleML)
 
 - Double Machine Learning法[@chernozhukov2018double]を紹介
+
+- なんらかの方法（例、OLS、ランダムフォレスト、LASSO）で$E[Y|X],E[D|X]$の予測関数$f_Y(X),f_D(X)$を推定し、予測誤差を単回帰
 
 - DoubleMLパッケージ[@R-DoubleML]を利用
 
@@ -149,33 +168,29 @@ library(mlr3)
 library(mlr3learners)
 library(data.table)
 
-dt <- model.matrix(~-1 +.,
-                   raw)
-
-dt <- as.data.table(dt)
-
-learner <- lrn("regr.ranger", num.trees = 100) # Require bigger num.trees in practice
+learner <- 
+  lrn("regr.ranger", 
+      num.trees = 100) # Require bigger num.trees in practice
 
 ml_g <- learner$clone()
 
 ml_m <- learner$clone()
 
-obj_dml_data <- DoubleMLData$new(dt, y_col="visits", d_cols="medicaidyes")
+obj_dml_data <- 
+  double_ml_data_from_matrix(X = X,
+                             y = Y,
+                             d = D)
 
-data <- make_plr_CCDDHNR2018(alpha=0.5, return_type='data.table')
-
-dml_plr_obj <- DoubleMLPLR$new(obj_dml_data, ml_g, ml_m, dml_procedure="dml1")
+dml_plr_obj <- 
+  DoubleMLPLR$new(obj_dml_data, 
+                  ml_g, 
+                  ml_m, 
+                  dml_procedure="dml1", 
+                  n_rep = 3)
 
 dml_plr_obj$fit()
 ```
 
 ```{r}
-dml_plr_obj$summary()
+print(dml_plr_obj)
 ```
-
-
-### Causal Forest
-
-- Causal Forest法[@wager2018estimation, @athey2019generalized]を紹介
-
-- grfパッケージ[@R-grf]を利用

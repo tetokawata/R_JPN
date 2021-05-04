@@ -24,14 +24,14 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-05-03" />
+<meta name="date" content="2021-05-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="パラメータの推定.html"/>
+<link rel="prev" href="単一のパラメータの推定.html"/>
 
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -169,15 +169,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.4" data-path="予測関数の推定.html"><a href="予測関数の推定.html#lassoridge"><i class="fa fa-check"></i><b>5.4</b> LASSO/Ridge</a></li>
 <li class="chapter" data-level="5.5" data-path="予測関数の推定.html"><a href="予測関数の推定.html#random-forestbagging"><i class="fa fa-check"></i><b>5.5</b> Random Forest/Bagging</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="パラメータの推定.html"><a href="パラメータの推定.html"><i class="fa fa-check"></i><b>6</b> パラメータの推定</a>
+<li class="chapter" data-level="6" data-path="単一のパラメータの推定.html"><a href="単一のパラメータの推定.html"><i class="fa fa-check"></i><b>6</b> 単一のパラメータの推定</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="パラメータの推定.html"><a href="パラメータの推定.html#データ"><i class="fa fa-check"></i><b>6.1</b> データ</a></li>
-<li class="chapter" data-level="6.2" data-path="パラメータの推定.html"><a href="パラメータの推定.html#部分線形モデルに基づく推定"><i class="fa fa-check"></i><b>6.2</b> 部分線形モデルに基づく推定</a>
+<li class="chapter" data-level="6.1" data-path="単一のパラメータの推定.html"><a href="単一のパラメータの推定.html#データ"><i class="fa fa-check"></i><b>6.1</b> データ</a></li>
+<li class="chapter" data-level="6.2" data-path="単一のパラメータの推定.html"><a href="単一のパラメータの推定.html#部分線形モデルに基づく推定"><i class="fa fa-check"></i><b>6.2</b> 部分線形モデルに基づく推定</a>
 <ul>
-<li class="chapter" data-level="6.2.1" data-path="パラメータの推定.html"><a href="パラメータの推定.html#ols-by-lm_robust-estimatr"><i class="fa fa-check"></i><b>6.2.1</b> OLS by lm_robust (estimatr)</a></li>
-<li class="chapter" data-level="6.2.2" data-path="パラメータの推定.html"><a href="パラメータの推定.html#double-selection"><i class="fa fa-check"></i><b>6.2.2</b> Double selection</a></li>
-<li class="chapter" data-level="6.2.3" data-path="パラメータの推定.html"><a href="パラメータの推定.html#double-machine-learning"><i class="fa fa-check"></i><b>6.2.3</b> Double Machine Learning</a></li>
-<li class="chapter" data-level="6.2.4" data-path="パラメータの推定.html"><a href="パラメータの推定.html#causal-forest"><i class="fa fa-check"></i><b>6.2.4</b> Causal Forest</a></li>
+<li class="chapter" data-level="6.2.1" data-path="単一のパラメータの推定.html"><a href="単一のパラメータの推定.html#ols-by-lm_robust-estimatr"><i class="fa fa-check"></i><b>6.2.1</b> OLS by lm_robust (estimatr)</a></li>
+<li class="chapter" data-level="6.2.2" data-path="単一のパラメータの推定.html"><a href="単一のパラメータの推定.html#ロビンソン変換robinson1988root"><i class="fa fa-check"></i><b>6.2.2</b> ロビンソン変換<span class="citation">(<span>Robinson 1988</span>)</span></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -205,9 +203,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>References</h1>
 
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-athey2019generalized" class="csl-entry">
-Athey, Susan, Julie Tibshirani, Stefan Wager, and others. 2019. <span>“Generalized Random Forests.”</span> <em>Annals of Statistics</em> 47 (2): 1148–78.
-</div>
 <div id="ref-R-DoubleML" class="csl-entry">
 Bach, Philipp, Victor Chernozhukov, Malte S. Kurz, and Martin Spindler. 2021. <em>DoubleML: Double Machine Learning in r</em>. <a href="https://CRAN.R-project.org/package=DoubleML">https://CRAN.R-project.org/package=DoubleML</a>.
 </div>
@@ -229,14 +224,11 @@ James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2013. <em>A
 <div id="ref-AER2008" class="csl-entry">
 Kleiber, Christian, and Achim Zeileis. 2008. <em>Applied Econometrics with <span>R</span></em>. New York: Springer-Verlag. <a href="https://CRAN.R-project.org/package=AER">https://CRAN.R-project.org/package=AER</a>.
 </div>
+<div id="ref-robinson1988root" class="csl-entry">
+Robinson, Peter. 1988. <span>“Root-n-Consistent Semiparametric Regression.”</span> <em>Econometrica</em> 56 (4): 931–54.
+</div>
 <div id="ref-R-hdm" class="csl-entry">
 Spindler, Martin, Victor Chernozhukov, and Christian Hansen. 2019. <em>Hdm: High-Dimensional Metrics</em>. <a href="https://CRAN.R-project.org/package=hdm">https://CRAN.R-project.org/package=hdm</a>.
-</div>
-<div id="ref-R-grf" class="csl-entry">
-Tibshirani, Julie, Susan Athey, and Stefan Wager. 2020. <em>Grf: Generalized Random Forests</em>. <a href="https://github.com/grf-labs/grf">https://github.com/grf-labs/grf</a>.
-</div>
-<div id="ref-wager2018estimation" class="csl-entry">
-Wager, Stefan, and Susan Athey. 2018. <span>“Estimation and Inference of Heterogeneous Treatment Effects Using Random Forests.”</span> <em>Journal of the American Statistical Association</em> 113 (523): 1228–42.
 </div>
 <div id="ref-tidyverse2019" class="csl-entry">
 Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain Francois, Garrett Grolemund, et al. 2019. <span>“Welcome to the <span class="nocase">tidyverse</span>.”</span> <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
@@ -257,7 +249,7 @@ Wright, Marvin N., Stefan Wager, and Philipp Probst. 2020. <em>Ranger: A Fast Im
           </div>
         </div>
       </div>
-<a href="パラメータの推定.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="単一のパラメータの推定.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>

@@ -21,10 +21,10 @@ y連続x連続
 ols
 lassoridge
 random-forestbagging
-パラメータの推定
+単一のパラメータの推定
 データ
 部分線形モデルに基づく推定
 ols-by-lm_robust-estimatr
-double-selection
-double-machine-learning
-causal-forest
+ロビンソン変換robinson1988root
+double-selection-rlassoeffect-hdm
+double-machine-learning-doubleml

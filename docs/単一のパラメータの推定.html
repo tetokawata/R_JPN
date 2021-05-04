@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 単一のパラメータの推定 | Rによる比較・予測・因果推論入門 ver0.1</title>
+  <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 単一のパラメータの推定 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 単一のパラメータの推定 | Rによる比較・予測・因果推論入門 ver0.1" />
+  
+  <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
+  
+
+<meta name="author" content="川田恵介" />
+
+
+<meta name="date" content="2021-05-04" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="予測関数の推定.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Introduction to comparison, prediction, and causal inference with R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>はじめに</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 準備</a></li>
+<li class="chapter" data-level="2" data-path="識別.html"><a href="識別.html"><i class="fa fa-check"></i><b>2</b> 識別</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="識別.html"><a href="識別.html#予測"><i class="fa fa-check"></i><b>2.1</b> 予測</a></li>
+<li class="chapter" data-level="2.2" data-path="識別.html"><a href="識別.html#比較"><i class="fa fa-check"></i><b>2.2</b> 比較</a></li>
+<li class="chapter" data-level="2.3" data-path="識別.html"><a href="識別.html#因果効果"><i class="fa fa-check"></i><b>2.3</b> 因果効果</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>3</b> データ整備</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="データ整備.html"><a href="データ整備.html#新しい変数の作成-mutate-tidyverse"><i class="fa fa-check"></i><b>3.1</b> 新しい変数の作成: mutate (tidyverse)</a></li>
+<li class="chapter" data-level="3.2" data-path="データ整備.html"><a href="データ整備.html#変数の限定-select-tidyverse"><i class="fa fa-check"></i><b>3.2</b> 変数の限定: select (tidyverse)</a></li>
+<li class="chapter" data-level="3.3" data-path="データ整備.html"><a href="データ整備.html#サンプルの除外filter-tidyverse"><i class="fa fa-check"></i><b>3.3</b> サンプルの除外:filter (tidyverse)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="可視化.html"><a href="可視化.html"><i class="fa fa-check"></i><b>4</b> 可視化</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="可視化.html"><a href="可視化.html#y連続xカテゴリ"><i class="fa fa-check"></i><b>4.1</b> Y=連続、X＝カテゴリ</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム-geom_histogram-tidyverse"><i class="fa fa-check"></i><b>4.1.1</b> ヒストグラム: geom_histogram (tidyverse)</a></li>
+<li class="chapter" data-level="4.1.2" data-path="可視化.html"><a href="可視化.html#密度-geom_density-tidyverse"><i class="fa fa-check"></i><b>4.1.2</b> 密度: geom_density (tidyverse)</a></li>
+<li class="chapter" data-level="4.1.3" data-path="可視化.html"><a href="可視化.html#boxplot-geom_boxplot-tidyverse"><i class="fa fa-check"></i><b>4.1.3</b> Boxplot: geom_boxplot (tidyverse)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="可視化.html"><a href="可視化.html#y連続x連続"><i class="fa fa-check"></i><b>4.2</b> Y=連続、X=連続</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="可視化.html"><a href="可視化.html#散布図-geom_point-tidyverse"><i class="fa fa-check"></i><b>4.2.1</b> 散布図: geom_point (tidyverse)</a></li>
+<li class="chapter" data-level="4.2.2" data-path="可視化.html"><a href="可視化.html#ヒートマップ-geom_bin2d-tidyverse"><i class="fa fa-check"></i><b>4.2.2</b> ヒートマップ: geom_bin2d (tidyverse)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="予測関数の推定.html"><a href="予測関数の推定.html"><i class="fa fa-check"></i><b>5</b> 予測関数の推定</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="予測関数の推定.html"><a href="予測関数の推定.html#データの導入"><i class="fa fa-check"></i><b>5.1</b> データの導入</a></li>
+<li class="chapter" data-level="5.2" data-path="予測関数の推定.html"><a href="予測関数の推定.html#データ分割"><i class="fa fa-check"></i><b>5.2</b> データ分割</a></li>
+<li class="chapter" data-level="5.3" data-path="予測関数の推定.html"><a href="予測関数の推定.html#ols"><i class="fa fa-check"></i><b>5.3</b> OLS</a></li>
+<li class="chapter" data-level="5.4" data-path="予測関数の推定.html"><a href="予測関数の推定.html#lassoridge"><i class="fa fa-check"></i><b>5.4</b> LASSO/Ridge</a></li>
+<li class="chapter" data-level="5.5" data-path="予測関数の推定.html"><a href="予測関数の推定.html#random-forestbagging"><i class="fa fa-check"></i><b>5.5</b> Random Forest/Bagging</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="単一のパラメータの推定.html"><a href="単一のパラメータの推定.html"><i class="fa fa-check"></i><b>6</b> 単一のパラメータの推定</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="単一のパラメータの推定.html"><a href="単一のパラメータの推定.html#データ"><i class="fa fa-check"></i><b>6.1</b> データ</a></li>
+<li class="chapter" data-level="6.2" data-path="単一のパラメータの推定.html"><a href="単一のパラメータの推定.html#部分線形モデルに基づく推定"><i class="fa fa-check"></i><b>6.2</b> 部分線形モデルに基づく推定</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="単一のパラメータの推定.html"><a href="単一のパラメータの推定.html#ols-by-lm_robust-estimatr"><i class="fa fa-check"></i><b>6.2.1</b> OLS by lm_robust (estimatr)</a></li>
+<li class="chapter" data-level="6.2.2" data-path="単一のパラメータの推定.html"><a href="単一のパラメータの推定.html#ロビンソン変換robinson1988root"><i class="fa fa-check"></i><b>6.2.2</b> ロビンソン変換<span class="citation">(<span>Robinson 1988</span>)</span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Rによる比較・予測・因果推論入門 ver0.1</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="単一のパラメータの推定" class="section level1" number="6">
+<h1><span class="header-section-number">Chapter 6</span> 単一のパラメータの推定</h1>
+<ul>
+<li><p>（条件付き）平均差を推定する。</p></li>
+<li><p>点推定だけでなく、信頼区間も推定する。</p></li>
+</ul>
+<div id="データ" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> データ</h2>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="単一のパラメータの推定.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb24-2"><a href="単一のパラメータの推定.html#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="単一のパラメータの推定.html#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
+<span id="cb24-4"><a href="単一のパラメータの推定.html#cb24-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
+<span id="cb24-5"><a href="単一のパラメータの推定.html#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="単一のパラメータの推定.html#cb24-6" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span></code></pre></div>
+</div>
+<div id="部分線形モデルに基づく推定" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> 部分線形モデルに基づく推定</h2>
+<ul>
+<li>部分線形モデルに関心のあるパラメータを埋め込む</li>
+</ul>
+<p><span class="math display">\[E[Y|D=d,X=x]=\underbrace{\tau}_{Interest\ parameter}\times d+\underbrace{f(x)}_{Nuisance\ function}\]</span></p>
+<div id="ols-by-lm_robust-estimatr" class="section level3" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> OLS by lm_robust (estimatr)</h3>
+<ul>
+<li><p><span class="math inline">\(\tau(x)=\tau,f(x)=\beta_0+\beta_1x_1+...+\beta_Lx_L\)</span>と特定化</p></li>
+<li><p>サンプル内MSEを最大化するように推定</p></li>
+<li><p>robust standard errorを計算するためにestimatrパッケージ<span class="citation">(<a href="references.html#ref-R-estimatr" role="doc-biblioref">Blair et al. 2021</a>)</span>を利用</p></li>
+</ul>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="単一のパラメータの推定.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span></code></pre></div>
+<ul>
+<li>lm_robust関数で推定</li>
+</ul>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="単一のパラメータの推定.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> age <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> region <span class="sc">+</span> afam <span class="sc">+</span> married,</span>
+<span id="cb26-2"><a href="単一のパラメータの推定.html#cb26-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
+<pre><code>##                    Estimate Std. Error    t value     Pr(&gt;|t|)    CI Lower
+## (Intercept)      4.32086605 1.30928537  3.3001713 9.739642e-04  1.75400683
+## insuranceyes     0.96591490 0.24785140  3.8971533 9.877947e-05  0.48000123
+## age              0.04293421 0.15977094  0.2687235 7.881551e-01 -0.27029737
+## gendermale      -0.46726544 0.22050124 -2.1191057 3.413748e-02 -0.89955902
+## school           0.08475793 0.03108035  2.7270588 6.415540e-03  0.02382479
+## income          -0.04678801 0.03712934 -1.2601357 2.076873e-01 -0.11958023
+## employedyes     -0.34186375 0.42407955 -0.8061312 4.202108e-01 -1.17327342
+## regionnortheast  0.34814737 0.30392728  1.1454957 2.520663e-01 -0.24770327
+## regionmidwest   -0.40583622 0.25526934 -1.5898354 1.119439e-01 -0.90629278
+## regionwest       0.57163030 0.30418463  1.8792215 6.028038e-02 -0.02472489
+## afamyes         -0.39294341 0.34701206 -1.1323624 2.575439e-01 -1.07326195
+## marriedyes      -0.29559842 0.23244624 -1.2716851 2.035523e-01 -0.75131020
+##                    CI Upper   DF
+## (Intercept)      6.88772528 4394
+## insuranceyes     1.45182856 4394
+## age              0.35616578 4394
+## gendermale      -0.03497187 4394
+## school           0.14569108 4394
+## income           0.02600421 4394
+## employedyes      0.48954591 4394
+## regionnortheast  0.94399802 4394
+## regionmidwest    0.09462034 4394
+## regionwest       1.16798549 4394
+## afamyes          0.28737512 4394
+## marriedyes       0.16011336 4394</code></pre>
+<div id="発展推計結果表" class="section level4 unnumbered">
+<h4>発展:推計結果表</h4>
+<ul>
+<li><p>tidy関数により推定結果data.frameに変化することで、kable関数(knitrパッケージ)による推計結果表の整形、geom_pointrange関数による可視化が可能</p></li>
+<li><p>点推定値(estimate)、標準誤差(std.error)のみを残した推計結果表</p></li>
+</ul>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="単一のパラメータの推定.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb28-2"><a href="単一のパラメータの推定.html#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb28-3"><a href="単一のパラメータの推定.html#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="単一のパラメータの推定.html#cb28-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> </span>
+<span id="cb28-5"><a href="単一のパラメータの推定.html#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> age <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> region <span class="sc">+</span> afam <span class="sc">+</span> married,</span>
+<span id="cb28-6"><a href="単一のパラメータの推定.html#cb28-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw)</span>
+<span id="cb28-7"><a href="単一のパラメータの推定.html#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="単一のパラメータの推定.html#cb28-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
+<span id="cb28-9"><a href="単一のパラメータの推定.html#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="単一のパラメータの推定.html#cb28-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">select</span>(fit, term, estimate, std.error)</span>
+<span id="cb28-11"><a href="単一のパラメータの推定.html#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-12"><a href="単一のパラメータの推定.html#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">4.32</td>
+<td align="right">1.31</td>
+</tr>
+<tr class="even">
+<td align="left">insuranceyes</td>
+<td align="right">0.97</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">age</td>
+<td align="right">0.04</td>
+<td align="right">0.16</td>
+</tr>
+<tr class="even">
+<td align="left">gendermale</td>
+<td align="right">-0.47</td>
+<td align="right">0.22</td>
+</tr>
+<tr class="odd">
+<td align="left">school</td>
+<td align="right">0.08</td>
+<td align="right">0.03</td>
+</tr>
+<tr class="even">
+<td align="left">income</td>
+<td align="right">-0.05</td>
+<td align="right">0.04</td>
+</tr>
+<tr class="odd">
+<td align="left">employedyes</td>
+<td align="right">-0.34</td>
+<td align="right">0.42</td>
+</tr>
+<tr class="even">
+<td align="left">regionnortheast</td>
+<td align="right">0.35</td>
+<td align="right">0.30</td>
+</tr>
+<tr class="odd">
+<td align="left">regionmidwest</td>
+<td align="right">-0.41</td>
+<td align="right">0.26</td>
+</tr>
+<tr class="even">
+<td align="left">regionwest</td>
+<td align="right">0.57</td>
+<td align="right">0.30</td>
+</tr>
+<tr class="odd">
+<td align="left">afamyes</td>
+<td align="right">-0.39</td>
+<td align="right">0.35</td>
+</tr>
+<tr class="even">
+<td align="left">marriedyes</td>
+<td align="right">-0.30</td>
+<td align="right">0.23</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="単一のパラメータの推定.html#cb29-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
+<span id="cb29-2"><a href="単一のパラメータの推定.html#cb29-2" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">==</span> <span class="st">&quot;insuranceyes&quot;</span>)</span>
+<span id="cb29-3"><a href="単一のパラメータの推定.html#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">insuranceyes</td>
+<td align="right">0.97</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="発展dot-and-whisker-plotによる可視化" class="section level4 unnumbered">
+<h4>発展:Dot-and-Whisker plotによる可視化</h4>
+<ul>
+<li>Dot-and-Whisker図により点推定量と信頼区間を可視化</li>
+</ul>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="単一のパラメータの推定.html#cb30-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> </span>
+<span id="cb30-2"><a href="単一のパラメータの推定.html#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> age <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> region <span class="sc">+</span> afam <span class="sc">+</span> married,</span>
+<span id="cb30-3"><a href="単一のパラメータの推定.html#cb30-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw)</span>
+<span id="cb30-4"><a href="単一のパラメータの推定.html#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="単一のパラメータの推定.html#cb30-5" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
+<span id="cb30-6"><a href="単一のパラメータの推定.html#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="単一のパラメータの推定.html#cb30-7" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
+<span id="cb30-8"><a href="単一のパラメータの推定.html#cb30-8" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">!=</span> <span class="st">&quot;(Intercept)&quot;</span>)</span>
+<span id="cb30-9"><a href="単一のパラメータの推定.html#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="単一のパラメータの推定.html#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fit, <span class="fu">aes</span>(<span class="at">y =</span> term,</span>
+<span id="cb30-11"><a href="単一のパラメータの推定.html#cb30-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> estimate,</span>
+<span id="cb30-12"><a href="単一のパラメータの推定.html#cb30-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low,</span>
+<span id="cb30-13"><a href="単一のパラメータの推定.html#cb30-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb30-14"><a href="単一のパラメータの推定.html#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>()</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="単一のパラメータの推定.html#cb31-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
+<span id="cb31-2"><a href="単一のパラメータの推定.html#cb31-2" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">==</span> <span class="st">&quot;insuranceyes&quot;</span>)</span>
+<span id="cb31-3"><a href="単一のパラメータの推定.html#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="単一のパラメータの推定.html#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fit, <span class="fu">aes</span>(<span class="at">y =</span> term,</span>
+<span id="cb31-5"><a href="単一のパラメータの推定.html#cb31-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> estimate,</span>
+<span id="cb31-6"><a href="単一のパラメータの推定.html#cb31-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low,</span>
+<span id="cb31-7"><a href="単一のパラメータの推定.html#cb31-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb31-8"><a href="単一のパラメータの推定.html#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>() <span class="sc">+</span></span>
+<span id="cb31-9"><a href="単一のパラメータの推定.html#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+</div>
+</div>
+<div id="ロビンソン変換robinson1988root" class="section level3" number="6.2.2">
+<h3><span class="header-section-number">6.2.2</span> ロビンソン変換<span class="citation">(<a href="references.html#ref-robinson1988root" role="doc-biblioref">Robinson 1988</a>)</span></h3>
+<ul>
+<li>部分線形モデルをロビンソン変換<span class="citation">(<a href="references.html#ref-robinson1988root" role="doc-biblioref">Robinson 1988</a>)</span></li>
+</ul>
+<p><span class="math display">\[Y_i-\underbrace{E[Y_i|X_i]}_{Nuisance\ term}=\tau\times [D_i-\underbrace{E[D_i|X_i]}_{Nuisance\ term}]+u_i\]</span></p>
+<ul>
+<li><p><span class="math inline">\(E[Y_i|X_i],E[D_i|X_i]\)</span>を予測関数として推定し、予測誤差間を単回帰すればよい</p></li>
+<li><p>実際には<span class="math inline">\(E[Y_i|X_i],E[D_i|X_i]\)</span>は未知の関数なので何らかの方法で推定する必要がある。関数の推定なので予測の手法が適用できる。</p></li>
+</ul>
+<div id="double-selection-rlassoeffect-hdm" class="section level4" number="6.2.2.1">
+<h4><span class="header-section-number">6.2.2.1</span> Double selection: rlassoEffect (hdm)</h4>
+<ul>
+<li><p>2重選択法<span class="citation">(<a href="references.html#ref-belloni2014inference" role="doc-biblioref">Belloni, Chernozhukov, and Hansen 2014</a>)</span>を紹介</p></li>
+<li><p>LASSOにより<span class="math inline">\(Y_i,D_i\)</span>の両方あるいはどちらか一方を予測する上でrelevantな<span class="math inline">\(X^c\)</span>を特定しコントロールする</p>
+<ul>
+<li><span class="math inline">\(Y_i,D_i\)</span>どちらの予測にもrelevantではない変数は除外する</li>
+</ul></li>
+<li><p>hdmパッケージ<span class="citation">(<a href="references.html#ref-R-hdm" role="doc-biblioref">Spindler, Chernozhukov, and Hansen 2019</a>)</span>を利用</p></li>
+</ul>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="単一のパラメータの推定.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdm)</span>
+<span id="cb32-2"><a href="単一のパラメータの推定.html#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="単一のパラメータの推定.html#cb32-3" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>visits</span>
+<span id="cb32-4"><a href="単一のパラメータの推定.html#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="単一のパラメータの推定.html#cb32-5" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">if_else</span>(raw<span class="sc">$</span>insurance <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb32-6"><a href="単一のパラメータの推定.html#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="単一のパラメータの推定.html#cb32-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> age <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> region <span class="sc">+</span> afam <span class="sc">+</span> married,</span>
+<span id="cb32-8"><a href="単一のパラメータの推定.html#cb32-8" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
+<span id="cb32-9"><a href="単一のパラメータの推定.html#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="単一のパラメータの推定.html#cb32-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
+<span id="cb32-11"><a href="単一のパラメータの推定.html#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rlassoEffect</span>(<span class="at">x =</span> X,</span>
+<span id="cb32-12"><a href="単一のパラメータの推定.html#cb32-12" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> Y,</span>
+<span id="cb32-13"><a href="単一のパラメータの推定.html#cb32-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">d =</span> D,</span>
+<span id="cb32-14"><a href="単一のパラメータの推定.html#cb32-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">method =</span> <span class="st">&quot;double selection&quot;</span>)</span></code></pre></div>
+<ul>
+<li>推定結果</li>
+</ul>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="単一のパラメータの推定.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<pre><code>## [1] &quot;Estimates and significance testing of the effect of target variables&quot;
+##    Estimate. Std. Error t value Pr(&gt;|t|)    
+## d1    0.9597     0.2480    3.87 0.000109 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<ul>
+<li>選択されたコントロール変数</li>
+</ul>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="単一のパラメータの推定.html#cb35-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>selection.index</span></code></pre></div>
+<pre><code>##             age    genderfemale      gendermale          school          income 
+##           FALSE           FALSE           FALSE            TRUE            TRUE 
+##     employedyes regionnortheast   regionmidwest      regionwest         afamyes 
+##           FALSE           FALSE            TRUE           FALSE            TRUE 
+##      marriedyes 
+##            TRUE</code></pre>
+</div>
+<div id="double-machine-learning-doubleml" class="section level4" number="6.2.2.2">
+<h4><span class="header-section-number">6.2.2.2</span> Double Machine Learning (DoubleML)</h4>
+<ul>
+<li><p>Double Machine Learning法<span class="citation">(<a href="references.html#ref-chernozhukov2018double" role="doc-biblioref">Chernozhukov et al. 2018</a>)</span>を紹介</p></li>
+<li><p>なんらかの方法（例、OLS、ランダムフォレスト、LASSO）で<span class="math inline">\(E[Y|X],E[D|X]\)</span>の予測関数<span class="math inline">\(f_Y(X),f_D(X)\)</span>を推定し、予測誤差を単回帰</p></li>
+<li><p>DoubleMLパッケージ<span class="citation">(<a href="references.html#ref-R-DoubleML" role="doc-biblioref">Bach et al. 2021</a>)</span>を利用</p></li>
+</ul>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="単一のパラメータの推定.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoubleML)</span>
+<span id="cb37-2"><a href="単一のパラメータの推定.html#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3)</span>
+<span id="cb37-3"><a href="単一のパラメータの推定.html#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3learners)</span>
+<span id="cb37-4"><a href="単一のパラメータの推定.html#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb37-5"><a href="単一のパラメータの推定.html#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="単一のパラメータの推定.html#cb37-6" aria-hidden="true" tabindex="-1"></a>learner <span class="ot">&lt;-</span> </span>
+<span id="cb37-7"><a href="単一のパラメータの推定.html#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lrn</span>(<span class="st">&quot;regr.ranger&quot;</span>, </span>
+<span id="cb37-8"><a href="単一のパラメータの推定.html#cb37-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">num.trees =</span> <span class="dv">100</span>) <span class="co"># Require bigger num.trees in practice</span></span>
+<span id="cb37-9"><a href="単一のパラメータの推定.html#cb37-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-10"><a href="単一のパラメータの推定.html#cb37-10" aria-hidden="true" tabindex="-1"></a>ml_g <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
+<span id="cb37-11"><a href="単一のパラメータの推定.html#cb37-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-12"><a href="単一のパラメータの推定.html#cb37-12" aria-hidden="true" tabindex="-1"></a>ml_m <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
+<span id="cb37-13"><a href="単一のパラメータの推定.html#cb37-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-14"><a href="単一のパラメータの推定.html#cb37-14" aria-hidden="true" tabindex="-1"></a>obj_dml_data <span class="ot">&lt;-</span> </span>
+<span id="cb37-15"><a href="単一のパラメータの推定.html#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">double_ml_data_from_matrix</span>(<span class="at">X =</span> X,</span>
+<span id="cb37-16"><a href="単一のパラメータの推定.html#cb37-16" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> Y,</span>
+<span id="cb37-17"><a href="単一のパラメータの推定.html#cb37-17" aria-hidden="true" tabindex="-1"></a>                             <span class="at">d =</span> D)</span>
+<span id="cb37-18"><a href="単一のパラメータの推定.html#cb37-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-19"><a href="単一のパラメータの推定.html#cb37-19" aria-hidden="true" tabindex="-1"></a>dml_plr_obj <span class="ot">&lt;-</span> </span>
+<span id="cb37-20"><a href="単一のパラメータの推定.html#cb37-20" aria-hidden="true" tabindex="-1"></a>  DoubleMLPLR<span class="sc">$</span><span class="fu">new</span>(obj_dml_data, </span>
+<span id="cb37-21"><a href="単一のパラメータの推定.html#cb37-21" aria-hidden="true" tabindex="-1"></a>                  ml_g, </span>
+<span id="cb37-22"><a href="単一のパラメータの推定.html#cb37-22" aria-hidden="true" tabindex="-1"></a>                  ml_m, </span>
+<span id="cb37-23"><a href="単一のパラメータの推定.html#cb37-23" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dml_procedure=</span><span class="st">&quot;dml1&quot;</span>, </span>
+<span id="cb37-24"><a href="単一のパラメータの推定.html#cb37-24" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_rep =</span> <span class="dv">3</span>)</span>
+<span id="cb37-25"><a href="単一のパラメータの推定.html#cb37-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-26"><a href="単一のパラメータの推定.html#cb37-26" aria-hidden="true" tabindex="-1"></a>dml_plr_obj<span class="sc">$</span><span class="fu">fit</span>()</span></code></pre></div>
+<pre><code>## INFO  [15:45:10.943] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [15:45:11.777] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [15:45:11.986] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [15:45:12.190] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [15:45:12.391] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [15:45:12.978] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [15:45:13.161] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [15:45:13.326] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [15:45:13.504] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [15:45:13.679] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [15:45:14.110] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [15:45:14.298] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [15:45:14.494] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [15:45:14.694] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [15:45:14.884] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [15:45:15.164] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [15:45:15.510] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [15:45:15.688] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [15:45:15.860] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [15:45:16.030] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [15:45:16.271] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [15:45:16.476] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [15:45:16.681] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [15:45:16.872] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [15:45:17.069] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [15:45:17.328] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [15:45:17.500] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [15:45:17.676] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [15:45:17.853] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [15:45:18.024] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5)</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="単一のパラメータの推定.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dml_plr_obj)</span></code></pre></div>
+<pre><code>## ================= DoubleMLPLR Object ==================
+## 
+## 
+## ------------------ Data summary      ------------------
+## Outcome variable: y
+## Treatment variable(s): d
+## Covariates: X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11
+## Instrument(s): 
+## No. Observations: 4406
+## 
+## ------------------ Score &amp; algorithm ------------------
+## Score function: partialling out
+## DML algorithm: dml1
+## 
+## ------------------ Machine learner   ------------------
+## ml_g: regr.ranger
+## ml_m: regr.ranger
+## 
+## ------------------ Resampling        ------------------
+## No. folds: 5
+## No. repeated sample splits: 3
+## Apply cross-fitting: TRUE
+## 
+## ------------------ Fit summary       ------------------
+##  [1] &quot;Estimates and significance testing of the effect of target variables&quot;
+##   Estimate. Std. Error t value Pr(&gt;|t|)    
+## d    1.2198     0.2569   4.747 2.06e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="予測関数の推定.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["R_book.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
