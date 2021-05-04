@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 単一のパラメータの推定 | Rによる比較・予測・因果推論入門 ver0.1</title>
+  <title>Chapter 6 Constant parameterの推定 | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 単一のパラメータの推定 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:title" content="Chapter 6 Constant parameterの推定 | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 単一のパラメータの推定 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta name="twitter:title" content="Chapter 6 Constant parameterの推定 | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-05-04" />
+<meta name="date" content="2021-05-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -135,15 +135,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>はじめに</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 準備</a></li>
-<li class="chapter" data-level="2" data-path="問題意識.html"><a href="問題意識.html"><i class="fa fa-check"></i><b>2</b> 問題意識</a>
+<li class="chapter" data-level="2" data-path="目標.html"><a href="目標.html"><i class="fa fa-check"></i><b>2</b> 目標</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="問題意識.html"><a href="問題意識.html#予測"><i class="fa fa-check"></i><b>2.1</b> 予測</a>
+<li class="chapter" data-level="2.1" data-path="目標.html"><a href="目標.html#予測"><i class="fa fa-check"></i><b>2.1</b> 予測</a>
 <ul>
-<li class="chapter" data-level="2.1.1" data-path="問題意識.html"><a href="問題意識.html#損失関数"><i class="fa fa-check"></i><b>2.1.1</b> 損失関数</a></li>
-<li class="chapter" data-level="2.1.2" data-path="問題意識.html"><a href="問題意識.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>2.1.2</b> Bias-Variance tradeoff</a></li>
+<li class="chapter" data-level="2.1.1" data-path="目標.html"><a href="目標.html#問題設定"><i class="fa fa-check"></i><b>2.1.1</b> 問題設定</a></li>
+<li class="chapter" data-level="2.1.2" data-path="目標.html"><a href="目標.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>2.1.2</b> Bias-Variance tradeoff</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="問題意識.html"><a href="問題意識.html#比較"><i class="fa fa-check"></i><b>2.2</b> 比較</a></li>
-<li class="chapter" data-level="2.3" data-path="問題意識.html"><a href="問題意識.html#因果効果"><i class="fa fa-check"></i><b>2.3</b> 因果効果</a></li>
+<li class="chapter" data-level="2.2" data-path="目標.html"><a href="目標.html#比較"><i class="fa fa-check"></i><b>2.2</b> 比較</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="目標.html"><a href="目標.html#問題設定-1"><i class="fa fa-check"></i><b>2.2.1</b> 問題設定</a></li>
+<li class="chapter" data-level="2.2.2" data-path="目標.html"><a href="目標.html#high-dimentional-x"><i class="fa fa-check"></i><b>2.2.2</b> High-dimentional X</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="目標.html"><a href="目標.html#因果効果"><i class="fa fa-check"></i><b>2.3</b> 因果効果</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="目標.html"><a href="目標.html#問題設定-2"><i class="fa fa-check"></i><b>2.3.1</b> 問題設定</a></li>
+<li class="chapter" data-level="2.3.2" data-path="目標.html"><a href="目標.html#識別の問題"><i class="fa fa-check"></i><b>2.3.2</b> 識別の問題</a></li>
+<li class="chapter" data-level="2.3.3" data-path="目標.html"><a href="目標.html#推定の問題"><i class="fa fa-check"></i><b>2.3.3</b> 推定の問題</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>3</b> データ整備</a>
 <ul>
@@ -173,7 +182,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.4" data-path="prediction.html"><a href="prediction.html#lassoridge"><i class="fa fa-check"></i><b>5.4</b> LASSO/Ridge</a></li>
 <li class="chapter" data-level="5.5" data-path="prediction.html"><a href="prediction.html#random-forestbagging"><i class="fa fa-check"></i><b>5.5</b> Random Forest/Bagging</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="unique.html"><a href="unique.html"><i class="fa fa-check"></i><b>6</b> 単一のパラメータの推定</a>
+<li class="chapter" data-level="6" data-path="unique.html"><a href="unique.html"><i class="fa fa-check"></i><b>6</b> Constant parameterの推定</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="unique.html"><a href="unique.html#データ"><i class="fa fa-check"></i><b>6.1</b> データ</a></li>
 <li class="chapter" data-level="6.2" data-path="unique.html"><a href="unique.html#部分線形モデルに基づく推定"><i class="fa fa-check"></i><b>6.2</b> 部分線形モデルに基づく推定</a>
@@ -204,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="unique" class="section level1" number="6">
-<h1><span class="header-section-number">Chapter 6</span> 単一のパラメータの推定</h1>
+<h1><span class="header-section-number">Chapter 6</span> Constant parameterの推定</h1>
 <ul>
 <li><p>（条件付き）平均差を推定する。</p></li>
 <li><p>点推定だけでなく、信頼区間も推定する。</p></li>
@@ -491,36 +500,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb37-24"><a href="unique.html#cb37-24" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_rep =</span> <span class="dv">3</span>)</span>
 <span id="cb37-25"><a href="unique.html#cb37-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-26"><a href="unique.html#cb37-26" aria-hidden="true" tabindex="-1"></a>dml_plr_obj<span class="sc">$</span><span class="fu">fit</span>()</span></code></pre></div>
-<pre><code>## INFO  [23:52:54.525] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [23:52:55.759] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [23:52:56.057] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [23:52:56.386] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [23:52:56.680] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [23:52:57.555] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
-## INFO  [23:52:57.862] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [23:52:58.132] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
-## INFO  [23:52:58.412] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [23:52:58.687] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [23:52:59.236] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [23:52:59.499] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [23:52:59.742] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [23:52:59.994] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [23:53:00.246] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [23:53:00.582] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [23:53:00.786] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [23:53:01.002] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [23:53:01.212] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
-## INFO  [23:53:01.432] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
-## INFO  [23:53:01.714] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [23:53:01.945] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [23:53:02.164] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [23:53:02.405] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [23:53:02.629] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [23:53:03.113] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [23:53:03.323] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [23:53:03.508] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
-## INFO  [23:53:03.698] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [23:53:03.898] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5)</code></pre>
+<pre><code>## INFO  [03:00:13.251] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [03:00:14.628] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [03:00:14.982] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [03:00:15.337] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [03:00:15.631] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [03:00:16.605] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [03:00:16.881] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [03:00:17.177] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [03:00:17.471] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [03:00:17.760] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [03:00:18.373] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [03:00:18.683] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [03:00:18.980] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [03:00:19.243] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [03:00:19.487] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [03:00:19.820] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [03:00:20.033] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [03:00:20.246] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [03:00:20.449] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [03:00:20.650] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [03:00:20.946] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [03:00:21.210] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [03:00:21.477] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [03:00:21.729] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [03:00:21.978] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [03:00:22.496] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [03:00:22.701] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [03:00:22.941] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [03:00:23.166] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [03:00:23.400] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5)</code></pre>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="unique.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dml_plr_obj)</span></code></pre></div>
 <pre><code>## ================= DoubleMLPLR Object ==================
 ## 
@@ -548,7 +557,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## ------------------ Fit summary       ------------------
 ##  [1] &quot;Estimates and significance testing of the effect of target variables&quot;
 ##   Estimate. Std. Error t value Pr(&gt;|t|)    
-## d    1.1712     0.2634   4.446 8.73e-06 ***
+## d    1.1739     0.2744   4.279 1.88e-05 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 

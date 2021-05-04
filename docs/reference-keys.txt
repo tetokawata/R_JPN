@@ -1,10 +1,15 @@
 intro
-問題意識
+目標
 予測
-損失関数
+問題設定
 bias-variance-tradeoff
 比較
+問題設定-1
+high-dimentional-x
 因果効果
+問題設定-2
+識別の問題
+推定の問題
 データ整備
 新しい変数の作成-mutate-tidyverse
 変数の限定-select-tidyverse

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Rによる比較・予測・因果推論入門 ver0.1</title>
+  <title>Chapter 2 目標 | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:title" content="Chapter 2 目標 | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta name="twitter:title" content="Chapter 2 目標 | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="intro.html"/>
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="データ整備.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -212,33 +212,126 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Rによる比較・予測・因果推論入門 ver0.1</h1>
-<p class="author"><em>川田恵介</em></p>
-<p class="date"><em>2021-05-05</em></p>
+<div id="目標" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> 目標</h1>
+<ul>
+<li><p>経済学におけるデータ分析の大部分は、複数の変数間での関係性の理解・利用を目的とします。</p></li>
+<li><p>ここではある結果変数<span class="math inline">\(Y\)</span>と独立変数（群）<span class="math inline">\(X=X_1,...,X_L\)</span>の関係性に焦点を当てます。</p></li>
+<li><p>より具体的な目標は大きく（予測）<span class="math inline">\(Y\)</span>の予測関数の推定、（比較）異なる<span class="math inline">\(X\)</span>間での<span class="math inline">\(Y\)</span>の比較、（因果効果）<span class="math inline">\(X\)</span>の変化が<span class="math inline">\(Y\)</span>に与える因果効果の推定、に大別できます。</p></li>
+<li><p><span class="math inline">\(Y\)</span>と<span class="math inline">\(X\)</span>がともに観察でき、関心のある母集団からランダムサンプリングされたデータが入手出来ているとします。</p></li>
+</ul>
+<div id="予測" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 予測</h2>
+<ul>
+<li>Chapter <a href="prediction.html#prediction">5</a> の背後にある問題意識・方針を紹介します。</li>
+</ul>
+<div id="問題設定" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> 問題設定</h3>
+<ul>
+<li><p>データと同じ母集団から新しくランダムサンプリングされ、<span class="math inline">\(X\)</span>のみが観察できるサンプルについて<span class="math inline">\(Y\)</span>の値を予測することを目的とします。</p></li>
+<li><p>具体的には、事前に定義する損失関数の期待値を最小化するような、予測関数<span class="math inline">\(f(X)\)</span>の推定をめざします。
+以下ではMean squared error(MSE)を損失関数として用います。
+所与の<span class="math inline">\(f(X)\)</span>、母分布に従う確率変数<span class="math inline">\(Y,X\)</span>についてMSEは以下のように定義されます。</p></li>
+</ul>
+<p><span class="math display">\[MSE = E_{X,Y}[(Y_i-f(X_i))^2]\]</span></p>
+<ul>
+<li>一般にMSEは以下のように書き換えられます。</li>
+</ul>
+<p><span class="math display">\[MSE = \underbrace{E_{X,Y}[(Y_i-\bar{Y}(X_i))^2]}_{Irreducible\ error}+\underbrace{E_{X,Y}[(\bar{Y}(X_i)-f(X_i))^2]}_{Reducible\ error}\]</span>
+ただし<span class="math inline">\(\bar{Y}(X_i)=E[Y_i|X_i]\)</span>。
+上記式から以下が確認できます。</p>
+<ul>
+<li><p>最善の予測関数は条件付き母平均<span class="math inline">\(\bar{Y}(X_i)\)</span>(Reducible error = 0)</p></li>
+<li><p>最善の予測関数のもとでも削減不可能なエラー(Irreducible error)が存在</p></li>
+<li><p>予測関数の推定 <span class="math inline">\(=\)</span> Reducible errorの削減 <span class="math inline">\(=\)</span> 条件付き母平均との乖離(MSE)の削減</p></li>
+</ul>
 </div>
-<div id="はじめに" class="section level1 unnumbered">
-<h1>はじめに</h1>
+<div id="bias-variance-tradeoff" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Bias-Variance tradeoff</h3>
 <ul>
-<li><p>本ページでは、定量的な比較、（反実仮想）因果推定、予測分析をRによって行う方法を紹介します。</p></li>
-<li><p>データインポート、整理、可視化を行う関数群を統合的に提供するtidyverseパッケージ<span class="citation">(<a href="references.html#ref-tidyverse2019" role="doc-biblioref">Wickham et al. 2019</a>)</span>の利用を前提にします。</p></li>
-<li><p>AERパッケージ<span class="citation">(<a href="references.html#ref-AER2008" role="doc-biblioref">Kleiber and Zeileis 2008</a>)</span>に含まれるNMES1988を例として使用します。</p></li>
-<li><p>無料で公開されている有力な参考文献として、以下を推薦します。</p>
+<li><p>実際の<span class="math inline">\(f(X_i)\)</span>はランダムサンプリングされたデータから推定される必要があり、実際には確率分布を持ちます。</p></li>
+<li><p>Reducible errorは一般に以下のように書き換えられます。</p></li>
+</ul>
+<p><span class="math display">\[E_{Y,X,f(X)}[(\bar{Y}(X_i)-f(X_i))^2]\]</span></p>
+<p><span class="math display">\[=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E_{Y,X,f(X)}[(\bar{f}(X_i)-f(X_i))^2]}_{Variance}.\]</span>
+ただし<span class="math inline">\(\bar{f}(X_i)=f(X_i)\)</span>。</p>
 <ul>
-<li><p>機械学習を用いた予測：<span class="citation"><a href="references.html#ref-james2013introduction" role="doc-biblioref">James et al.</a> (<a href="references.html#ref-james2013introduction" role="doc-biblioref">2013</a>)</span> <a href="https://www.statlearning.com/">公開ページ</a></p></li>
-<li><p>日本語によるR入門：<a href="https://www.jaysong.net/RBook/">私たちのR: ベストプラクティスの探究</a></p></li>
-<li><p>tidyverseパッケージの利用： <a href="https://www.tidyverse.org/learn/#books">公式ページ</a></p></li>
+<li><p>上記式は推定される予測関数が平均的にどの程度条件付き母平均を近似できているのか(Biasがどの程度小さいのか)だけでなく、予測関数の分布がどの程度散らばっているのか（VArianceがどの程度大木のか）、についても考慮する必要があることを示しています。</p></li>
+<li><p>母平均<span class="math inline">\(\bar Y(X_i)\)</span>が単純な既知の関数形に従い、かつサンプルサイズが大きい場合、OLS推定された<span class="math inline">\(f(X_i)\)</span>は<span class="math inline">\(Bias=0\)</span>かつ小さいVarianceを達成します。
+しかしながら社会科学における多くの応用においては、<span class="math inline">\(\bar Y(X_i)\)</span>は未知かつ複雑であることが予想され、その複雑さに対してサンプルサイズが小さいことを想定する必要があります。
+このような状況では、OLSやサブサンプル平均により推定された予測モデルは、Bias-Variance tradeoffに直面します。</p>
+<ul>
+<li><p>少ないパラメータ（短い回帰式、少ないサブサンプル分割）を推定する場合、大きなBiasを持つ</p></li>
+<li><p>多くのパラメータ（長い回帰式、多いサブサンプル分割）を推定する場合、大きなVarianceを持つ。</p></li>
 </ul></li>
+<li><p>Bias-variance tradeoffを分析者が解くこと（最善のモデル設定を行うこと）は困難です。Chapter <a href="prediction.html#prediction">5</a> で紹介するLASSO/Ridge/Random Forestなどの手法は、bias-varianceのバランスをよりデータ主導型かつ現実的な計算時間で達成することを目指します。</p></li>
+</ul>
+</div>
+</div>
+<div id="比較" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> 比較</h2>
+<ul>
+<li>Chapter <a href="unique.html#unique">6</a> の背後にある問題意識・方針を紹介します。</li>
+</ul>
+<div id="問題設定-1" class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> 問題設定</h3>
+<ul>
+<li><p>変数<span class="math inline">\(D\)</span>の値が異なる集団間において、結果変数<span class="math inline">\(Y\)</span>の分布がどの程度異なっているのか、推定します。
+その際直接的な関心ではない変数群<span class="math inline">\(X\)</span>は一定であるとします。</p></li>
+<li><p>以下の議論では<span class="math inline">\(Y\)</span>の平均値に焦点を当て、<span class="math inline">\(E[Y|D=d,X]-E[Y|D=d&#39;,X]\)</span>の推定を目指します。
+またこの際に点推定量のみならず、信頼区間の推定も行います。</p></li>
+</ul>
+</div>
+<div id="high-dimentional-x" class="section level3" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> High-dimentional X</h3>
+<ul>
+<li><p>多数の<span class="math inline">\(X\)</span>で条件づける必要がある場合、重回帰やマッチング法などの手法の有効性が失われます。
+これは予測で問題となった大きすぎるvarianceが生じてしまうためです。</p></li>
+<li><p>なお<span class="math inline">\(X\)</span>が少数であったとしても、定式化の自由度（高次項や交差項の導入）を持たせた場合、同様の問題が生じます。</p></li>
+<li><p>この問題を回避するためにChapter <a href="unique.html#unique">6</a> では、LASSOやRandom Forestなどの予測手法の応用を紹介します。</p></li>
+</ul>
+</div>
+</div>
+<div id="因果効果" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> 因果効果</h2>
+<ul>
+<li>引き続きChapter <a href="unique.html#unique">6</a> の背後にある問題意識・方針を紹介します。</li>
+</ul>
+<div id="問題設定-2" class="section level3" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> 問題設定</h3>
+<ul>
+<li>ある集団の変数<span class="math inline">\(D\)</span>を変化させた場合、結果変数<span class="math inline">\(Y\)</span>の分布がどのように変化するのか、因果効果を推定します。</li>
+</ul>
+</div>
+<div id="識別の問題" class="section level3" number="2.3.2">
+<h3><span class="header-section-number">2.3.2</span> 識別の問題</h3>
+<ul>
+<li><p>因果効果を推定する際には、識別条件をまず議論する必要があります。</p>
+<ul>
+<li>識別条件：「仮にサンプルサイズが無限大である」場合、どのような仮定の下で因果効果を推定できるか？</li>
+</ul></li>
+<li><p>本ページでは<span class="math inline">\(D\)</span>の条件付きランダム化（<span class="math inline">\(X\)</span>が均一のグループ内では、<span class="math inline">\(D\)</span>の値がランダムに決定されている）の仮定に基づき議論していきます。
+この仮定のもとで<span class="math inline">\(D\)</span>の因果効果は、<span class="math inline">\(E[Y|D=d,X]-E[Y|D=d&#39;,X]\)</span>によって識別できます。</p></li>
+<li><p>代替的な識別条件も複数存在</p></li>
+</ul>
+</div>
+<div id="推定の問題" class="section level3" number="2.3.3">
+<h3><span class="header-section-number">2.3.3</span> 推定の問題</h3>
+<ul>
+<li>識別条件はしばしば多数の<span class="math inline">\(X\)</span>について、条件づけた平均差の推定を要求されます
+このような状況では比較の問題と同様に、機械学習の応用が有益となります。</li>
 </ul>
 
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="intro.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="データ整備.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
