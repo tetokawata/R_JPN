@@ -104,7 +104,7 @@ ggplot(fit, aes(y = term,
   geom_vline(xintercept = 0)
 ```
 
-### ロビンソン変換[@robinson1988root]
+### ロビンソン変換
 
 - 部分線形モデルをロビンソン変換[@robinson1988root]
 

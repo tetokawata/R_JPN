@@ -179,8 +179,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.1" data-path="prediction.html"><a href="prediction.html#データの導入"><i class="fa fa-check"></i><b>5.1</b> データの導入</a></li>
 <li class="chapter" data-level="5.2" data-path="prediction.html"><a href="prediction.html#データ分割"><i class="fa fa-check"></i><b>5.2</b> データ分割</a></li>
 <li class="chapter" data-level="5.3" data-path="prediction.html"><a href="prediction.html#ols"><i class="fa fa-check"></i><b>5.3</b> OLS</a></li>
-<li class="chapter" data-level="5.4" data-path="prediction.html"><a href="prediction.html#lassoridge"><i class="fa fa-check"></i><b>5.4</b> LASSO/Ridge</a></li>
-<li class="chapter" data-level="5.5" data-path="prediction.html"><a href="prediction.html#random-forestbagging"><i class="fa fa-check"></i><b>5.5</b> Random Forest/Bagging</a></li>
+<li class="chapter" data-level="5.4" data-path="prediction.html"><a href="prediction.html#lasso"><i class="fa fa-check"></i><b>5.4</b> LASSO</a></li>
+<li class="chapter" data-level="5.5" data-path="prediction.html"><a href="prediction.html#rdige"><i class="fa fa-check"></i><b>5.5</b> Rdige</a></li>
+<li class="chapter" data-level="5.6" data-path="prediction.html"><a href="prediction.html#bagging"><i class="fa fa-check"></i><b>5.6</b> Bagging</a></li>
+<li class="chapter" data-level="5.7" data-path="prediction.html"><a href="prediction.html#random-forest"><i class="fa fa-check"></i><b>5.7</b> Random Forest</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="unique.html"><a href="unique.html"><i class="fa fa-check"></i><b>6</b> Constant parameterの推定</a>
 <ul>
@@ -188,7 +190,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.2" data-path="unique.html"><a href="unique.html#部分線形モデルに基づく推定"><i class="fa fa-check"></i><b>6.2</b> 部分線形モデルに基づく推定</a>
 <ul>
 <li class="chapter" data-level="6.2.1" data-path="unique.html"><a href="unique.html#ols-by-lm_robust-estimatr"><i class="fa fa-check"></i><b>6.2.1</b> OLS by lm_robust (estimatr)</a></li>
-<li class="chapter" data-level="6.2.2" data-path="unique.html"><a href="unique.html#ロビンソン変換robinson1988root"><i class="fa fa-check"></i><b>6.2.2</b> ロビンソン変換<span class="citation">(<span>Robinson 1988</span>)</span></a></li>
+<li class="chapter" data-level="6.2.2" data-path="unique.html"><a href="unique.html#ロビンソン変換"><i class="fa fa-check"></i><b>6.2.2</b> ロビンソン変換</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -240,15 +242,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb17-3"><a href="prediction.html#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="prediction.html#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)</span></code></pre></div>
 <pre><code>##     (Intercept)         nvisits         ovisits        novisits       emergency 
-##      2.81870261      0.24358564      0.02001873      0.15720467      0.12497577 
+##      2.11599183      0.26612435      0.07526872      0.11240549      0.13035369 
 ##        hospital      healthpoor healthexcellent         chronic      adllimited 
-##      1.45515845      2.11208033     -1.27757593      0.80234470      0.08612356 
+##      1.37533622      2.06403981     -1.22918752      0.88331150      0.10926354 
 ## regionnortheast   regionmidwest      regionwest             age         afamyes 
-##      0.42870004     -0.33553847      0.15969306     -0.22800239     -0.31504494 
+##      0.60479378     -0.37761662      0.15450166     -0.13075635     -0.38941124 
 ##      gendermale      marriedyes          school          income     employedyes 
-##     -0.44370981     -0.22018099      0.13963340     -0.04002319      0.20915882 
+##     -0.46133687     -0.17833078      0.12743970     -0.02971627      0.52929491 
 ##    insuranceyes     medicaidyes 
-##      1.41257921      1.43541270</code></pre>
+##      1.37693280      1.46379586</code></pre>
 <ul>
 <li>予測値の導出</li>
 </ul>
@@ -257,24 +259,184 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>テストデータへの適合</li>
 </ul>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="prediction.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 37.92364</code></pre>
+<pre><code>## [1] 35.08665</code></pre>
 <ul>
 <li>訓練データへの適合</li>
 </ul>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="prediction.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((raw<span class="sc">$</span>visits <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 37.81695</code></pre>
+<pre><code>## [1] 38.52352</code></pre>
 </div>
-<div id="lassoridge" class="section level2" number="5.4">
-<h2><span class="header-section-number">5.4</span> LASSO/Ridge</h2>
+<div id="lasso" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> LASSO</h2>
 <ul>
 <li>glmentパッケージ<span class="citation">(<a href="references.html#ref-R-glmnet" role="doc-biblioref">Friedman et al. 2021</a>)</span>を利用</li>
 </ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="prediction.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
+<span id="cb24-2"><a href="prediction.html#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="prediction.html#cb24-3" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>visits</span>
+<span id="cb24-4"><a href="prediction.html#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="prediction.html#cb24-5" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(visits <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> .,</span>
+<span id="cb24-6"><a href="prediction.html#cb24-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> raw)</span>
+<span id="cb24-7"><a href="prediction.html#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="prediction.html#cb24-8" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(<span class="at">x =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
+<span id="cb24-9"><a href="prediction.html#cb24-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
+<span id="cb24-10"><a href="prediction.html#cb24-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">alpha =</span> <span class="dv">1</span>)</span>
+<span id="cb24-11"><a href="prediction.html#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="prediction.html#cb24-12" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(<span class="at">x =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
+<span id="cb24-13"><a href="prediction.html#cb24-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
+<span id="cb24-14"><a href="prediction.html#cb24-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="dv">1</span>,</span>
+<span id="cb24-15"><a href="prediction.html#cb24-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">lambda =</span> cv<span class="sc">$</span>lambda.min)</span></code></pre></div>
+<ul>
+<li>予測モデルの確認</li>
+</ul>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="prediction.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)</span></code></pre></div>
+<pre><code>## 23 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                          s0
+## (Intercept)      1.72647011
+## nvisits          0.26148829
+## ovisits          0.06630306
+## novisits         0.10557520
+## emergency        0.10838457
+## hospital         1.36008477
+## healthpoor       1.99053922
+## healthaverage    .         
+## healthexcellent -1.10240377
+## chronic          0.87547893
+## adllimited       0.03391850
+## regionnortheast  0.50268862
+## regionmidwest   -0.34073914
+## regionwest       0.05844919
+## age             -0.05051568
+## afamyes         -0.26262962
+## gendermale      -0.41943384
+## marriedyes      -0.10787744
+## school           0.11844568
+## income          -0.01346280
+## employedyes      0.36940235
+## insuranceyes     1.24031029
+## medicaidyes      1.26632690</code></pre>
+<ul>
+<li>予測値の導出</li>
+</ul>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="prediction.html#cb27-1" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)</span></code></pre></div>
+<ul>
+<li>テストデータへの適合</li>
+</ul>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="prediction.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 34.92133</code></pre>
+<ul>
+<li>訓練データへの適合</li>
+</ul>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="prediction.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 38.54843</code></pre>
 </div>
-<div id="random-forestbagging" class="section level2" number="5.5">
-<h2><span class="header-section-number">5.5</span> Random Forest/Bagging</h2>
+<div id="rdige" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> Rdige</h2>
+<ul>
+<li>引き続きglmentパッケージ<span class="citation">(<a href="references.html#ref-R-glmnet" role="doc-biblioref">Friedman et al. 2021</a>)</span>を利用</li>
+</ul>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="prediction.html#cb32-1" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(<span class="at">x =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
+<span id="cb32-2"><a href="prediction.html#cb32-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
+<span id="cb32-3"><a href="prediction.html#cb32-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">alpha =</span> <span class="dv">0</span>)</span>
+<span id="cb32-4"><a href="prediction.html#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="prediction.html#cb32-5" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(<span class="at">x =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
+<span id="cb32-6"><a href="prediction.html#cb32-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
+<span id="cb32-7"><a href="prediction.html#cb32-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="dv">0</span>,</span>
+<span id="cb32-8"><a href="prediction.html#cb32-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">lambda =</span> cv<span class="sc">$</span>lambda.min)</span></code></pre></div>
+<ul>
+<li>予測モデルの確認</li>
+</ul>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="prediction.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)</span></code></pre></div>
+<pre><code>## 23 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                          s0
+## (Intercept)      2.91334337
+## nvisits          0.23823548
+## ovisits          0.07468668
+## novisits         0.10632749
+## emergency        0.22721378
+## hospital         1.22417925
+## healthpoor       1.56645161
+## healthaverage   -0.38038254
+## healthexcellent -1.49408146
+## chronic          0.79920484
+## adllimited       0.20869689
+## regionnortheast  0.54583525
+## regionmidwest   -0.34259820
+## regionwest       0.16462404
+## age             -0.12216590
+## afamyes         -0.39538494
+## gendermale      -0.41800894
+## marriedyes      -0.15765222
+## school           0.11379541
+## income          -0.02450203
+## employedyes      0.42123793
+## insuranceyes     1.17419208
+## medicaidyes      1.15915382</code></pre>
+<ul>
+<li>予測値の導出</li>
+</ul>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="prediction.html#cb35-1" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)</span></code></pre></div>
+<ul>
+<li>テストデータへの適合</li>
+</ul>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="prediction.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 34.83197</code></pre>
+<ul>
+<li>訓練データへの適合</li>
+</ul>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="prediction.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 38.594</code></pre>
+</div>
+<div id="bagging" class="section level2" number="5.6">
+<h2><span class="header-section-number">5.6</span> Bagging</h2>
 <ul>
 <li>rangerパッケージ<span class="citation">(<a href="references.html#ref-R-ranger" role="doc-biblioref">Wright, Wager, and Probst 2020</a>)</span>を利用</li>
 </ul>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="prediction.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span>
+<span id="cb40-2"><a href="prediction.html#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="prediction.html#cb40-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ranger</span>(<span class="at">x =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
+<span id="cb40-4"><a href="prediction.html#cb40-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
+<span id="cb40-5"><a href="prediction.html#cb40-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">num.trees =</span> <span class="dv">2000</span>,</span>
+<span id="cb40-6"><a href="prediction.html#cb40-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">mtry =</span> <span class="fu">ncol</span>(X))</span></code></pre></div>
+<ul>
+<li>予測値の計算</li>
+</ul>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="prediction.html#cb41-1" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>predictions</span></code></pre></div>
+<ul>
+<li>テストデータへの適合</li>
+</ul>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="prediction.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 35.38</code></pre>
+<ul>
+<li>訓練データへの適合</li>
+</ul>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="prediction.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 9.016629</code></pre>
+</div>
+<div id="random-forest" class="section level2" number="5.7">
+<h2><span class="header-section-number">5.7</span> Random Forest</h2>
+<ul>
+<li>rangerパッケージ<span class="citation">(<a href="references.html#ref-R-ranger" role="doc-biblioref">Wright, Wager, and Probst 2020</a>)</span>を利用</li>
+</ul>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="prediction.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span>
+<span id="cb46-2"><a href="prediction.html#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="prediction.html#cb46-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ranger</span>(<span class="at">x =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
+<span id="cb46-4"><a href="prediction.html#cb46-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
+<span id="cb46-5"><a href="prediction.html#cb46-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">num.trees =</span> <span class="dv">2000</span>)</span></code></pre></div>
+<ul>
+<li>予測値の計算</li>
+</ul>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="prediction.html#cb47-1" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>predictions</span></code></pre></div>
+<ul>
+<li>テストデータへの適合</li>
+</ul>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="prediction.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 32.81325</code></pre>
+<ul>
+<li>訓練データへの適合</li>
+</ul>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="prediction.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 12.8627</code></pre>
 
 </div>
 </div>

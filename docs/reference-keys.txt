@@ -26,12 +26,14 @@ prediction
 データの導入
 データ分割
 ols
-lassoridge
-random-forestbagging
+lasso
+rdige
+bagging
+random-forest
 unique
 データ
 部分線形モデルに基づく推定
 ols-by-lm_robust-estimatr
-ロビンソン変換robinson1988root
+ロビンソン変換
 double-selection-rlassoeffect-hdm
 double-machine-learning-doubleml

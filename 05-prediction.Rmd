@@ -50,11 +50,153 @@ mean((raw$visits - Y.hat)[group == 1]^2)
 mean((raw$visits - Y.hat)[group != 1]^2)
 ```
 
-## LASSO/Ridge
+## LASSO
 
 - glmentパッケージ[@R-glmnet]を利用
 
-## Random Forest/Bagging
+```{r}
+library(glmnet)
+
+Y <- raw$visits
+
+X <- model.matrix(visits ~ -1 + .,
+                  data = raw)
+
+cv <- cv.glmnet(x = X[group != 1,],
+                y = Y[group != 1],
+                alpha = 1)
+
+fit <- glmnet(x = X[group != 1,],
+              y = Y[group != 1],
+              alpha = 1,
+              lambda = cv$lambda.min)
+```
+
+- 予測モデルの確認
+
+```{r}
+coef(fit)
+```
+
+
+- 予測値の導出
+
+```{r}
+Y.hat <- predict(fit,X)
+```
+
+- テストデータへの適合
+
+```{r}
+mean((Y - Y.hat)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((Y - Y.hat)[group != 1]^2)
+```
+
+
+## Rdige
+
+- 引き続きglmentパッケージ[@R-glmnet]を利用
+
+```{r}
+cv <- cv.glmnet(x = X[group != 1,],
+                y = Y[group != 1],
+                alpha = 0)
+
+fit <- glmnet(x = X[group != 1,],
+              y = Y[group != 1],
+              alpha = 0,
+              lambda = cv$lambda.min)
+```
+
+- 予測モデルの確認
+
+```{r}
+coef(fit)
+```
+
+
+- 予測値の導出
+
+```{r}
+Y.hat <- predict(fit,X)
+```
+
+- テストデータへの適合
+
+```{r}
+mean((Y - Y.hat)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((Y - Y.hat)[group != 1]^2)
+```
+
+## Bagging
 
 - rangerパッケージ[@R-ranger]を利用
 
+```{r}
+library(ranger)
+
+fit <- ranger(x = X[group != 1,],
+              y = Y[group != 1],
+              num.trees = 2000,
+              mtry = ncol(X))
+```
+
+- 予測値の計算
+
+```{r}
+Y.hat <- predict(fit,X)$predictions
+```
+
+
+- テストデータへの適合
+
+```{r}
+mean((Y - Y.hat)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((Y - Y.hat)[group != 1]^2)
+```
+
+## Random Forest
+
+- rangerパッケージ[@R-ranger]を利用
+
+```{r}
+library(ranger)
+
+fit <- ranger(x = X[group != 1,],
+              y = Y[group != 1],
+              num.trees = 2000)
+```
+
+- 予測値の計算
+
+```{r}
+Y.hat <- predict(fit,X)$predictions
+```
+
+
+- テストデータへの適合
+
+```{r}
+mean((Y - Y.hat)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((Y - Y.hat)[group != 1]^2)
+```
