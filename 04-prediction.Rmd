@@ -1,18 +1,7 @@
-# 目標
 
-- 経済学におけるデータ分析の大部分は、複数の変数間での関係性の理解・利用を目的とします。
+# 予測 {#prediction}
 
-- ここではある結果変数$Y$と独立変数（群）$X=X_1,...,X_L$の関係性に焦点を当てます。
-
-- より具体的な目標は大きく（予測）$Y$の予測関数の推定、（比較）異なる$X$間での$Y$の比較、（因果効果）$X$の変化が$Y$に与える因果効果の推定、に大別できます。
-
-- $Y$と$X$がともに観察でき、関心のある母集団からランダムサンプリングされたデータが入手出来ているとします。
-
-## 予測
-
-- Chapter \@ref(prediction) の背後にある問題意識・方針を紹介します。
-
-### 問題設定
+## 問題設定
 
 - データと同じ母集団から新しくランダムサンプリングされ、$X$のみが観察できるサンプルについて$Y$の値を予測することを目的とします。
 
@@ -57,52 +46,202 @@ $$=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E
 
 - Bias-variance tradeoffを分析者が解くこと（最善のモデル設定を行うこと）は困難です。Chapter \@ref(prediction) で紹介するLASSO/Ridge/Random Forestなどの手法は、bias-varianceのバランスをよりデータ主導型かつ現実的な計算時間で達成することを目指します。
 
-## 比較
+## データの導入
 
-- Chapter \@ref(unique) の背後にある問題意識・方針を紹介します。
+```{r}
+data("NMES1988",
+     package = "AER")
 
-### 問題設定
+raw <- NMES1988
+```
 
-- 変数$D$の値が異なる集団間において、結果変数$Y$の分布がどの程度異なっているのか、推定します。
-その際直接的な関心ではない変数群$X$は一定であるとします。
+## データ分割
 
-- 以下の議論では$Y$の平均値に焦点を当て、$E[Y|D=d,X]-E[Y|D=d',X]$の推定を目指します。
-またこの際に点推定量のみならず、信頼区間の推定も行います。
+- ここでは5個のデータに分割する。
 
-### High-dimentional X
-
-- 多数の$X$で条件づける必要がある場合、重回帰やマッチング法などの手法の有効性が失われます。
-これは予測で問題となった大きすぎるvarianceが生じてしまうためです。
-
-- なお$X$が少数であったとしても、定式化の自由度（高次項や交差項の導入）を持たせた場合、同様の問題が生じます。
-
-- この問題を回避するためにChapter \@ref(unique) では、LASSOやRandom Forestなどの予測手法の応用を紹介します。
-
-## 因果効果
-
-- 引き続きChapter \@ref(unique) の背後にある問題意識・方針を紹介します。
-
-### 問題設定
-
-- ある集団の変数$D$を変化させた場合、結果変数$Y$の分布がどのように変化するのか、因果効果を推定します。
-
-### 識別の問題
-
-- 因果効果を推定する際には、識別条件をまず議論する必要があります。
-
-  - 識別条件：「仮にサンプルサイズが無限大である」場合、どのような仮定の下で因果効果を推定できるか？
-  
-- 本ページでは$D$の条件付きランダム化（$X$が均一のグループ内では、$D$の値がランダムに決定されている）の仮定に基づき議論していきます。
-この仮定のもとで$D$の因果効果は、$E[Y|D=d,X]-E[Y|D=d',X]$によって識別できます。
-
-- 代替的な識別条件も複数存在
-
-### 推定の問題
-
-- 識別条件はしばしば多数の$X$について、条件づけた平均差の推定を要求されます
-このような状況では比較の問題と同様に、機械学習の応用が有益となります。
+```{r}
+group <- sample(1:5,
+                size = nrow(raw),
+                replace = TRUE)
+```
 
 
+## OLS
+
+- 線形予測関数$f(X)=\beta_0 + \beta_1X_1+...+\beta_LX_L$を仮定し、最小二乗法にて推定する。
+
+```{r}
+fit <- lm(visits ~ .,
+          data = raw[group != 1,])
+
+coef(fit)
+```
+
+- 予測値の導出
+
+```{r}
+Y.hat <- predict(fit,raw)
+```
+
+- テストデータへの適合
+
+```{r}
+mean((raw$visits - Y.hat)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((raw$visits - Y.hat)[group != 1]^2)
+```
+
+## LASSO
+
+- glmentパッケージ[@R-glmnet]を利用
+
+```{r}
+library(glmnet)
+
+Y <- raw$visits
+
+X <- model.matrix(visits ~ -1 + .,
+                  data = raw)
+
+cv <- cv.glmnet(x = X[group != 1,],
+                y = Y[group != 1],
+                alpha = 1)
+
+fit <- glmnet(x = X[group != 1,],
+              y = Y[group != 1],
+              alpha = 1,
+              lambda = cv$lambda.min)
+```
+
+- 予測モデルの確認
+
+```{r}
+coef(fit)
+```
 
 
+- 予測値の導出
 
+```{r}
+Y.hat <- predict(fit,X)
+```
+
+- テストデータへの適合
+
+```{r}
+mean((Y - Y.hat)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((Y - Y.hat)[group != 1]^2)
+```
+
+
+## Rdige
+
+- 引き続きglmentパッケージ[@R-glmnet]を利用
+
+```{r}
+cv <- cv.glmnet(x = X[group != 1,],
+                y = Y[group != 1],
+                alpha = 0)
+
+fit <- glmnet(x = X[group != 1,],
+              y = Y[group != 1],
+              alpha = 0,
+              lambda = cv$lambda.min)
+```
+
+- 予測モデルの確認
+
+```{r}
+coef(fit)
+```
+
+
+- 予測値の導出
+
+```{r}
+Y.hat <- predict(fit,X)
+```
+
+- テストデータへの適合
+
+```{r}
+mean((Y - Y.hat)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((Y - Y.hat)[group != 1]^2)
+```
+
+## Bagging
+
+- rangerパッケージ[@R-ranger]を利用
+
+```{r}
+library(ranger)
+
+fit <- ranger(x = X[group != 1,],
+              y = Y[group != 1],
+              num.trees = 2000,
+              mtry = ncol(X))
+```
+
+- 予測値の計算
+
+```{r}
+Y.hat <- predict(fit,X)$predictions
+```
+
+
+- テストデータへの適合
+
+```{r}
+mean((Y - Y.hat)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((Y - Y.hat)[group != 1]^2)
+```
+
+## Random Forest
+
+- rangerパッケージ[@R-ranger]を利用
+
+```{r}
+library(ranger)
+
+fit <- ranger(x = X[group != 1,],
+              y = Y[group != 1],
+              num.trees = 2000)
+```
+
+- 予測値の計算
+
+```{r}
+Y.hat <- predict(fit,X)$predictions
+```
+
+
+- テストデータへの適合
+
+```{r}
+mean((Y - Y.hat)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((Y - Y.hat)[group != 1]^2)
+```
