@@ -3,6 +3,7 @@ intro
 新しい変数の作成-mutate-tidyverse
 変数の限定-select-tidyverse
 サンプルの除外filter-tidyverse
+記述統計表の作成
 可視化
 y連続xカテゴリ
 ヒストグラム-geom_histogram-tidyverse

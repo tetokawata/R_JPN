@@ -9,13 +9,14 @@ data("NMES1988",
 raw <- NMES1988
 ```
 
+## 新しい変数の作成: mutate (tidyverse)
+
+
 - tidyverseパッケージに含まれるdplyrパッケージ[@R-dplyr]は、有用な関数を提供
 
 ```{r}
 library(tidyverse)
 ```
-
-## 新しい変数の作成: mutate (tidyverse)
 
 - mutate関数の利用
 
@@ -56,5 +57,31 @@ df <- select(raw,
 df <- filter(raw,
              visits >= 5
              )
+```
+
+
+
+## 記述統計表の作成
+
+- 記述統計の作成には多くの有益なパッケージが存在
+
+- ここではgtsummaryを使用
+
+```{r}
+library(gtsummary)
+```
+
+- select関数で必要な変数(health, visits, income, insurance)を抜き出し、insuranceごとに連続変数については中央値、カテゴリ変数については頻度を記述
+
+```{r}
+descriptive <-
+  select(raw,
+         insurance,
+         health,
+         visits,
+         income)
+
+tbl_summary(descriptive,
+            by = insurance)
 ```
 
