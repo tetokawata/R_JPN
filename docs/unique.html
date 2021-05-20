@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-05-19" />
+<meta name="date" content="2021-05-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -166,7 +166,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3" data-path="prediction.html"><a href="prediction.html#データ分割"><i class="fa fa-check"></i><b>4.3</b> データ分割</a></li>
 <li class="chapter" data-level="4.4" data-path="prediction.html"><a href="prediction.html#ols"><i class="fa fa-check"></i><b>4.4</b> OLS</a></li>
 <li class="chapter" data-level="4.5" data-path="prediction.html"><a href="prediction.html#lasso"><i class="fa fa-check"></i><b>4.5</b> LASSO</a></li>
-<li class="chapter" data-level="4.6" data-path="prediction.html"><a href="prediction.html#rdige"><i class="fa fa-check"></i><b>4.6</b> Rdige</a></li>
+<li class="chapter" data-level="4.6" data-path="prediction.html"><a href="prediction.html#rdige"><i class="fa fa-check"></i><b>4.6</b> Rdige</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="prediction.html"><a href="prediction.html#no-penalty"><i class="fa fa-check"></i><b>4.6.1</b> No penalty</a></li>
+</ul></li>
 <li class="chapter" data-level="4.7" data-path="prediction.html"><a href="prediction.html#bagging"><i class="fa fa-check"></i><b>4.7</b> Bagging</a></li>
 <li class="chapter" data-level="4.8" data-path="prediction.html"><a href="prediction.html#random-forest"><i class="fa fa-check"></i><b>4.8</b> Random Forest</a></li>
 </ul></li>
@@ -222,12 +225,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <div id="データ" class="section level2" number="6.1">
 <h2><span class="header-section-number">6.1</span> データ</h2>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="unique.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb54-2"><a href="unique.html#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-3"><a href="unique.html#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
-<span id="cb54-4"><a href="unique.html#cb54-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
-<span id="cb54-5"><a href="unique.html#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-6"><a href="unique.html#cb54-6" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="unique.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb62-2"><a href="unique.html#cb62-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-3"><a href="unique.html#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;close_college&quot;</span>,</span>
+<span id="cb62-4"><a href="unique.html#cb62-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;causaldata&quot;</span>)</span>
+<span id="cb62-5"><a href="unique.html#cb62-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-6"><a href="unique.html#cb62-6" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(close_college)</span>
+<span id="cb62-7"><a href="unique.html#cb62-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-8"><a href="unique.html#cb62-8" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
+<span id="cb62-9"><a href="unique.html#cb62-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">college =</span> <span class="fu">if_else</span>(educ <span class="sc">&gt;=</span> <span class="dv">16</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb62-10"><a href="unique.html#cb62-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-11"><a href="unique.html#cb62-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">111</span>)</span></code></pre></div>
 </div>
 <div id="部分線形モデルに基づく推定" class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> 部分線形モデルに基づく推定</h2>
@@ -242,56 +250,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>サンプル内MSEを最大化するように推定</p></li>
 <li><p>robust standard errorを計算するためにestimatrパッケージ<span class="citation">(<a href="references.html#ref-R-estimatr" role="doc-biblioref">Blair et al. 2021</a>)</span>を利用</p></li>
 </ul>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="unique.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="unique.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span></code></pre></div>
 <ul>
 <li>lm_robust関数で推定</li>
 </ul>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="unique.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> age <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> region <span class="sc">+</span> afam <span class="sc">+</span> married,</span>
-<span id="cb56-2"><a href="unique.html#cb56-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
-<pre><code>##                    Estimate Std. Error    t value     Pr(&gt;|t|)    CI Lower
-## (Intercept)      4.32086605 1.30928537  3.3001713 9.739642e-04  1.75400683
-## insuranceyes     0.96591490 0.24785140  3.8971533 9.877947e-05  0.48000123
-## age              0.04293421 0.15977094  0.2687235 7.881551e-01 -0.27029737
-## gendermale      -0.46726544 0.22050124 -2.1191057 3.413748e-02 -0.89955902
-## school           0.08475793 0.03108035  2.7270588 6.415540e-03  0.02382479
-## income          -0.04678801 0.03712934 -1.2601357 2.076873e-01 -0.11958023
-## employedyes     -0.34186375 0.42407955 -0.8061312 4.202108e-01 -1.17327342
-## regionnortheast  0.34814737 0.30392728  1.1454957 2.520663e-01 -0.24770327
-## regionmidwest   -0.40583622 0.25526934 -1.5898354 1.119439e-01 -0.90629278
-## regionwest       0.57163030 0.30418463  1.8792215 6.028038e-02 -0.02472489
-## afamyes         -0.39294341 0.34701206 -1.1323624 2.575439e-01 -1.07326195
-## marriedyes      -0.29559842 0.23244624 -1.2716851 2.035523e-01 -0.75131020
-##                    CI Upper   DF
-## (Intercept)      6.88772528 4394
-## insuranceyes     1.45182856 4394
-## age              0.35616578 4394
-## gendermale      -0.03497187 4394
-## school           0.14569108 4394
-## income           0.02600421 4394
-## employedyes      0.48954591 4394
-## regionnortheast  0.94399802 4394
-## regionmidwest    0.09462034 4394
-## regionwest       1.16798549 4394
-## afamyes          0.28737512 4394
-## marriedyes       0.16011336 4394</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="unique.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(lwage <span class="sc">~</span> college <span class="sc">+</span> nearc4 <span class="sc">+</span> black,</span>
+<span id="cb64-2"><a href="unique.html#cb64-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
+<pre><code>##               Estimate Std. Error    t value     Pr(&gt;|t|)    CI Lower
+## (Intercept)  6.1952536 0.01454122 426.047636 0.000000e+00  6.16674178
+## college      0.1695215 0.01767448   9.591315 1.762574e-21  0.13486616
+## nearc4       0.1240253 0.01582735   7.836142 6.399135e-15  0.09299177
+## black       -0.2744157 0.01771864 -15.487400 4.169409e-52 -0.30915760
+##               CI Upper   DF
+## (Intercept)  6.2237653 2999
+## college      0.2041768 2999
+## nearc4       0.1550589 2999
+## black       -0.2396738 2999</code></pre>
 <div id="発展推計結果表" class="section level4 unnumbered">
 <h4>発展:推計結果表</h4>
 <ul>
 <li><p>tidy関数により推定結果data.frameに変化することで、kable関数(knitrパッケージ)による推計結果表の整形、geom_pointrange関数による可視化が可能</p></li>
 <li><p>点推定値(estimate)、標準誤差(std.error)のみを残した推計結果表</p></li>
 </ul>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="unique.html#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb58-2"><a href="unique.html#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb58-3"><a href="unique.html#cb58-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-4"><a href="unique.html#cb58-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> </span>
-<span id="cb58-5"><a href="unique.html#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> age <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> region <span class="sc">+</span> afam <span class="sc">+</span> married,</span>
-<span id="cb58-6"><a href="unique.html#cb58-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw)</span>
-<span id="cb58-7"><a href="unique.html#cb58-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-8"><a href="unique.html#cb58-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
-<span id="cb58-9"><a href="unique.html#cb58-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-10"><a href="unique.html#cb58-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">select</span>(fit, term, estimate, std.error)</span>
-<span id="cb58-11"><a href="unique.html#cb58-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-12"><a href="unique.html#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="unique.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb66-2"><a href="unique.html#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb66-3"><a href="unique.html#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="unique.html#cb66-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> </span>
+<span id="cb66-5"><a href="unique.html#cb66-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(lwage <span class="sc">~</span> college <span class="sc">+</span> nearc4 <span class="sc">+</span> black,</span>
+<span id="cb66-6"><a href="unique.html#cb66-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw)</span>
+<span id="cb66-7"><a href="unique.html#cb66-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-8"><a href="unique.html#cb66-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
+<span id="cb66-9"><a href="unique.html#cb66-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-10"><a href="unique.html#cb66-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">select</span>(fit, term, estimate, std.error)</span>
+<span id="cb66-11"><a href="unique.html#cb66-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-12"><a href="unique.html#cb66-12" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -303,69 +295,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">4.32</td>
-<td align="right">1.31</td>
+<td align="right">6.20</td>
+<td align="right">0.01</td>
 </tr>
 <tr class="even">
-<td align="left">insuranceyes</td>
-<td align="right">0.97</td>
-<td align="right">0.25</td>
+<td align="left">college</td>
+<td align="right">0.17</td>
+<td align="right">0.02</td>
 </tr>
 <tr class="odd">
-<td align="left">age</td>
-<td align="right">0.04</td>
-<td align="right">0.16</td>
+<td align="left">nearc4</td>
+<td align="right">0.12</td>
+<td align="right">0.02</td>
 </tr>
 <tr class="even">
-<td align="left">gendermale</td>
-<td align="right">-0.47</td>
-<td align="right">0.22</td>
-</tr>
-<tr class="odd">
-<td align="left">school</td>
-<td align="right">0.08</td>
-<td align="right">0.03</td>
-</tr>
-<tr class="even">
-<td align="left">income</td>
-<td align="right">-0.05</td>
-<td align="right">0.04</td>
-</tr>
-<tr class="odd">
-<td align="left">employedyes</td>
-<td align="right">-0.34</td>
-<td align="right">0.42</td>
-</tr>
-<tr class="even">
-<td align="left">regionnortheast</td>
-<td align="right">0.35</td>
-<td align="right">0.30</td>
-</tr>
-<tr class="odd">
-<td align="left">regionmidwest</td>
-<td align="right">-0.41</td>
-<td align="right">0.26</td>
-</tr>
-<tr class="even">
-<td align="left">regionwest</td>
-<td align="right">0.57</td>
-<td align="right">0.30</td>
-</tr>
-<tr class="odd">
-<td align="left">afamyes</td>
-<td align="right">-0.39</td>
-<td align="right">0.35</td>
-</tr>
-<tr class="even">
-<td align="left">marriedyes</td>
-<td align="right">-0.30</td>
-<td align="right">0.23</td>
+<td align="left">black</td>
+<td align="right">-0.27</td>
+<td align="right">0.02</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="unique.html#cb59-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
-<span id="cb59-2"><a href="unique.html#cb59-2" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">==</span> <span class="st">&quot;insuranceyes&quot;</span>)</span>
-<span id="cb59-3"><a href="unique.html#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="unique.html#cb67-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
+<span id="cb67-2"><a href="unique.html#cb67-2" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">==</span> <span class="st">&quot;college&quot;</span>)</span>
+<span id="cb67-3"><a href="unique.html#cb67-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-4"><a href="unique.html#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -376,9 +329,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">insuranceyes</td>
-<td align="right">0.97</td>
-<td align="right">0.25</td>
+<td align="left">college</td>
+<td align="right">0.17</td>
+<td align="right">0.02</td>
 </tr>
 </tbody>
 </table>
@@ -388,31 +341,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>Dot-and-Whisker図により点推定量と信頼区間を可視化</li>
 </ul>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="unique.html#cb60-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> </span>
-<span id="cb60-2"><a href="unique.html#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> age <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> region <span class="sc">+</span> afam <span class="sc">+</span> married,</span>
-<span id="cb60-3"><a href="unique.html#cb60-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw)</span>
-<span id="cb60-4"><a href="unique.html#cb60-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-5"><a href="unique.html#cb60-5" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
-<span id="cb60-6"><a href="unique.html#cb60-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-7"><a href="unique.html#cb60-7" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
-<span id="cb60-8"><a href="unique.html#cb60-8" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">!=</span> <span class="st">&quot;(Intercept)&quot;</span>)</span>
-<span id="cb60-9"><a href="unique.html#cb60-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-10"><a href="unique.html#cb60-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fit, <span class="fu">aes</span>(<span class="at">y =</span> term,</span>
-<span id="cb60-11"><a href="unique.html#cb60-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> estimate,</span>
-<span id="cb60-12"><a href="unique.html#cb60-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low,</span>
-<span id="cb60-13"><a href="unique.html#cb60-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
-<span id="cb60-14"><a href="unique.html#cb60-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="unique.html#cb61-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
-<span id="cb61-2"><a href="unique.html#cb61-2" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">==</span> <span class="st">&quot;insuranceyes&quot;</span>)</span>
-<span id="cb61-3"><a href="unique.html#cb61-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-4"><a href="unique.html#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fit, <span class="fu">aes</span>(<span class="at">y =</span> term,</span>
-<span id="cb61-5"><a href="unique.html#cb61-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> estimate,</span>
-<span id="cb61-6"><a href="unique.html#cb61-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low,</span>
-<span id="cb61-7"><a href="unique.html#cb61-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
-<span id="cb61-8"><a href="unique.html#cb61-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>() <span class="sc">+</span></span>
-<span id="cb61-9"><a href="unique.html#cb61-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="unique.html#cb68-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> </span>
+<span id="cb68-2"><a href="unique.html#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(lwage <span class="sc">~</span> college <span class="sc">+</span> nearc4 <span class="sc">+</span> black,</span>
+<span id="cb68-3"><a href="unique.html#cb68-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw)</span>
+<span id="cb68-4"><a href="unique.html#cb68-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-5"><a href="unique.html#cb68-5" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">tidy</span>(fit)</span>
+<span id="cb68-6"><a href="unique.html#cb68-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-7"><a href="unique.html#cb68-7" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
+<span id="cb68-8"><a href="unique.html#cb68-8" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">!=</span> <span class="st">&quot;(Intercept)&quot;</span>)</span>
+<span id="cb68-9"><a href="unique.html#cb68-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-10"><a href="unique.html#cb68-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fit, <span class="fu">aes</span>(<span class="at">y =</span> term,</span>
+<span id="cb68-11"><a href="unique.html#cb68-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> estimate,</span>
+<span id="cb68-12"><a href="unique.html#cb68-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low,</span>
+<span id="cb68-13"><a href="unique.html#cb68-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb68-14"><a href="unique.html#cb68-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>()</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-53-1.png" width="672" /></p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="unique.html#cb69-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">filter</span>(fit,</span>
+<span id="cb69-2"><a href="unique.html#cb69-2" aria-hidden="true" tabindex="-1"></a>              term <span class="sc">==</span> <span class="st">&quot;college&quot;</span>)</span>
+<span id="cb69-3"><a href="unique.html#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-4"><a href="unique.html#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fit, <span class="fu">aes</span>(<span class="at">y =</span> term,</span>
+<span id="cb69-5"><a href="unique.html#cb69-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> estimate,</span>
+<span id="cb69-6"><a href="unique.html#cb69-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low,</span>
+<span id="cb69-7"><a href="unique.html#cb69-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb69-8"><a href="unique.html#cb69-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>() <span class="sc">+</span></span>
+<span id="cb69-9"><a href="unique.html#cb69-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p>
 </div>
 </div>
 <div id="ロビンソン変換" class="section level3" number="6.2.2">
@@ -435,39 +388,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li><p>hdmパッケージ<span class="citation">(<a href="references.html#ref-R-hdm" role="doc-biblioref">Spindler, Chernozhukov, and Hansen 2019</a>)</span>を利用</p></li>
 </ul>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="unique.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdm)</span>
-<span id="cb62-2"><a href="unique.html#cb62-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-3"><a href="unique.html#cb62-3" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>visits</span>
-<span id="cb62-4"><a href="unique.html#cb62-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-5"><a href="unique.html#cb62-5" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">if_else</span>(raw<span class="sc">$</span>insurance <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb62-6"><a href="unique.html#cb62-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-7"><a href="unique.html#cb62-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> age <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> region <span class="sc">+</span> afam <span class="sc">+</span> married,</span>
-<span id="cb62-8"><a href="unique.html#cb62-8" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
-<span id="cb62-9"><a href="unique.html#cb62-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-10"><a href="unique.html#cb62-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
-<span id="cb62-11"><a href="unique.html#cb62-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rlassoEffect</span>(<span class="at">x =</span> X,</span>
-<span id="cb62-12"><a href="unique.html#cb62-12" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> Y,</span>
-<span id="cb62-13"><a href="unique.html#cb62-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">d =</span> D,</span>
-<span id="cb62-14"><a href="unique.html#cb62-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">method =</span> <span class="st">&quot;double selection&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="unique.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdm)</span>
+<span id="cb70-2"><a href="unique.html#cb70-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-3"><a href="unique.html#cb70-3" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>lwage</span>
+<span id="cb70-4"><a href="unique.html#cb70-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-5"><a href="unique.html#cb70-5" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> raw<span class="sc">$</span>college</span>
+<span id="cb70-6"><a href="unique.html#cb70-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-7"><a href="unique.html#cb70-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> black <span class="sc">+</span> nearc4 <span class="sc">+</span> black<span class="sc">:</span>nearc4,</span>
+<span id="cb70-8"><a href="unique.html#cb70-8" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
+<span id="cb70-9"><a href="unique.html#cb70-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-10"><a href="unique.html#cb70-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
+<span id="cb70-11"><a href="unique.html#cb70-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rlassoEffect</span>(<span class="at">x =</span> X,</span>
+<span id="cb70-12"><a href="unique.html#cb70-12" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> Y,</span>
+<span id="cb70-13"><a href="unique.html#cb70-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">d =</span> D,</span>
+<span id="cb70-14"><a href="unique.html#cb70-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">method =</span> <span class="st">&quot;double selection&quot;</span>)</span></code></pre></div>
 <ul>
 <li>推定結果</li>
 </ul>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="unique.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="unique.html#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
 <pre><code>## [1] &quot;Estimates and significance testing of the effect of target variables&quot;
 ##    Estimate. Std. Error t value Pr(&gt;|t|)    
-## d1    0.9597     0.2480    3.87 0.000109 ***
+## d1   0.16952    0.01767   9.594   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <ul>
 <li>選択されたコントロール変数</li>
 </ul>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="unique.html#cb65-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>selection.index</span></code></pre></div>
-<pre><code>##             age    genderfemale      gendermale          school          income 
-##           FALSE           FALSE           FALSE            TRUE            TRUE 
-##     employedyes regionnortheast   regionmidwest      regionwest         afamyes 
-##           FALSE           FALSE            TRUE           FALSE            TRUE 
-##      marriedyes 
-##            TRUE</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="unique.html#cb73-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>selection.index</span></code></pre></div>
+<pre><code>##        black       nearc4 black:nearc4 
+##         TRUE         TRUE        FALSE</code></pre>
 </div>
 <div id="double-machine-learning-doubleml" class="section level4" number="6.2.2.2">
 <h4><span class="header-section-number">6.2.2.2</span> Double Machine Learning (DoubleML)</h4>
@@ -476,72 +425,72 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>なんらかの方法（例、OLS、ランダムフォレスト、LASSO）で<span class="math inline">\(E[Y|X],E[D|X]\)</span>の予測関数<span class="math inline">\(f_Y(X),f_D(X)\)</span>を推定し、予測誤差を単回帰</p></li>
 <li><p>DoubleMLパッケージ<span class="citation">(<a href="references.html#ref-R-DoubleML" role="doc-biblioref">Bach et al. 2021</a>)</span>を利用</p></li>
 </ul>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="unique.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoubleML)</span>
-<span id="cb67-2"><a href="unique.html#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3)</span>
-<span id="cb67-3"><a href="unique.html#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3learners)</span>
-<span id="cb67-4"><a href="unique.html#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
-<span id="cb67-5"><a href="unique.html#cb67-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-6"><a href="unique.html#cb67-6" aria-hidden="true" tabindex="-1"></a>learner <span class="ot">&lt;-</span> </span>
-<span id="cb67-7"><a href="unique.html#cb67-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lrn</span>(<span class="st">&quot;regr.ranger&quot;</span>, </span>
-<span id="cb67-8"><a href="unique.html#cb67-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">num.trees =</span> <span class="dv">100</span>) <span class="co"># Require bigger num.trees in practice</span></span>
-<span id="cb67-9"><a href="unique.html#cb67-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-10"><a href="unique.html#cb67-10" aria-hidden="true" tabindex="-1"></a>ml_g <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
-<span id="cb67-11"><a href="unique.html#cb67-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-12"><a href="unique.html#cb67-12" aria-hidden="true" tabindex="-1"></a>ml_m <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
-<span id="cb67-13"><a href="unique.html#cb67-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-14"><a href="unique.html#cb67-14" aria-hidden="true" tabindex="-1"></a>obj_dml_data <span class="ot">&lt;-</span> </span>
-<span id="cb67-15"><a href="unique.html#cb67-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">double_ml_data_from_matrix</span>(<span class="at">X =</span> X,</span>
-<span id="cb67-16"><a href="unique.html#cb67-16" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> Y,</span>
-<span id="cb67-17"><a href="unique.html#cb67-17" aria-hidden="true" tabindex="-1"></a>                             <span class="at">d =</span> D)</span>
-<span id="cb67-18"><a href="unique.html#cb67-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-19"><a href="unique.html#cb67-19" aria-hidden="true" tabindex="-1"></a>dml_plr_obj <span class="ot">&lt;-</span> </span>
-<span id="cb67-20"><a href="unique.html#cb67-20" aria-hidden="true" tabindex="-1"></a>  DoubleMLPLR<span class="sc">$</span><span class="fu">new</span>(obj_dml_data, </span>
-<span id="cb67-21"><a href="unique.html#cb67-21" aria-hidden="true" tabindex="-1"></a>                  ml_g, </span>
-<span id="cb67-22"><a href="unique.html#cb67-22" aria-hidden="true" tabindex="-1"></a>                  ml_m, </span>
-<span id="cb67-23"><a href="unique.html#cb67-23" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dml_procedure=</span><span class="st">&quot;dml1&quot;</span>, </span>
-<span id="cb67-24"><a href="unique.html#cb67-24" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_rep =</span> <span class="dv">3</span>)</span>
-<span id="cb67-25"><a href="unique.html#cb67-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-26"><a href="unique.html#cb67-26" aria-hidden="true" tabindex="-1"></a>dml_plr_obj<span class="sc">$</span><span class="fu">fit</span>()</span></code></pre></div>
-<pre><code>## INFO  [16:30:28.944] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [16:30:29.498] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [16:30:29.941] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [16:30:30.497] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [16:30:30.894] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [16:30:31.588] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [16:30:31.946] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
-## INFO  [16:30:32.314] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
-## INFO  [16:30:32.640] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [16:30:32.972] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [16:30:33.475] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [16:30:33.900] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [16:30:34.270] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [16:30:34.635] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [16:30:35.045] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [16:30:35.690] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [16:30:36.101] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [16:30:36.502] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
-## INFO  [16:30:36.850] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [16:30:37.290] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
-## INFO  [16:30:37.746] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [16:30:38.168] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [16:30:38.622] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [16:30:39.207] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [16:30:39.613] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [16:30:40.349] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [16:30:40.799] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [16:30:41.134] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
-## INFO  [16:30:41.447] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [16:30:41.790] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5)</code></pre>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="unique.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dml_plr_obj)</span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="unique.html#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoubleML)</span>
+<span id="cb75-2"><a href="unique.html#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3)</span>
+<span id="cb75-3"><a href="unique.html#cb75-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3learners)</span>
+<span id="cb75-4"><a href="unique.html#cb75-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb75-5"><a href="unique.html#cb75-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-6"><a href="unique.html#cb75-6" aria-hidden="true" tabindex="-1"></a>learner <span class="ot">&lt;-</span> </span>
+<span id="cb75-7"><a href="unique.html#cb75-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lrn</span>(<span class="st">&quot;regr.ranger&quot;</span>, </span>
+<span id="cb75-8"><a href="unique.html#cb75-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">num.trees =</span> <span class="dv">100</span>) <span class="co"># Require bigger num.trees in practice</span></span>
+<span id="cb75-9"><a href="unique.html#cb75-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-10"><a href="unique.html#cb75-10" aria-hidden="true" tabindex="-1"></a>ml_g <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
+<span id="cb75-11"><a href="unique.html#cb75-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-12"><a href="unique.html#cb75-12" aria-hidden="true" tabindex="-1"></a>ml_m <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
+<span id="cb75-13"><a href="unique.html#cb75-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-14"><a href="unique.html#cb75-14" aria-hidden="true" tabindex="-1"></a>obj_dml_data <span class="ot">&lt;-</span> </span>
+<span id="cb75-15"><a href="unique.html#cb75-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">double_ml_data_from_matrix</span>(<span class="at">X =</span> X,</span>
+<span id="cb75-16"><a href="unique.html#cb75-16" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> <span class="fu">as.numeric</span>(Y),</span>
+<span id="cb75-17"><a href="unique.html#cb75-17" aria-hidden="true" tabindex="-1"></a>                             <span class="at">d =</span> <span class="fu">as.numeric</span>(D))</span>
+<span id="cb75-18"><a href="unique.html#cb75-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-19"><a href="unique.html#cb75-19" aria-hidden="true" tabindex="-1"></a>dml_plr_obj <span class="ot">&lt;-</span> </span>
+<span id="cb75-20"><a href="unique.html#cb75-20" aria-hidden="true" tabindex="-1"></a>  DoubleMLPLR<span class="sc">$</span><span class="fu">new</span>(obj_dml_data, </span>
+<span id="cb75-21"><a href="unique.html#cb75-21" aria-hidden="true" tabindex="-1"></a>                  ml_g, </span>
+<span id="cb75-22"><a href="unique.html#cb75-22" aria-hidden="true" tabindex="-1"></a>                  ml_m, </span>
+<span id="cb75-23"><a href="unique.html#cb75-23" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dml_procedure=</span><span class="st">&quot;dml1&quot;</span>, </span>
+<span id="cb75-24"><a href="unique.html#cb75-24" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_rep =</span> <span class="dv">3</span>)</span>
+<span id="cb75-25"><a href="unique.html#cb75-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-26"><a href="unique.html#cb75-26" aria-hidden="true" tabindex="-1"></a>dml_plr_obj<span class="sc">$</span><span class="fu">fit</span>()</span></code></pre></div>
+<pre><code>## INFO  [18:23:46.435] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [18:23:46.542] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [18:23:46.611] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [18:23:46.658] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [18:23:46.704] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [18:23:46.996] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [18:23:47.044] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [18:23:47.090] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [18:23:47.136] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [18:23:47.181] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [18:23:47.343] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [18:23:47.386] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [18:23:47.428] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [18:23:47.469] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [18:23:47.509] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [18:23:47.622] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [18:23:47.659] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [18:23:47.698] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [18:23:47.739] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [18:23:47.781] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [18:23:47.934] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [18:23:47.979] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [18:23:48.029] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [18:23:48.071] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [18:23:48.115] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [18:23:48.235] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [18:23:48.279] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [18:23:48.325] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [18:23:48.366] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [18:23:48.405] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5)</code></pre>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="unique.html#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dml_plr_obj)</span></code></pre></div>
 <pre><code>## ================= DoubleMLPLR Object ==================
 ## 
 ## 
 ## ------------------ Data summary      ------------------
 ## Outcome variable: y
 ## Treatment variable(s): d
-## Covariates: X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11
+## Covariates: X1, X2, X3
 ## Instrument(s): 
-## No. Observations: 4406
+## No. Observations: 3003
 ## 
 ## ------------------ Score &amp; algorithm ------------------
 ## Score function: partialling out
@@ -559,7 +508,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## ------------------ Fit summary       ------------------
 ##  [1] &quot;Estimates and significance testing of the effect of target variables&quot;
 ##   Estimate. Std. Error t value Pr(&gt;|t|)    
-## d    1.2113     0.2615   4.632 3.63e-06 ***
+## d   0.17364    0.01769   9.817   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 

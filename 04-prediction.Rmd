@@ -48,12 +48,18 @@ $$=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E
 
 ## データの導入
 
-```{r}
-data("NMES1988",
-     package = "AER")
+- 引き続きcausaldataに含まれるclose_collegeを使用
 
-raw <- NMES1988
+```{r}
+data("close_college",
+     package = "causaldata")
+
+raw <- na.omit(close_college)
+
+set.seed(111)
 ```
+
+
 
 ## データ分割
 
@@ -71,7 +77,7 @@ group <- sample(1:5,
 - 線形予測関数$f(X)=\beta_0 + \beta_1X_1+...+\beta_LX_L$を仮定し、最小二乗法にて推定する。
 
 ```{r}
-fit <- lm(visits ~ .,
+fit <- lm(lwage ~ .,
           data = raw[group != 1,])
 
 coef(fit)
@@ -86,13 +92,13 @@ Y.hat <- predict(fit,raw)
 - テストデータへの適合
 
 ```{r}
-mean((raw$visits - Y.hat)[group == 1]^2)
+mean((raw$lwage - Y.hat)[group == 1]^2)
 ```
 
 - 訓練データへの適合
 
 ```{r}
-mean((raw$visits - Y.hat)[group != 1]^2)
+mean((raw$lwage - Y.hat)[group != 1]^2)
 ```
 
 ## LASSO
@@ -102,9 +108,9 @@ mean((raw$visits - Y.hat)[group != 1]^2)
 ```{r}
 library(glmnet)
 
-Y <- raw$visits
+Y <- raw$lwage
 
-X <- model.matrix(visits ~ -1 + .,
+X <- model.matrix(lwage ~ -1 + . + .^2 + I(exper^2) + I(educ^2),
                   data = raw)
 
 cv <- cv.glmnet(x = X[group != 1,],
@@ -183,12 +189,49 @@ mean((Y - Y.hat)[group == 1]^2)
 mean((Y - Y.hat)[group != 1]^2)
 ```
 
+### No penalty
+
+```{r}
+library(glmnet)
+
+Y <- raw$lwage
+
+X <- model.matrix(lwage ~ -1 + . + .^2 + I(exper^2) + I(educ^2),
+                  data = raw)
+
+fit <- glmnet(x = X[group != 1,],
+              y = Y[group != 1],
+              alpha = 1,
+              lambda = 0)
+```
+
+- 予測値の導出
+
+```{r}
+Y.hat <- predict(fit,X)
+```
+
+- テストデータへの適合
+
+```{r}
+mean((Y - Y.hat)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((Y - Y.hat)[group != 1]^2)
+```
+
 ## Bagging
 
 - rangerパッケージ[@R-ranger]を利用
 
 ```{r}
 library(ranger)
+
+X <- model.matrix(lwage ~ -1 + .,
+                  data = raw)
 
 fit <- ranger(x = X[group != 1,],
               y = Y[group != 1],

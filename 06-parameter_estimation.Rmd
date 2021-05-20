@@ -10,10 +10,15 @@
 ```{r}
 library(tidyverse)
 
-data("NMES1988",
-     package = "AER")
+data("close_college",
+     package = "causaldata")
 
-raw <- NMES1988
+raw <- na.omit(close_college)
+
+raw <- mutate(raw,
+              college = if_else(educ >= 16, 1, 0))
+
+set.seed(111)
 ```
 
 ## 部分線形モデルに基づく推定
@@ -38,7 +43,7 @@ library(estimatr)
 - lm_robust関数で推定
 
 ```{r}
-lm_robust(visits ~ insurance + age + gender + school + income + employed + region + afam + married,
+lm_robust(lwage ~ college + nearc4 + black,
           data = raw)
 ```
 
@@ -53,7 +58,7 @@ library(knitr)
 library(tidyverse)
 
 fit <- 
-  lm_robust(visits ~ insurance + age + gender + school + income + employed + region + afam + married,
+  lm_robust(lwage ~ college + nearc4 + black,
             data = raw)
 
 fit <- tidy(fit)
@@ -65,7 +70,8 @@ kable(fit, digits = 2)
 
 ```{r}
 fit <- filter(fit,
-              term == "insuranceyes")
+              term == "college")
+
 kable(fit, digits = 2)
 ```
 
@@ -76,7 +82,7 @@ kable(fit, digits = 2)
 
 ```{r}
 fit <- 
-  lm_robust(visits ~ insurance + age + gender + school + income + employed + region + afam + married,
+  lm_robust(lwage ~ college + nearc4 + black,
             data = raw)
 
 fit <- tidy(fit)
@@ -94,7 +100,7 @@ ggplot(fit, aes(y = term,
 
 ```{r}
 fit <- filter(fit,
-              term == "insuranceyes")
+              term == "college")
 
 ggplot(fit, aes(y = term,
                 x = estimate,
@@ -127,11 +133,11 @@ $$Y_i-\underbrace{E[Y_i|X_i]}_{Nuisance\ term}=\tau\times [D_i-\underbrace{E[D_i
 ```{r}
 library(hdm)
 
-Y <- raw$visits
+Y <- raw$lwage
 
-D <- if_else(raw$insurance == "yes", 1, 0)
+D <- raw$college
 
-X <- model.matrix(~ - 1+ age + gender + school + income + employed + region + afam + married,
+X <- model.matrix(~ - 1+ black + nearc4 + black:nearc4,
                   raw)
 
 fit <-
@@ -178,8 +184,8 @@ ml_m <- learner$clone()
 
 obj_dml_data <- 
   double_ml_data_from_matrix(X = X,
-                             y = Y,
-                             d = D)
+                             y = as.numeric(Y),
+                             d = as.numeric(D))
 
 dml_plr_obj <- 
   DoubleMLPLR$new(obj_dml_data, 

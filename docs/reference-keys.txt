@@ -20,6 +20,7 @@ bias-variance-tradeoff
 ols
 lasso
 rdige
+no-penalty
 bagging
 random-forest
 比較因果推論

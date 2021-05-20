@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-05-19" />
+<meta name="date" content="2021-05-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -166,7 +166,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3" data-path="prediction.html"><a href="prediction.html#データ分割"><i class="fa fa-check"></i><b>4.3</b> データ分割</a></li>
 <li class="chapter" data-level="4.4" data-path="prediction.html"><a href="prediction.html#ols"><i class="fa fa-check"></i><b>4.4</b> OLS</a></li>
 <li class="chapter" data-level="4.5" data-path="prediction.html"><a href="prediction.html#lasso"><i class="fa fa-check"></i><b>4.5</b> LASSO</a></li>
-<li class="chapter" data-level="4.6" data-path="prediction.html"><a href="prediction.html#rdige"><i class="fa fa-check"></i><b>4.6</b> Rdige</a></li>
+<li class="chapter" data-level="4.6" data-path="prediction.html"><a href="prediction.html#rdige"><i class="fa fa-check"></i><b>4.6</b> Rdige</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="prediction.html"><a href="prediction.html#no-penalty"><i class="fa fa-check"></i><b>4.6.1</b> No penalty</a></li>
+</ul></li>
 <li class="chapter" data-level="4.7" data-path="prediction.html"><a href="prediction.html#bagging"><i class="fa fa-check"></i><b>4.7</b> Bagging</a></li>
 <li class="chapter" data-level="4.8" data-path="prediction.html"><a href="prediction.html#random-forest"><i class="fa fa-check"></i><b>4.8</b> Random Forest</a></li>
 </ul></li>
@@ -219,10 +222,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>AERパッケージに含まれるNMES1988を利用</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="データ整備.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
-<span id="cb1-2"><a href="データ整備.html#cb1-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="データ整備.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;close_college&quot;</span>,</span>
+<span id="cb1-2"><a href="データ整備.html#cb1-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;causaldata&quot;</span>)</span>
 <span id="cb1-3"><a href="データ整備.html#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="データ整備.html#cb1-4" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span></code></pre></div>
+<span id="cb1-4"><a href="データ整備.html#cb1-4" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> close_college</span></code></pre></div>
 <div id="新しい変数の作成-mutate-tidyverse" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> 新しい変数の作成: mutate (tidyverse)</h2>
 <ul>
@@ -232,11 +235,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>mutate関数の利用</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="データ整備.html#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
-<span id="cb3-2"><a href="データ整備.html#cb3-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">square_age =</span> age<span class="sc">^</span><span class="dv">2</span>,</span>
-<span id="cb3-3"><a href="データ整備.html#cb3-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">log_age =</span> <span class="fu">log</span>(age),</span>
-<span id="cb3-4"><a href="データ整備.html#cb3-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">total_visit =</span> visits <span class="sc">+</span> nvisits <span class="sc">+</span> ovisits <span class="sc">+</span> novisits</span>
-<span id="cb3-5"><a href="データ整備.html#cb3-5" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="データ整備.html#cb3-1" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
+<span id="cb3-2"><a href="データ整備.html#cb3-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">square_exper =</span> exper<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb3-3"><a href="データ整備.html#cb3-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">college =</span> <span class="fu">if_else</span>(educ <span class="sc">&gt;=</span> <span class="dv">16</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb3-4"><a href="データ整備.html#cb3-4" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
 </div>
 <div id="変数の限定-select-tidyverse" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> 変数の限定: select (tidyverse)</h2>
@@ -244,15 +246,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>select関数の利用</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="データ整備.html#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">select</span>(raw,</span>
-<span id="cb4-2"><a href="データ整備.html#cb4-2" aria-hidden="true" tabindex="-1"></a>             age,</span>
-<span id="cb4-3"><a href="データ整備.html#cb4-3" aria-hidden="true" tabindex="-1"></a>             visits</span>
+<span id="cb4-2"><a href="データ整備.html#cb4-2" aria-hidden="true" tabindex="-1"></a>             black,</span>
+<span id="cb4-3"><a href="データ整備.html#cb4-3" aria-hidden="true" tabindex="-1"></a>             smsa</span>
 <span id="cb4-4"><a href="データ整備.html#cb4-4" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
 <ul>
 <li>特定の変数の除外</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="データ整備.html#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">select</span>(raw,</span>
-<span id="cb5-2"><a href="データ整備.html#cb5-2" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>age,</span>
-<span id="cb5-3"><a href="データ整備.html#cb5-3" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>visits</span>
+<span id="cb5-2"><a href="データ整備.html#cb5-2" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>black,</span>
+<span id="cb5-3"><a href="データ整備.html#cb5-3" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>smsa</span>
 <span id="cb5-4"><a href="データ整備.html#cb5-4" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
 </div>
 <div id="サンプルの除外filter-tidyverse" class="section level2" number="2.3">
@@ -261,34 +263,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>filter関数の利用</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="データ整備.html#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">filter</span>(raw,</span>
-<span id="cb6-2"><a href="データ整備.html#cb6-2" aria-hidden="true" tabindex="-1"></a>             visits <span class="sc">&gt;=</span> <span class="dv">5</span></span>
+<span id="cb6-2"><a href="データ整備.html#cb6-2" aria-hidden="true" tabindex="-1"></a>             educ <span class="sc">&gt;=</span> <span class="dv">7</span></span>
 <span id="cb6-3"><a href="データ整備.html#cb6-3" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
 </div>
 <div id="記述統計表の作成" class="section level2" number="2.4">
 <h2><span class="header-section-number">2.4</span> 記述統計表の作成</h2>
 <ul>
 <li><p>記述統計の作成には多くの有益なパッケージが存在</p></li>
-<li><p>ここではgtsummaryを使用</p></li>
+<li><p>ここではgtsummary<span class="citation">(<a href="references.html#ref-R-gtsummary" role="doc-biblioref">Sjoberg et al. 2021</a>)</span>を使用</p></li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="データ整備.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span></code></pre></div>
 <ul>
-<li>select関数で必要な変数(health, visits, income, insurance)を抜き出し、insuranceごとに連続変数については中央値、カテゴリ変数については頻度を記述</li>
+<li>select関数で必要な変数(lwage, black, south, nearc4)を抜き出し、insuranceごとに連続変数については中央値、カテゴリ変数については頻度を記述</li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="データ整備.html#cb8-1" aria-hidden="true" tabindex="-1"></a>descriptive <span class="ot">&lt;-</span></span>
 <span id="cb8-2"><a href="データ整備.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(raw,</span>
-<span id="cb8-3"><a href="データ整備.html#cb8-3" aria-hidden="true" tabindex="-1"></a>         insurance,</span>
-<span id="cb8-4"><a href="データ整備.html#cb8-4" aria-hidden="true" tabindex="-1"></a>         health,</span>
-<span id="cb8-5"><a href="データ整備.html#cb8-5" aria-hidden="true" tabindex="-1"></a>         visits,</span>
-<span id="cb8-6"><a href="データ整備.html#cb8-6" aria-hidden="true" tabindex="-1"></a>         income)</span>
+<span id="cb8-3"><a href="データ整備.html#cb8-3" aria-hidden="true" tabindex="-1"></a>         college,</span>
+<span id="cb8-4"><a href="データ整備.html#cb8-4" aria-hidden="true" tabindex="-1"></a>         lwage,</span>
+<span id="cb8-5"><a href="データ整備.html#cb8-5" aria-hidden="true" tabindex="-1"></a>         black,</span>
+<span id="cb8-6"><a href="データ整備.html#cb8-6" aria-hidden="true" tabindex="-1"></a>         nearc4)</span>
 <span id="cb8-7"><a href="データ整備.html#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-8"><a href="データ整備.html#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_summary</span>(descriptive,</span>
-<span id="cb8-9"><a href="データ整備.html#cb8-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> insurance)</span></code></pre></div>
-<div id="fnppvtbnps" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<span id="cb8-9"><a href="データ整備.html#cb8-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> college)</span></code></pre></div>
+<div id="bxztlfkaao" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#fnppvtbnps .gt_table {
+#bxztlfkaao .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -313,7 +315,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-left-color: #D3D3D3;
 }
 
-#fnppvtbnps .gt_heading {
+#bxztlfkaao .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -325,7 +327,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#fnppvtbnps .gt_title {
+#bxztlfkaao .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -335,7 +337,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-width: 0;
 }
 
-#fnppvtbnps .gt_subtitle {
+#bxztlfkaao .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -345,13 +347,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-width: 0;
 }
 
-#fnppvtbnps .gt_bottom_border {
+#bxztlfkaao .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fnppvtbnps .gt_col_headings {
+#bxztlfkaao .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -366,7 +368,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#fnppvtbnps .gt_col_heading {
+#bxztlfkaao .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -386,7 +388,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-#fnppvtbnps .gt_column_spanner_outer {
+#bxztlfkaao .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -398,15 +400,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 4px;
 }
 
-#fnppvtbnps .gt_column_spanner_outer:first-child {
+#bxztlfkaao .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fnppvtbnps .gt_column_spanner_outer:last-child {
+#bxztlfkaao .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fnppvtbnps .gt_column_spanner {
+#bxztlfkaao .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -418,7 +420,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   width: 100%;
 }
 
-#fnppvtbnps .gt_group_heading {
+#bxztlfkaao .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -440,7 +442,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-#fnppvtbnps .gt_empty_group_heading {
+#bxztlfkaao .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -455,15 +457,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-#fnppvtbnps .gt_from_md > :first-child {
+#bxztlfkaao .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fnppvtbnps .gt_from_md > :last-child {
+#bxztlfkaao .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fnppvtbnps .gt_row {
+#bxztlfkaao .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -482,7 +484,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-#fnppvtbnps .gt_stub {
+#bxztlfkaao .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -494,7 +496,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-left: 12px;
 }
 
-#fnppvtbnps .gt_summary_row {
+#bxztlfkaao .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -504,7 +506,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#fnppvtbnps .gt_first_summary_row {
+#bxztlfkaao .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -514,7 +516,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-#fnppvtbnps .gt_grand_summary_row {
+#bxztlfkaao .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -524,7 +526,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#fnppvtbnps .gt_first_grand_summary_row {
+#bxztlfkaao .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -534,11 +536,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-#fnppvtbnps .gt_striped {
+#bxztlfkaao .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fnppvtbnps .gt_table_body {
+#bxztlfkaao .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -547,7 +549,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-#fnppvtbnps .gt_footnotes {
+#bxztlfkaao .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -561,13 +563,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#fnppvtbnps .gt_footnote {
+#bxztlfkaao .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#fnppvtbnps .gt_sourcenotes {
+#bxztlfkaao .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -581,41 +583,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#fnppvtbnps .gt_sourcenote {
+#bxztlfkaao .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#fnppvtbnps .gt_left {
+#bxztlfkaao .gt_left {
   text-align: left;
 }
 
-#fnppvtbnps .gt_center {
+#bxztlfkaao .gt_center {
   text-align: center;
 }
 
-#fnppvtbnps .gt_right {
+#bxztlfkaao .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fnppvtbnps .gt_font_normal {
+#bxztlfkaao .gt_font_normal {
   font-weight: normal;
 }
 
-#fnppvtbnps .gt_font_bold {
+#bxztlfkaao .gt_font_bold {
   font-weight: bold;
 }
 
-#fnppvtbnps .gt_font_italic {
+#bxztlfkaao .gt_font_italic {
   font-style: italic;
 }
 
-#fnppvtbnps .gt_super {
+#bxztlfkaao .gt_super {
   font-size: 65%;
 }
 
-#fnppvtbnps .gt_footnote_marks {
+#bxztlfkaao .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
@@ -626,29 +628,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <thead class="gt_col_headings">
     <tr>
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>no</strong>, N = 985<sup class="gt_footnote_marks">1</sup></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>yes</strong>, N = 3,421<sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>0</strong>, N = 2,193<sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>1</strong>, N = 817<sup class="gt_footnote_marks">1</sup></th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
-    <tr><td class="gt_row gt_left">health</td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">poor</td>
-<td class="gt_row gt_center">204 (21%)</td>
-<td class="gt_row gt_center">350 (10%)</td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">average</td>
-<td class="gt_row gt_center">721 (73%)</td>
-<td class="gt_row gt_center">2,788 (81%)</td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">excellent</td>
-<td class="gt_row gt_center">60 (6.1%)</td>
-<td class="gt_row gt_center">283 (8.3%)</td></tr>
-    <tr><td class="gt_row gt_left">visits</td>
-<td class="gt_row gt_center">3 (1, 7)</td>
-<td class="gt_row gt_center">4 (2, 8)</td></tr>
-    <tr><td class="gt_row gt_left">income</td>
-<td class="gt_row gt_center">0.94 (0.56, 2.01)</td>
-<td class="gt_row gt_center">1.91 (1.11, 3.43)</td></tr>
+    <tr><td class="gt_row gt_left">Log wages</td>
+<td class="gt_row gt_center">6.21 (5.90, 6.51)</td>
+<td class="gt_row gt_center">6.45 (6.14, 6.71)</td></tr>
+    <tr><td class="gt_row gt_left">Race: Black</td>
+<td class="gt_row gt_center">621 (28%)</td>
+<td class="gt_row gt_center">82 (10%)</td></tr>
+    <tr><td class="gt_row gt_left">There is a four-year college in the county</td>
+<td class="gt_row gt_center">1,451 (66%)</td>
+<td class="gt_row gt_center">602 (74%)</td></tr>
   </tbody>
   
   <tfoot>
@@ -659,7 +652,395 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <em>1</em>
           </sup>
            
-          n (%); Median (IQR)
+          Median (IQR); n (%)
+          <br />
+        </p>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+<ul>
+<li>連続変数について、平均値と標準偏差を記述</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="データ整備.html#cb9-1" aria-hidden="true" tabindex="-1"></a>descriptive <span class="ot">&lt;-</span></span>
+<span id="cb9-2"><a href="データ整備.html#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(raw,</span>
+<span id="cb9-3"><a href="データ整備.html#cb9-3" aria-hidden="true" tabindex="-1"></a>         college,</span>
+<span id="cb9-4"><a href="データ整備.html#cb9-4" aria-hidden="true" tabindex="-1"></a>         lwage,</span>
+<span id="cb9-5"><a href="データ整備.html#cb9-5" aria-hidden="true" tabindex="-1"></a>         black,</span>
+<span id="cb9-6"><a href="データ整備.html#cb9-6" aria-hidden="true" tabindex="-1"></a>         nearc4)</span>
+<span id="cb9-7"><a href="データ整備.html#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="データ整備.html#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_summary</span>(descriptive,</span>
+<span id="cb9-9"><a href="データ整備.html#cb9-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> college,</span>
+<span id="cb9-10"><a href="データ整備.html#cb9-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">statistic =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">&quot;{mean} ({sd})&quot;</span>))</span></code></pre></div>
+<div id="ogiegrmant" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#ogiegrmant .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ogiegrmant .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ogiegrmant .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ogiegrmant .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ogiegrmant .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ogiegrmant .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ogiegrmant .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ogiegrmant .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ogiegrmant .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ogiegrmant .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ogiegrmant .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ogiegrmant .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ogiegrmant .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ogiegrmant .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ogiegrmant .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ogiegrmant .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ogiegrmant .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#ogiegrmant .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ogiegrmant .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#ogiegrmant .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ogiegrmant .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ogiegrmant .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ogiegrmant .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ogiegrmant .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ogiegrmant .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#ogiegrmant .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ogiegrmant .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#ogiegrmant .gt_left {
+  text-align: left;
+}
+
+#ogiegrmant .gt_center {
+  text-align: center;
+}
+
+#ogiegrmant .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ogiegrmant .gt_font_normal {
+  font-weight: normal;
+}
+
+#ogiegrmant .gt_font_bold {
+  font-weight: bold;
+}
+
+#ogiegrmant .gt_font_italic {
+  font-style: italic;
+}
+
+#ogiegrmant .gt_super {
+  font-size: 65%;
+}
+
+#ogiegrmant .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 65%;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>0</strong>, N = 2,193<sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>1</strong>, N = 817<sup class="gt_footnote_marks">1</sup></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td class="gt_row gt_left">Log wages</td>
+<td class="gt_row gt_center">6.20 (0.43)</td>
+<td class="gt_row gt_center">6.43 (0.43)</td></tr>
+    <tr><td class="gt_row gt_left">Race: Black</td>
+<td class="gt_row gt_center">621 (28%)</td>
+<td class="gt_row gt_center">82 (10%)</td></tr>
+    <tr><td class="gt_row gt_left">There is a four-year college in the county</td>
+<td class="gt_row gt_center">1,451 (66%)</td>
+<td class="gt_row gt_center">602 (74%)</td></tr>
+  </tbody>
+  
+  <tfoot>
+    <tr class="gt_footnotes">
+      <td colspan="3">
+        <p class="gt_footnote">
+          <sup class="gt_footnote_marks">
+            <em>1</em>
+          </sup>
+           
+          Mean (SD); n (%)
           <br />
         </p>
       </td>
