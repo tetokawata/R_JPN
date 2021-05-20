@@ -4,4 +4,4 @@
 
 - exampleコードは、Rフォルダ内のexample.Rです。
 
-- 例として用いるデータは、AERパッケージに含まれているNMES1988 (the US National Medical Expenditure Survey)
+- 例として用いるデータは、causaldataパッケージに含まれているclose_college
