@@ -1,0 +1,55 @@
+# 加重法
+
+
+```{r}
+library(tidyverse)
+
+data("close_college",
+     package = "causaldata")
+
+raw <- na.omit(close_college)
+
+raw <- mutate(raw,
+              college = if_else(educ >= 16, 1, 0))
+
+set.seed(111)
+```
+
+## Inverse propencity score weight
+
+- 傾向スコアの推定
+
+```{r}
+library(estimatr)
+
+fit <- 
+  lm(college ~ nearc4 + black + smsa + south,
+    data = raw)
+
+raw$D.hat <- predict(fit,raw)
+```
+
+- 傾向スコアの分布
+
+```{r}
+ggplot(raw, aes(x = D.hat)) +
+  geom_density() +
+  facet_wrap(~college)
+```
+
+- Weight推計
+
+```{r}
+raw <-
+  mutate(raw,
+         p.weight = if_else(college == 1, 1/D.hat, 1/(1-D.hat))
+         )
+
+lm_robust(lwage ~ college,
+          data = raw,
+          weights = 1/p.weight)
+```
+
+
+
+

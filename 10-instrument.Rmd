@@ -1,0 +1,57 @@
+# 操作変数法による推定
+
+## 線形モデルの推定
+
+- 2段階線形モデルを推定
+
+$$Y_i=\beta_0+\beta_D D_i+\beta_1 X_{1i}+...+\beta_L X_{Li}+u_i$$
+
+and
+
+$$D_i=\alpha_0 + \alpha_Z Z_i + \alpha_1 X_{1i}+...+\alpha_LX_{Li}+v_i$$
+
+- iv_robust (estimatrパッケージ)で推定可能
+
+```{r}
+iv_robust(lwage ~ college + black + south + smsa + 
+                    black:smsa + black:south +
+                    smsa:south | 
+            nearc4 + black + south + smsa + 
+                    black:smsa + black:south +
+                    smsa:south,
+          data = raw) # nearc4 is instruments
+```
+
+## 部分線形モデルの推定 
+
+```{r}
+learner = lrn("regr.ranger",
+              num.trees = 2000)
+
+ml_g <- learner$clone()
+ml_m <- learner$clone()
+ml_r <- learner$clone()
+
+df <-
+  select(raw,
+         nearc4,
+         college,
+         black,
+         smsa,
+         south,
+         lwage)
+
+df <- as.data.table(df)
+
+obj_dml_data = DoubleMLData$new(df,
+                                y_col = "lwage",
+                                d_col = "college",
+                                z_col = "nearc4")
+
+dml_pliv_obj <- DoubleMLPLIV$new(obj_dml_data, ml_g, ml_m, ml_r)
+
+
+dml_pliv_obj$fit()
+
+print(dml_pliv_obj)
+```

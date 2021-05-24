@@ -21,13 +21,13 @@ raw <- mutate(raw,
 set.seed(111)
 ```
 
-## 部分線形モデルに基づく推定
+## コントロール変数の導入
 
-- 部分線形モデルに関心のあるパラメータを埋め込む
+- モデルに関心のあるパラメータを埋め込み推定する
 
 $$E[Y|D=d,X=x]=\underbrace{\tau}_{Interest\ parameter}\times d+\underbrace{f(x)}_{Nuisance\ function}$$
 
-### OLS by lm_robust (estimatr)
+### 線形モデルの推定 by lm_robust (estimatr)
 
 
 - $\tau(x)=\tau,f(x)=\beta_0+\beta_1x_1+...+\beta_Lx_L$と特定化
@@ -43,7 +43,7 @@ library(estimatr)
 - lm_robust関数で推定
 
 ```{r}
-lm_robust(lwage ~ college + nearc4 + black,
+lm_robust(lwage ~ college + nearc4 + black + smsa + south,
           data = raw)
 ```
 
@@ -58,7 +58,7 @@ library(knitr)
 library(tidyverse)
 
 fit <- 
-  lm_robust(lwage ~ college + nearc4 + black,
+  lm_robust(lwage ~ college + nearc4 + black + smsa + south,
             data = raw)
 
 fit <- tidy(fit)
@@ -82,7 +82,7 @@ kable(fit, digits = 2)
 
 ```{r}
 fit <- 
-  lm_robust(lwage ~ college + nearc4 + black,
+  lm_robust(lwage ~ college + nearc4 + black + smsa + south,
             data = raw)
 
 fit <- tidy(fit)
@@ -110,7 +110,7 @@ ggplot(fit, aes(y = term,
   geom_vline(xintercept = 0)
 ```
 
-### ロビンソン変換
+### 部分推計モデルの推定
 
 - 部分線形モデルをロビンソン変換[@robinson1988root]
 
@@ -137,7 +137,10 @@ Y <- raw$lwage
 
 D <- raw$college
 
-X <- model.matrix(~ - 1+ black + nearc4 + black:nearc4,
+X <- model.matrix(~ - 1+ black + nearc4 + smsa + south + 
+                    black:nearc4 + black:smsa + black:south +
+                    nearc4:smsa + nearc4:south +
+                    smsa:south,
                   raw)
 
 fit <-

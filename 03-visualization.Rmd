@@ -1,5 +1,13 @@
 # 可視化
 
+
+- tidyverseに含まれるggplot2パッケージ[@R-ggplot2]を利用
+
+```{r}
+library(tidyverse)
+```
+
+
 - 引き続きcausaldataに含まれるclose_collegeを使用
 
 ```{r}
@@ -10,13 +18,6 @@ raw <- close_college
 
 raw <- mutate(raw,
               college = if_else(educ >= 16,"More than college","Less than college"))
-```
-
-
-- tidyverseに含まれるggplot2パッケージ[@R-ggplot2]を利用
-
-```{r}
-library(tidyverse)
 ```
 
 ## Y=連続、X＝カテゴリ
