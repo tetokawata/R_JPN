@@ -35,7 +35,8 @@ knitr::write_bib(
     "ggplot2",
     "AER",
     "causaldata",
-    "gtsummary"),
+    "gtsummary",
+    "MatchIt"),
   'packages.bib')
 ```
 
