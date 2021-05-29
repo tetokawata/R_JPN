@@ -3,10 +3,10 @@
 - AERパッケージに含まれるNMES1988を利用
 
 ```{r}
-data("close_college",
-     package = "causaldata")
+data("NMES1988",
+     package = "AER")
 
-raw <- close_college
+raw <- NMES1988
 ```
 
 ## 新しい変数の作成: mutate (tidyverse)
@@ -21,10 +21,9 @@ library(tidyverse)
 - mutate関数の利用
 
 ```{r}
-raw <- mutate(raw,
-             square_exper = exper^2,
-             college = if_else(educ >= 16, 1, 0)
-             )
+df <- mutate(raw,
+              age_2 = age^2
+              )
 ```
 
 
@@ -34,8 +33,8 @@ raw <- mutate(raw,
 
 ```{r}
 df <- select(raw,
-             black,
-             smsa
+             age,
+             income
              )
 ```
 
@@ -43,8 +42,8 @@ df <- select(raw,
 
 ```{r}
 df <- select(raw,
-             -black,
-             -smsa
+             -age,
+             -income
              )
 ```
 
@@ -54,7 +53,7 @@ df <- select(raw,
 
 ```{r}
 df <- filter(raw,
-             educ >= 7
+             visits >= 7
              )
 ```
 
@@ -70,32 +69,25 @@ df <- filter(raw,
 library(gtsummary)
 ```
 
-- select関数で必要な変数(lwage, black, south, nearc4)を抜き出し、insuranceごとに連続変数については中央値、カテゴリ変数については頻度を記述
+- select関数で必要な変数(visits, health, medicaid)を抜き出し、insuranceごとに連続変数については中央値、カテゴリ変数については頻度を記述
 
 ```{r}
 descriptive <-
   select(raw,
-         college,
-         lwage,
-         black,
-         nearc4)
+         visits,
+         health,
+         medicaid,
+         insurance)
 
 tbl_summary(descriptive,
-            by = college)
+            by = insurance)
 ```
 
 - 連続変数について、平均値と標準偏差を記述
 
-
 ```{r}
-descriptive <-
-  select(raw,
-         college,
-         lwage,
-         black,
-         nearc4)
-
 tbl_summary(descriptive,
-            by = college,
+            by = insurance,
             statistic = list(all_continuous() ~ "{mean} ({sd})"))
 ```
+

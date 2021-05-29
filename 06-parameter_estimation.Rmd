@@ -1,7 +1,11 @@
 
-# Constant parameterの推定 {#unique}
+# 部分線形モデルの推定 {#unique}
 
-- （条件付き）平均差を推定する。
+- （条件付き）平均差の周辺化値の推定を目指します。
+
+- モデルに関心のあるパラメータを埋め込み、推定します。
+
+$$E[Y|D=d,X=x]=\underbrace{\tau}_{Interest\ parameter}\times d+\underbrace{f(x)}_{Nuisance\ function}$$
 
 - 点推定だけでなく、信頼区間も推定する。
 
@@ -10,24 +14,18 @@
 ```{r}
 library(tidyverse)
 
-data("close_college",
-     package = "causaldata")
+data("NMES1988",
+     package = "AER")
 
-raw <- na.omit(close_college)
+raw <- na.omit(NMES1988)
 
 raw <- mutate(raw,
-              college = if_else(educ >= 16, 1, 0))
+              no_insurance = if_else(insurance == "no",1, 0))
 
-set.seed(111)
+set.seed(123)
 ```
 
-## コントロール変数の導入
-
-- モデルに関心のあるパラメータを埋め込み推定する
-
-$$E[Y|D=d,X=x]=\underbrace{\tau}_{Interest\ parameter}\times d+\underbrace{f(x)}_{Nuisance\ function}$$
-
-### 線形モデルの推定 by lm_robust (estimatr)
+## 線形モデルの推定
 
 
 - $\tau(x)=\tau,f(x)=\beta_0+\beta_1x_1+...+\beta_Lx_L$と特定化
@@ -43,11 +41,11 @@ library(estimatr)
 - lm_robust関数で推定
 
 ```{r}
-lm_robust(lwage ~ college + nearc4 + black + smsa + south,
+lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
           data = raw)
 ```
 
-#### 発展:推計結果表{-}
+### 発展:推計結果表{-}
 
 - tidy関数により推定結果data.frameに変化することで、kable関数(knitrパッケージ)による推計結果表の整形、geom_pointrange関数による可視化が可能
 
@@ -55,10 +53,9 @@ lm_robust(lwage ~ college + nearc4 + black + smsa + south,
 
 ```{r}
 library(knitr)
-library(tidyverse)
 
 fit <- 
-  lm_robust(lwage ~ college + nearc4 + black + smsa + south,
+  lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
             data = raw)
 
 fit <- tidy(fit)
@@ -70,19 +67,19 @@ kable(fit, digits = 2)
 
 ```{r}
 fit <- filter(fit,
-              term == "college")
+              term == "no_insurance")
 
 kable(fit, digits = 2)
 ```
 
 
-#### 発展:Dot-and-Whisker plotによる可視化{-}
+### 発展:Dot-and-Whisker plotによる可視化{-}
 
 - Dot-and-Whisker図により点推定量と信頼区間を可視化
 
 ```{r}
 fit <- 
-  lm_robust(lwage ~ college + nearc4 + black + smsa + south,
+  lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
             data = raw)
 
 fit <- tidy(fit)
@@ -100,7 +97,7 @@ ggplot(fit, aes(y = term,
 
 ```{r}
 fit <- filter(fit,
-              term == "college")
+              term == "no_insurance")
 
 ggplot(fit, aes(y = term,
                 x = estimate,
@@ -110,7 +107,65 @@ ggplot(fit, aes(y = term,
   geom_vline(xintercept = 0)
 ```
 
-### 部分推計モデルの推定
+## マッチング法による修正
+
+```{r}
+library(MatchIt)
+```
+
+### Nearest neighbor matching
+
+```{r}
+fit.m <- matchit(no_insurance ~ region + age + afam + gender + school,
+                 data = raw,
+                 method = "nearest")
+```
+
+
+```{r}
+sum.m <- summary(fit.m)
+
+plot(sum.m, xlim=c(0,2))
+```
+
+
+```{r}
+df <- match.data(fit.m)
+
+lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
+          df,
+          clusters = subclass,
+          weights = weights)
+```
+
+
+### Coarsened exact matching
+
+```{r}
+fit.m <- matchit(no_insurance ~ region + age + afam + gender + school,
+                 data = raw,
+                 method = "cem",
+                 k2k = TRUE)
+```
+
+
+```{r}
+sum.m <- summary(fit.m)
+
+plot(sum.m, xlim=c(0,2))
+```
+
+
+```{r}
+df <- match.data(fit.m)
+
+lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
+          df,
+          clusters = subclass,
+          weights = weights)
+```
+
+## 部分推計モデルの推定
 
 - 部分線形モデルをロビンソン変換[@robinson1988root]
 
@@ -133,14 +188,16 @@ $$Y_i-\underbrace{E[Y_i|X_i]}_{Nuisance\ term}=\tau\times [D_i-\underbrace{E[D_i
 ```{r}
 library(hdm)
 
-Y <- raw$lwage
+Y <- raw$visits
 
-D <- raw$college
+D <- raw$no_insurance
 
-X <- model.matrix(~ - 1+ black + nearc4 + smsa + south + 
-                    black:nearc4 + black:smsa + black:south +
-                    nearc4:smsa + nearc4:south +
-                    smsa:south,
+X <- model.matrix(~ - 1+ region + age + afam + gender + school + 
+                    I(age^2) + I(school^2) +
+                    region:age + region:afam + region:gender + region:school +
+                    age:afam + age:gender + age:school +
+                    afam:gender + afam:school +
+                    gender:school,
                   raw)
 
 fit <-
@@ -149,6 +206,7 @@ fit <-
                d = D,
                method = "double selection")
 ```
+
 
 - 推定結果
 
@@ -176,6 +234,11 @@ library(DoubleML)
 library(mlr3)
 library(mlr3learners)
 library(data.table)
+
+
+X <- model.matrix(~ - 1+ region + age + afam + gender + school,
+                  raw)
+
 
 learner <- 
   lrn("regr.ranger", 

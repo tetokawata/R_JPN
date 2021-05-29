@@ -51,12 +51,14 @@ $$=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E
 - 引き続きcausaldataに含まれるclose_collegeを使用
 
 ```{r}
-data("close_college",
-     package = "causaldata")
+library(tidyverse)
 
-raw <- na.omit(close_college)
+data("NMES1988",
+     package = "AER")
 
-set.seed(111)
+raw <- na.omit(NMES1988)
+
+set.seed(123)
 ```
 
 
@@ -77,7 +79,7 @@ group <- sample(1:5,
 - 線形予測関数$f(X)=\beta_0 + \beta_1X_1+...+\beta_LX_L$を仮定し、最小二乗法にて推定する。
 
 ```{r}
-fit <- lm(lwage ~ .,
+fit <- lm(visits ~ .,
           data = raw[group != 1,])
 
 coef(fit)
@@ -92,13 +94,13 @@ Y.hat <- predict(fit,raw)
 - テストデータへの適合
 
 ```{r}
-mean((raw$lwage - Y.hat)[group == 1]^2)
+mean((raw$visits - Y.hat)[group == 1]^2)
 ```
 
 - 訓練データへの適合
 
 ```{r}
-mean((raw$lwage - Y.hat)[group != 1]^2)
+mean((raw$visits - Y.hat)[group != 1]^2)
 ```
 
 ## LASSO
@@ -108,9 +110,10 @@ mean((raw$lwage - Y.hat)[group != 1]^2)
 ```{r}
 library(glmnet)
 
-Y <- raw$lwage
+Y <- raw$visits
 
-X <- model.matrix(lwage ~ -1 + . + .^2 + I(exper^2) + I(educ^2),
+X <- model.matrix(visits ~ -1 + . + .^2 + 
+                    I(age^2) + I(school^2) + I(income^2) + I(nvisits^2) + I(ovisits^2) + I(hospital^2),
                   data = raw)
 
 cv <- cv.glmnet(x = X[group != 1,],
@@ -149,7 +152,7 @@ mean((Y - Y.hat)[group != 1]^2)
 ```
 
 
-## Rdige
+## Ridge
 
 - 引き続きglmentパッケージ[@R-glmnet]を利用
 
@@ -163,13 +166,6 @@ fit <- glmnet(x = X[group != 1,],
               alpha = 0,
               lambda = cv$lambda.min)
 ```
-
-- 予測モデルの確認
-
-```{r}
-coef(fit)
-```
-
 
 - 予測値の導出
 
@@ -194,9 +190,9 @@ mean((Y - Y.hat)[group != 1]^2)
 ```{r}
 library(glmnet)
 
-Y <- raw$lwage
+Y <- raw$visits
 
-X <- model.matrix(lwage ~ -1 + . + .^2 + I(exper^2) + I(educ^2),
+X <- model.matrix(visits ~ -1 + . + .^2 + I(age^2) + I(school^2) + I(income^2),
                   data = raw)
 
 fit <- glmnet(x = X[group != 1,],
@@ -230,7 +226,7 @@ mean((Y - Y.hat)[group != 1]^2)
 ```{r}
 library(ranger)
 
-X <- model.matrix(lwage ~ -1 + .,
+X <- model.matrix(visits ~ -1 + .,
                   data = raw)
 
 fit <- ranger(x = X[group != 1,],
@@ -260,11 +256,9 @@ mean((Y - Y.hat)[group != 1]^2)
 
 ## Random Forest
 
-- rangerパッケージ[@R-ranger]を利用
+- 引き続きrangerパッケージ[@R-ranger]を利用
 
 ```{r}
-library(ranger)
-
 fit <- ranger(x = X[group != 1,],
               y = Y[group != 1],
               num.trees = 2000)

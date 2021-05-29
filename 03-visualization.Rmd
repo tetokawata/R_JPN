@@ -11,13 +11,10 @@ library(tidyverse)
 - 引き続きcausaldataに含まれるclose_collegeを使用
 
 ```{r}
-data("close_college",
-     package = "causaldata")
+data("NMES1988",
+     package = "AER")
 
-raw <- close_college
-
-raw <- mutate(raw,
-              college = if_else(educ >= 16,"More than college","Less than college"))
+raw <- NMES1988
 ```
 
 ## Y=連続、X＝カテゴリ
@@ -28,56 +25,41 @@ raw <- mutate(raw,
 
 ```{r}
 ggplot(raw, 
-       aes(x = lwage)
+       aes(x = visits)
        ) +
   geom_histogram()
 ```
 
-- 学歴別賃金分布
+- 保険の有無別
 
 ```{r}
 ggplot(raw, 
-       aes(x = lwage,
-           fill = college)
+       aes(x = visits,
+           fill = insurance)
        ) +
   geom_histogram(position = "identity",
                  alpha = 0.5)
 ```
 
-- 人種・学歴別の賃金分布
-
-```{r}
-ggplot(raw, 
-       aes(x = lwage,
-           fill = college)
-       ) +
-  geom_histogram(position = "identity",
-                 alpha = 0.5
-                 ) +
-  facet_wrap(~ black)
-```
-
 ### 密度: geom_density (tidyverse)
 
-- 人種・学歴別の賃金分布
+- 保険の有無別分布
 
-```{r}
+````{r}
 ggplot(raw, 
-       aes(x = lwage,
-           fill = college)
+       aes(x = visits,
+           fill = insurance)
        ) +
   geom_density(position = "identity",
-                 alpha = 0.5
-  ) +
-  facet_wrap(~ black)
+                 alpha = 0.5)
 ```
 
 ### Boxplot: geom_boxplot (tidyverse)
 
 ```{r}
 ggplot(raw,
-       aes(y = lwage,
-           x = college)
+       aes(y = visits,
+           x = insurance)
        ) +
   geom_boxplot()
 ```
@@ -90,8 +72,8 @@ ggplot(raw,
 
 ```{r}
 ggplot(raw,
-       aes(x = exper,
-           y = lwage)
+       aes(x = age,
+           y = visits)
        ) +
   geom_point()
 ```
@@ -104,8 +86,8 @@ ggplot(raw,
 
 ```{r}
 ggplot(raw,
-       aes(x = exper,
-           y = lwage)
+       aes(x = age,
+           y = visits)
        ) +
   geom_bin2d()
 ```

@@ -1,0 +1,82 @@
+# 条件付き平均効果関数の推定
+
+
+```{r}
+library(tidyverse)
+
+data("NMES1988",
+     package = "AER")
+
+raw <- na.omit(NMES1988)
+
+raw <- mutate(raw,
+              no_insurance = if_else(insurance == "no",1, 0))
+
+
+Y <- raw$visits
+
+D <- raw$no_insurance
+
+X <- model.matrix(~ - 1+ region + age + afam + gender + school,
+                  raw)
+
+set.seed(123)
+```
+
+
+
+## Casual Forest
+
+```{r}
+library(grf)
+
+fit <- regression_forest(X = X,
+                         Y = Y)
+
+Y.hat <- predict(fit)$predictions
+
+fit <- regression_forest(X = X,
+                         Y = D)
+
+D.hat <- predict(fit)$predictions
+
+fit.CF <- causal_forest(X = X,
+                        W = D,
+                        Y = Y,
+                        Y.hat = Y.hat,
+                        W.hat = D.hat)
+
+df <- mutate(raw,
+             tau.grf = predict(fit.CF)$predictions)
+```
+
+
+## Distribution of predicted individual effects
+
+```{r}
+ggplot(df,
+       aes(x = tau.grf)
+       ) +
+  geom_histogram()
+```
+
+## Best linear predictors
+
+```{r}
+best_linear_projection(fit.CF,X)
+```
+
+## Tree presentation
+
+```{r}
+library(rpart)
+library(rpart.plot)
+
+fit <- rpart(tau.grf ~ region + age + afam + gender + school + medicaid,
+             df,
+             control = rpart.control(cp = 0,
+                                     maxdepth = 2)
+             )
+
+rpart.plot(fit)
+```
