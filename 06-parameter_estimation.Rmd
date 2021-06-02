@@ -19,9 +19,6 @@ data("NMES1988",
 
 raw <- na.omit(NMES1988)
 
-raw <- mutate(raw,
-              no_insurance = if_else(insurance == "no",1, 0))
-
 set.seed(123)
 ```
 
@@ -41,9 +38,19 @@ library(estimatr)
 - lm_robust関数で推定
 
 ```{r}
-lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
+lm_robust(visits ~ insurance + region + age + afam + gender + school,
           data = raw)
 ```
+
+- 線形モデルによる推定は、いくつかの問題がある
+
+  - 回帰式の定式化に強く依存する
+  
+  - 一般に平均効果ではなく、加重平均が推計される
+  
+  - サンプルサイズに比べて、少数のコントロール変数を導入できない
+
+- 以下ではマッチング法、機械学手法を用いた頑強な推定を目指す
 
 ### 発展:推計結果表{-}
 
@@ -55,7 +62,7 @@ lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
 library(knitr)
 
 fit <- 
-  lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
+  lm_robust(visits ~ insurance + region + age + afam + gender + school,
             data = raw)
 
 fit <- tidy(fit)
@@ -67,7 +74,7 @@ kable(fit, digits = 2)
 
 ```{r}
 fit <- filter(fit,
-              term == "no_insurance")
+              term == "insuranceyes")
 
 kable(fit, digits = 2)
 ```
@@ -79,7 +86,7 @@ kable(fit, digits = 2)
 
 ```{r}
 fit <- 
-  lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
+  lm_robust(visits ~ insurance + region + age + afam + gender + school,
             data = raw)
 
 fit <- tidy(fit)
@@ -97,7 +104,7 @@ ggplot(fit, aes(y = term,
 
 ```{r}
 fit <- filter(fit,
-              term == "no_insurance")
+              term == "insuranceyes")
 
 ggplot(fit, aes(y = term,
                 x = estimate,
@@ -109,30 +116,53 @@ ggplot(fit, aes(y = term,
 
 ## マッチング法による修正
 
+- 回帰を行う事前準備としてマッチング法を利用する
+
+  - 重回帰が持つ関数形への依存度を減らせる [@ho2007matching]
+  
+  - MathItパッケージ [@MatchIt2011]を利用
+
 ```{r}
 library(MatchIt)
 ```
 
+- 多数のマッチング法が実装されている
+
 ### Nearest neighbor matching
 
 ```{r}
-fit.m <- matchit(no_insurance ~ region + age + afam + gender + school,
+fit.m <- matchit(insurance ~ region + age + afam + gender + school,
                  data = raw,
-                 method = "nearest")
+                 method = "nearest",
+                 estimand = "ATC"
+                 )
 ```
 
+- マッチング結果
 
 ```{r}
 sum.m <- summary(fit.m)
 
-plot(sum.m, xlim=c(0,2))
+sum.m
 ```
 
 
-```{r}
-df <- match.data(fit.m)
+- マッチング結果の図示
 
-lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
+```{r}
+plot(sum.m, xlim=c(0,2))
+```
+
+- マッチングしたデータを用いた推定
+
+  - 新たに作成されるweight (defaltではweights)を用いた、加重推定で実装
+  
+  - replacement無しの場合ｍマッチングしたペア(subclass)でクラスタリングしたrobust standard errorの利用を推奨 [@abadie2021robust]
+
+```{r}
+df <- match.data(fit.m) # マッチング結果を含んだ
+
+lm_robust(visits ~ insurance + region + age + afam + gender + school,
           df,
           clusters = subclass,
           weights = weights)
@@ -141,25 +171,37 @@ lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
 
 ### Coarsened exact matching
 
+- Coarsened exact matching[@iacus2012causal]の実装
+
 ```{r}
-fit.m <- matchit(no_insurance ~ region + age + afam + gender + school,
+fit.m <- matchit(insurance ~ region + age + afam + gender + school,
                  data = raw,
                  method = "cem",
-                 k2k = TRUE)
+                 k2k = TRUE,
+                 estimand = "ATC")
 ```
 
+- マッチング結果
 
 ```{r}
 sum.m <- summary(fit.m)
 
+sum.m
+```
+
+
+- 可視化
+
+```{r}
 plot(sum.m, xlim=c(0,2))
 ```
 
+- 推定
 
 ```{r}
 df <- match.data(fit.m)
 
-lm_robust(visits ~ no_insurance + region + age + afam + gender + school,
+lm_robust(visits ~ insurance + region + age + afam + gender + school,
           df,
           clusters = subclass,
           weights = weights)
@@ -190,7 +232,7 @@ library(hdm)
 
 Y <- raw$visits
 
-D <- raw$no_insurance
+D <- if_else(raw$insurance == "yes",1,0)
 
 X <- model.matrix(~ - 1+ region + age + afam + gender + school + 
                     I(age^2) + I(school^2) +
