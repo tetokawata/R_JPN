@@ -198,7 +198,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.3" data-path="unique.html"><a href="unique.html#マッチング法による修正"><i class="fa fa-check"></i><b>6.3</b> マッチング法による修正</a>
 <ul>
 <li class="chapter" data-level="6.3.1" data-path="unique.html"><a href="unique.html#nearest-neighbor-matching"><i class="fa fa-check"></i><b>6.3.1</b> Nearest neighbor matching</a></li>
-<li class="chapter" data-level="6.3.2" data-path="unique.html"><a href="unique.html#coarsened-exact-matching"><i class="fa fa-check"></i><b>6.3.2</b> Coarsened exact matching</a></li>
+<li class="chapter" data-level="6.3.2" data-path="unique.html"><a href="unique.html#subclassification"><i class="fa fa-check"></i><b>6.3.2</b> Subclassification</a></li>
+<li class="chapter" data-level="6.3.3" data-path="unique.html"><a href="unique.html#coarsened-exact-matching"><i class="fa fa-check"></i><b>6.3.3</b> Coarsened exact matching</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="unique.html"><a href="unique.html#部分推計モデルの推定"><i class="fa fa-check"></i><b>6.4</b> 部分推計モデルの推定</a></li>
 </ul></li>
@@ -434,6 +435,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <div id="nearest-neighbor-matching" class="section level3" number="6.3.1">
 <h3><span class="header-section-number">6.3.1</span> Nearest neighbor matching</h3>
+<ul>
+<li>傾向スコアを用いた最近旁マッチング</li>
+</ul>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="unique.html#cb68-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(insurance <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
 <span id="cb68-2"><a href="unique.html#cb68-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw,</span>
 <span id="cb68-3"><a href="unique.html#cb68-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;nearest&quot;</span>,</span>
@@ -562,16 +566,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## gendermale      -0.31368501 820.2442
 ## school           0.09020212 423.2469</code></pre>
 </div>
-<div id="coarsened-exact-matching" class="section level3" number="6.3.2">
-<h3><span class="header-section-number">6.3.2</span> Coarsened exact matching</h3>
+<div id="subclassification" class="section level3" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Subclassification</h3>
 <ul>
-<li>Coarsened exact matching<span class="citation">(<a href="references.html#ref-iacus2012causal" role="doc-biblioref">Iacus, King, and Porro 2012</a>)</span>の実装</li>
+<li>傾向スコアを用いたStratification マッチング</li>
 </ul>
 <div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="unique.html#cb74-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(insurance <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
 <span id="cb74-2"><a href="unique.html#cb74-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw,</span>
-<span id="cb74-3"><a href="unique.html#cb74-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;cem&quot;</span>,</span>
-<span id="cb74-4"><a href="unique.html#cb74-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">k2k =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb74-5"><a href="unique.html#cb74-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimand =</span> <span class="st">&quot;ATC&quot;</span>)</span></code></pre></div>
+<span id="cb74-3"><a href="unique.html#cb74-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;subclass&quot;</span>,</span>
+<span id="cb74-4"><a href="unique.html#cb74-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimand =</span> <span class="st">&quot;ATC&quot;</span></span>
+<span id="cb74-5"><a href="unique.html#cb74-5" aria-hidden="true" tabindex="-1"></a>                 )</span></code></pre></div>
 <ul>
 <li>マッチング結果</li>
 </ul>
@@ -581,7 +585,138 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>## 
 ## Call:
 ## matchit(formula = insurance ~ region + age + afam + gender + 
-##     school, data = raw, method = &quot;cem&quot;, estimand = &quot;ATC&quot;, k2k = TRUE)
+##     school, data = raw, method = &quot;subclass&quot;, estimand = &quot;ATC&quot;)
+## 
+## Summary of Balance for All Data:
+##                 Means Treated Means Control Std. Mean Diff. Var. Ratio
+## distance               0.8184        0.6306          0.8087     0.3443
+## regionnortheast        0.1938        0.1766          0.0450          .
+## regionmidwest          0.2882        0.1736          0.3026          .
+## regionwest             0.1818        0.1787          0.0082          .
+## regionother            0.3362        0.4711         -0.2703          .
+## age                    7.3737        7.5021         -0.1849     0.7752
+## afamno                 0.9380        0.6914          0.5340          .
+## afamyes                0.0620        0.3086         -0.5340          .
+## genderfemale           0.5849        0.6365         -0.1073          .
+## gendermale             0.4151        0.3635          0.1073          .
+## school                10.9547        7.9827          0.7549     0.7464
+##                 eCDF Mean eCDF Max
+## distance           0.2488   0.4089
+## regionnortheast    0.0172   0.0172
+## regionmidwest      0.1146   0.1146
+## regionwest         0.0031   0.0031
+## regionother        0.1349   0.1349
+## age                0.0357   0.0936
+## afamno             0.2467   0.2467
+## afamyes            0.2467   0.2467
+## genderfemale       0.0516   0.0516
+## gendermale         0.0516   0.0516
+## school             0.1564   0.3248
+## 
+## Summary of Balance Across Subclasses
+##                 Means Treated Means Control Std. Mean Diff. Var. Ratio
+## distance               0.6390        0.6306          0.0362     0.9802
+## regionnortheast        0.1818        0.1766          0.0135          .
+## regionmidwest          0.1901        0.1736          0.0435          .
+## regionwest             0.1804        0.1787          0.0046          .
+## regionother            0.4477        0.4711         -0.0468          .
+## age                    7.4906        7.5021         -0.0166     0.8973
+## afamno                 0.7005        0.6914          0.0199          .
+## afamyes                0.2995        0.3086         -0.0199          .
+## genderfemale           0.6050        0.6365         -0.0656          .
+## gendermale             0.3950        0.3635          0.0656          .
+## school                 8.1080        7.9827          0.0318     1.0853
+##                 eCDF Mean eCDF Max
+## distance           0.0114   0.0277
+## regionnortheast    0.0052   0.0052
+## regionmidwest      0.0165   0.0165
+## regionwest         0.0017   0.0017
+## regionother        0.0234   0.0234
+## age                0.0127   0.0310
+## afamno             0.0092   0.0092
+## afamyes            0.0092   0.0092
+## genderfemale       0.0316   0.0316
+## gendermale         0.0316   0.0316
+## school             0.0094   0.0282
+## 
+## Percent Balance Improvement:
+##                 Std. Mean Diff. Var. Ratio eCDF Mean eCDF Max
+## distance                   95.5     -184.7      95.4     93.2
+## regionnortheast            70.0          .      70.0     70.0
+## regionmidwest              85.6          .      85.6     85.6
+## regionwest                 44.2          .      44.2     44.2
+## regionother                82.7          .      82.7     82.7
+## age                        91.0      -15.8      64.3     66.9
+## afamno                     96.3          .      96.3     96.3
+## afamyes                    96.3          .      96.3     96.3
+## genderfemale               38.9          .      38.9     38.9
+## gendermale                 38.9          .      38.9     38.9
+## school                     95.8      -45.4      94.0     91.3
+## 
+## Sample Sizes:
+##               Control Treated
+## All               985  3421. 
+## Matched (ESS)     985  1145.5
+## Matched           985  3421. 
+## Unmatched           0     0. 
+## Discarded           0     0.</code></pre>
+<ul>
+<li>マッチング結果の図示</li>
+</ul>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="unique.html#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sum.m, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-60-1.png" width="672" /></p>
+<ul>
+<li><p>マッチングしたデータを用いた推定</p>
+<ul>
+<li><p>新たに作成されるweight (defaltではweights)を用いた、加重推定で実装</p></li>
+<li><p>replacement無しの場合ｍマッチングしたペア(subclass)でクラスタリングしたrobust standard errorの利用を推奨 <span class="citation">(<a href="references.html#ref-abadie2021robust" role="doc-biblioref">Abadie and Spiess 2021</a>)</span></p></li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="unique.html#cb78-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">match.data</span>(fit.m) <span class="co"># マッチング結果を含んだ</span></span>
+<span id="cb78-2"><a href="unique.html#cb78-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-3"><a href="unique.html#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
+<span id="cb78-4"><a href="unique.html#cb78-4" aria-hidden="true" tabindex="-1"></a>          df,</span>
+<span id="cb78-5"><a href="unique.html#cb78-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">weights =</span> weights)</span></code></pre></div>
+<pre><code>##                    Estimate Std. Error   t value     Pr(&gt;|t|)    CI Lower
+## (Intercept)      2.53643382 1.55162248  1.634698 0.1021840027 -0.50552772
+## insuranceyes     0.74168443 0.27222587  2.724519 0.0064649989  0.20798462
+## regionnortheast  0.52033252 0.40508162  1.284513 0.1990302633 -0.27383148
+## regionmidwest   -0.62055282 0.33502900 -1.852236 0.0640588966 -1.27737839
+## regionwest       0.48566837 0.38634668  1.257079 0.2087917344 -0.27176571
+## age              0.33709514 0.18941669  1.779649 0.0752025365 -0.03425696
+## afamyes         -0.85604299 0.40016197 -2.139241 0.0324710471 -1.64056199
+## gendermale      -0.98618903 0.29374994 -3.357240 0.0007939345 -1.56208685
+## school           0.04998171 0.03902147  1.280877 0.2003043834 -0.02652003
+##                    CI Upper   DF
+## (Intercept)      5.57839536 4397
+## insuranceyes     1.27538423 4397
+## regionnortheast  1.31449651 4397
+## regionmidwest    0.03627275 4397
+## regionwest       1.24310246 4397
+## age              0.70844725 4397
+## afamyes         -0.07152399 4397
+## gendermale      -0.41029121 4397
+## school           0.12648345 4397</code></pre>
+</div>
+<div id="coarsened-exact-matching" class="section level3" number="6.3.3">
+<h3><span class="header-section-number">6.3.3</span> Coarsened exact matching</h3>
+<ul>
+<li>Coarsened exact matching<span class="citation">(<a href="references.html#ref-iacus2012causal" role="doc-biblioref">Iacus, King, and Porro 2012</a>)</span>の実装</li>
+</ul>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="unique.html#cb80-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(insurance <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
+<span id="cb80-2"><a href="unique.html#cb80-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw,</span>
+<span id="cb80-3"><a href="unique.html#cb80-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;cem&quot;</span>,</span>
+<span id="cb80-4"><a href="unique.html#cb80-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimand =</span> <span class="st">&quot;ATC&quot;</span>)</span></code></pre></div>
+<ul>
+<li>マッチング結果</li>
+</ul>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="unique.html#cb81-1" aria-hidden="true" tabindex="-1"></a>sum.m <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit.m)</span>
+<span id="cb81-2"><a href="unique.html#cb81-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-3"><a href="unique.html#cb81-3" aria-hidden="true" tabindex="-1"></a>sum.m</span></code></pre></div>
+<pre><code>## 
+## Call:
+## matchit(formula = insurance ~ region + age + afam + gender + 
+##     school, data = raw, method = &quot;cem&quot;, estimand = &quot;ATC&quot;)
 ## 
 ## Summary of Balance for All Data:
 ##                 Means Treated Means Control Std. Mean Diff. Var. Ratio
@@ -610,27 +745,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 
 ## Summary of Balance for Matched Data:
 ##                 Means Treated Means Control Std. Mean Diff. Var. Ratio
-## regionnortheast        0.1861        0.1861          0.0000          .
-## regionmidwest          0.1990        0.1990          0.0000          .
-## regionwest             0.1715        0.1715          0.0000          .
-## regionother            0.4434        0.4434          0.0000          .
-## age                    7.3510        7.3487          0.0033     0.9862
-## afamno                 0.8528        0.8528          0.0000          .
-## afamyes                0.1472        0.1472          0.0000          .
-## genderfemale           0.6133        0.6133          0.0000          .
-## gendermale             0.3867        0.3867          0.0000          .
-## school                 9.1667        9.1521          0.0037     0.9953
+## regionnortheast        0.1727        0.1727          0.0000          .
+## regionmidwest          0.1769        0.1769          0.0000          .
+## regionwest             0.1546        0.1546          0.0000          .
+## regionother            0.4958        0.4958          0.0000          .
+## age                    7.3546        7.3522          0.0035     0.9769
+## afamno                 0.8008        0.8008          0.0000          .
+## afamyes                0.1992        0.1992          0.0000          .
+## genderfemale           0.6295        0.6295         -0.0000          .
+## gendermale             0.3705        0.3705          0.0000          .
+## school                 8.7209        8.7033          0.0045     0.9872
 ##                 eCDF Mean eCDF Max Std. Pair Dist.
 ## regionnortheast    0.0000   0.0000          0.0000
 ## regionmidwest      0.0000   0.0000          0.0000
 ## regionwest         0.0000   0.0000          0.0000
 ## regionother        0.0000   0.0000          0.0000
-## age                0.0024   0.0210          0.0531
+## age                0.0032   0.0193          0.1526
 ## afamno             0.0000   0.0000          0.0000
 ## afamyes            0.0000   0.0000          0.0000
 ## genderfemale       0.0000   0.0000          0.0000
 ## gendermale         0.0000   0.0000          0.0000
-## school             0.0008   0.0065          0.0210
+## school             0.0012   0.0135          0.0238
 ## 
 ## Percent Balance Improvement:
 ##                 Std. Mean Diff. Var. Ratio eCDF Mean eCDF Max
@@ -638,53 +773,54 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## regionmidwest             100.0          .     100.0    100.0
 ## regionwest                100.0          .     100.0    100.0
 ## regionother               100.0          .     100.0    100.0
-## age                        98.2       94.5      93.2     77.5
+## age                        98.1       90.8      91.2     79.4
 ## afamno                    100.0          .     100.0    100.0
 ## afamyes                   100.0          .     100.0    100.0
 ## genderfemale              100.0          .     100.0    100.0
 ## gendermale                100.0          .     100.0    100.0
-## school                     99.5       98.4      99.5     98.0
+## school                     99.4       95.6      99.2     95.8
 ## 
 ## Sample Sizes:
-##           Control Treated
-## All           985    3421
-## Matched       618     618
-## Unmatched     367    2803
-## Discarded       0       0</code></pre>
+##               Control Treated
+## All               985 3421.  
+## Matched (ESS)     718  718.82
+## Matched           718 2376.  
+## Unmatched         267 1045.  
+## Discarded           0    0.</code></pre>
 <ul>
 <li>可視化</li>
 </ul>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="unique.html#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sum.m, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-60-1.png" width="672" /></p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="unique.html#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sum.m, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-64-1.png" width="672" /></p>
 <ul>
 <li>推定</li>
 </ul>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="unique.html#cb78-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">match.data</span>(fit.m)</span>
-<span id="cb78-2"><a href="unique.html#cb78-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-3"><a href="unique.html#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
-<span id="cb78-4"><a href="unique.html#cb78-4" aria-hidden="true" tabindex="-1"></a>          df,</span>
-<span id="cb78-5"><a href="unique.html#cb78-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">clusters =</span> subclass,</span>
-<span id="cb78-6"><a href="unique.html#cb78-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">weights =</span> weights)</span></code></pre></div>
-<pre><code>##                     Estimate Std. Error     t value     Pr(&gt;|t|)    CI Lower
-## (Intercept)      3.013665441 2.50793576  1.20165177 0.2308684233 -1.93064146
-## insuranceyes     0.547745400 0.34477470  1.58870531 0.1126392066 -0.12932877
-## regionnortheast  0.175756782 0.57402808  0.30618151 0.7597632267 -0.95569711
-## regionmidwest   -1.501779273 0.39984093 -3.75594183 0.0002175475 -2.28948860
-## regionwest       0.968830854 0.52763059  1.83619160 0.0678536818 -0.07177177
-## age              0.336254020 0.30422545  1.10527907 0.2703522931 -0.26360780
-## afamyes         -0.717320069 0.52001127 -1.37943176 0.1700910410 -1.74594103
-## gendermale      -1.262136493 0.35940647 -3.51172444 0.0004878990 -1.96836727
-## school           0.002509658 0.05155103  0.04868299 0.9612250738 -0.09920176
-##                   CI Upper       DF
-## (Intercept)      7.9579723 207.4592
-## insuranceyes     1.2248196 616.9999
-## regionnortheast  1.3072107 214.6445
-## regionmidwest   -0.7140699 236.2350
-## regionwest       2.0094335 194.7769
-## age              0.9361158 202.1698
-## afamyes          0.3113009 132.1769
-## gendermale      -0.5559057 473.0157
-## school           0.1042211 182.8299</code></pre>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="unique.html#cb84-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">match.data</span>(fit.m)</span>
+<span id="cb84-2"><a href="unique.html#cb84-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-3"><a href="unique.html#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
+<span id="cb84-4"><a href="unique.html#cb84-4" aria-hidden="true" tabindex="-1"></a>          df,</span>
+<span id="cb84-5"><a href="unique.html#cb84-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">clusters =</span> subclass,</span>
+<span id="cb84-6"><a href="unique.html#cb84-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">weights =</span> weights)</span></code></pre></div>
+<pre><code>##                    Estimate Std. Error     t value    Pr(&gt;|t|)    CI Lower
+## (Intercept)      1.05267750 2.69078734  0.39121542 0.697065510 -4.33303597
+## insuranceyes     0.85988594 0.30944757  2.77877754 0.006151236  0.24847002
+## regionnortheast  0.04298989 0.51241991  0.08389583 0.933495106 -0.98782932
+## regionmidwest   -1.20588673 0.40109588 -3.00647998 0.003782032 -2.00728013
+## regionwest       0.55327676 0.60443446  0.91536269 0.363880563 -0.65723927
+## age              0.50205428 0.33371377  1.50444582 0.138225432 -0.16682196
+## afamyes         -0.96449081 0.61557696 -1.56680784 0.125224381 -2.20954215
+## gendermale      -1.22662816 0.35928286 -3.41410149 0.001003308 -1.94152216
+## school           0.09305355 0.05981654  1.55564905 0.125629713 -0.02686963
+##                   CI Upper        DF
+## (Intercept)      6.4383910  58.24513
+## insuranceyes     1.4713019 150.70231
+## regionnortheast  1.0738091  47.06346
+## regionmidwest   -0.4044933  63.53783
+## regionwest       1.7637928  56.66115
+## age              1.1709305  54.64054
+## afamyes          0.2805605  39.06927
+## gendermale      -0.5117342  80.74822
+## school           0.2129767  54.03492</code></pre>
 </div>
 </div>
 <div id="部分推計モデルの推定" class="section level2" number="6.4">
@@ -707,29 +843,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li><p>hdmパッケージ<span class="citation">(<a href="references.html#ref-R-hdm" role="doc-biblioref">Spindler, Chernozhukov, and Hansen 2019</a>)</span>を利用</p></li>
 </ul>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="unique.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdm)</span>
-<span id="cb80-2"><a href="unique.html#cb80-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb80-3"><a href="unique.html#cb80-3" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>visits</span>
-<span id="cb80-4"><a href="unique.html#cb80-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb80-5"><a href="unique.html#cb80-5" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">if_else</span>(raw<span class="sc">$</span>insurance <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
-<span id="cb80-6"><a href="unique.html#cb80-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb80-7"><a href="unique.html#cb80-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> </span>
-<span id="cb80-8"><a href="unique.html#cb80-8" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(school<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb80-9"><a href="unique.html#cb80-9" aria-hidden="true" tabindex="-1"></a>                    region<span class="sc">:</span>age <span class="sc">+</span> region<span class="sc">:</span>afam <span class="sc">+</span> region<span class="sc">:</span>gender <span class="sc">+</span> region<span class="sc">:</span>school <span class="sc">+</span></span>
-<span id="cb80-10"><a href="unique.html#cb80-10" aria-hidden="true" tabindex="-1"></a>                    age<span class="sc">:</span>afam <span class="sc">+</span> age<span class="sc">:</span>gender <span class="sc">+</span> age<span class="sc">:</span>school <span class="sc">+</span></span>
-<span id="cb80-11"><a href="unique.html#cb80-11" aria-hidden="true" tabindex="-1"></a>                    afam<span class="sc">:</span>gender <span class="sc">+</span> afam<span class="sc">:</span>school <span class="sc">+</span></span>
-<span id="cb80-12"><a href="unique.html#cb80-12" aria-hidden="true" tabindex="-1"></a>                    gender<span class="sc">:</span>school,</span>
-<span id="cb80-13"><a href="unique.html#cb80-13" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
-<span id="cb80-14"><a href="unique.html#cb80-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb80-15"><a href="unique.html#cb80-15" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
-<span id="cb80-16"><a href="unique.html#cb80-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rlassoEffect</span>(<span class="at">x =</span> X,</span>
-<span id="cb80-17"><a href="unique.html#cb80-17" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> Y,</span>
-<span id="cb80-18"><a href="unique.html#cb80-18" aria-hidden="true" tabindex="-1"></a>               <span class="at">d =</span> D,</span>
-<span id="cb80-19"><a href="unique.html#cb80-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">method =</span> <span class="st">&quot;double selection&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="unique.html#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdm)</span>
+<span id="cb86-2"><a href="unique.html#cb86-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-3"><a href="unique.html#cb86-3" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>visits</span>
+<span id="cb86-4"><a href="unique.html#cb86-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-5"><a href="unique.html#cb86-5" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">if_else</span>(raw<span class="sc">$</span>insurance <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb86-6"><a href="unique.html#cb86-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-7"><a href="unique.html#cb86-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> </span>
+<span id="cb86-8"><a href="unique.html#cb86-8" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(school<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb86-9"><a href="unique.html#cb86-9" aria-hidden="true" tabindex="-1"></a>                    region<span class="sc">:</span>age <span class="sc">+</span> region<span class="sc">:</span>afam <span class="sc">+</span> region<span class="sc">:</span>gender <span class="sc">+</span> region<span class="sc">:</span>school <span class="sc">+</span></span>
+<span id="cb86-10"><a href="unique.html#cb86-10" aria-hidden="true" tabindex="-1"></a>                    age<span class="sc">:</span>afam <span class="sc">+</span> age<span class="sc">:</span>gender <span class="sc">+</span> age<span class="sc">:</span>school <span class="sc">+</span></span>
+<span id="cb86-11"><a href="unique.html#cb86-11" aria-hidden="true" tabindex="-1"></a>                    afam<span class="sc">:</span>gender <span class="sc">+</span> afam<span class="sc">:</span>school <span class="sc">+</span></span>
+<span id="cb86-12"><a href="unique.html#cb86-12" aria-hidden="true" tabindex="-1"></a>                    gender<span class="sc">:</span>school,</span>
+<span id="cb86-13"><a href="unique.html#cb86-13" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
+<span id="cb86-14"><a href="unique.html#cb86-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-15"><a href="unique.html#cb86-15" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
+<span id="cb86-16"><a href="unique.html#cb86-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rlassoEffect</span>(<span class="at">x =</span> X,</span>
+<span id="cb86-17"><a href="unique.html#cb86-17" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> Y,</span>
+<span id="cb86-18"><a href="unique.html#cb86-18" aria-hidden="true" tabindex="-1"></a>               <span class="at">d =</span> D,</span>
+<span id="cb86-19"><a href="unique.html#cb86-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">method =</span> <span class="st">&quot;double selection&quot;</span>)</span></code></pre></div>
 <ul>
 <li>推定結果</li>
 </ul>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="unique.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="unique.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
 <pre><code>## [1] &quot;Estimates and significance testing of the effect of target variables&quot;
 ##    Estimate. Std. Error t value Pr(&gt;|t|)    
 ## d1    0.8642     0.2452   3.524 0.000425 ***
@@ -738,7 +874,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>選択されたコントロール変数</li>
 </ul>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="unique.html#cb83-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>selection.index</span></code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="unique.html#cb89-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>selection.index</span></code></pre></div>
 <pre><code>##            regionnortheast              regionmidwest 
 ##                      FALSE                       TRUE 
 ##                 regionwest                regionother 
@@ -775,68 +911,67 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>なんらかの方法（例、OLS、ランダムフォレスト、LASSO）で<span class="math inline">\(E[Y|X],E[D|X]\)</span>の予測関数<span class="math inline">\(f_Y(X),f_D(X)\)</span>を推定し、予測誤差を単回帰</p></li>
 <li><p>DoubleMLパッケージ<span class="citation">(<a href="references.html#ref-R-DoubleML" role="doc-biblioref">Bach et al. 2021</a>)</span>を利用</p></li>
 </ul>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="unique.html#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoubleML)</span>
-<span id="cb85-2"><a href="unique.html#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3)</span>
-<span id="cb85-3"><a href="unique.html#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3learners)</span>
-<span id="cb85-4"><a href="unique.html#cb85-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
-<span id="cb85-5"><a href="unique.html#cb85-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-6"><a href="unique.html#cb85-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-7"><a href="unique.html#cb85-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
-<span id="cb85-8"><a href="unique.html#cb85-8" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
-<span id="cb85-9"><a href="unique.html#cb85-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-10"><a href="unique.html#cb85-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-11"><a href="unique.html#cb85-11" aria-hidden="true" tabindex="-1"></a>learner <span class="ot">&lt;-</span> </span>
-<span id="cb85-12"><a href="unique.html#cb85-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lrn</span>(<span class="st">&quot;regr.ranger&quot;</span>, </span>
-<span id="cb85-13"><a href="unique.html#cb85-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">num.trees =</span> <span class="dv">100</span>) <span class="co"># Require bigger num.trees in practice</span></span>
-<span id="cb85-14"><a href="unique.html#cb85-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-15"><a href="unique.html#cb85-15" aria-hidden="true" tabindex="-1"></a>ml_g <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
-<span id="cb85-16"><a href="unique.html#cb85-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-17"><a href="unique.html#cb85-17" aria-hidden="true" tabindex="-1"></a>ml_m <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
-<span id="cb85-18"><a href="unique.html#cb85-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-19"><a href="unique.html#cb85-19" aria-hidden="true" tabindex="-1"></a>obj_dml_data <span class="ot">&lt;-</span> </span>
-<span id="cb85-20"><a href="unique.html#cb85-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">double_ml_data_from_matrix</span>(<span class="at">X =</span> X,</span>
-<span id="cb85-21"><a href="unique.html#cb85-21" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> <span class="fu">as.numeric</span>(Y),</span>
-<span id="cb85-22"><a href="unique.html#cb85-22" aria-hidden="true" tabindex="-1"></a>                             <span class="at">d =</span> <span class="fu">as.numeric</span>(D))</span>
-<span id="cb85-23"><a href="unique.html#cb85-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-24"><a href="unique.html#cb85-24" aria-hidden="true" tabindex="-1"></a>dml_plr_obj <span class="ot">&lt;-</span> </span>
-<span id="cb85-25"><a href="unique.html#cb85-25" aria-hidden="true" tabindex="-1"></a>  DoubleMLPLR<span class="sc">$</span><span class="fu">new</span>(obj_dml_data, </span>
-<span id="cb85-26"><a href="unique.html#cb85-26" aria-hidden="true" tabindex="-1"></a>                  ml_g, </span>
-<span id="cb85-27"><a href="unique.html#cb85-27" aria-hidden="true" tabindex="-1"></a>                  ml_m, </span>
-<span id="cb85-28"><a href="unique.html#cb85-28" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dml_procedure=</span><span class="st">&quot;dml1&quot;</span>, </span>
-<span id="cb85-29"><a href="unique.html#cb85-29" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_rep =</span> <span class="dv">3</span>)</span>
-<span id="cb85-30"><a href="unique.html#cb85-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-31"><a href="unique.html#cb85-31" aria-hidden="true" tabindex="-1"></a>dml_plr_obj<span class="sc">$</span><span class="fu">fit</span>()</span></code></pre></div>
-<pre><code>## INFO  [15:27:38.682] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [15:27:39.003] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [15:27:39.263] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [15:27:39.543] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [15:27:39.778] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [15:27:40.490] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [15:27:40.704] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [15:27:40.927] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [15:27:41.144] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
-## INFO  [15:27:41.370] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
-## INFO  [15:27:41.760] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [15:27:41.995] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [15:27:42.261] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [15:27:42.546] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [15:27:42.763] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [15:27:43.146] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [15:27:43.378] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [15:27:43.619] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
-## INFO  [15:27:43.860] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [15:27:44.107] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
-## INFO  [15:27:44.605] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [15:27:44.840] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [15:27:45.119] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [15:27:45.391] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [15:27:45.741] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [15:27:46.282] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [15:27:46.604] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [15:27:46.972] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
-## INFO  [15:27:47.315] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [15:27:47.678] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5)</code></pre>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="unique.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dml_plr_obj)</span></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="unique.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoubleML)</span>
+<span id="cb91-2"><a href="unique.html#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3)</span>
+<span id="cb91-3"><a href="unique.html#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3learners)</span>
+<span id="cb91-4"><a href="unique.html#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb91-5"><a href="unique.html#cb91-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-6"><a href="unique.html#cb91-6" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
+<span id="cb91-7"><a href="unique.html#cb91-7" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
+<span id="cb91-8"><a href="unique.html#cb91-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-9"><a href="unique.html#cb91-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-10"><a href="unique.html#cb91-10" aria-hidden="true" tabindex="-1"></a>learner <span class="ot">&lt;-</span> </span>
+<span id="cb91-11"><a href="unique.html#cb91-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lrn</span>(<span class="st">&quot;regr.ranger&quot;</span>, </span>
+<span id="cb91-12"><a href="unique.html#cb91-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">num.trees =</span> <span class="dv">100</span>) <span class="co"># Require bigger num.trees in practice</span></span>
+<span id="cb91-13"><a href="unique.html#cb91-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-14"><a href="unique.html#cb91-14" aria-hidden="true" tabindex="-1"></a>ml_g <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
+<span id="cb91-15"><a href="unique.html#cb91-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-16"><a href="unique.html#cb91-16" aria-hidden="true" tabindex="-1"></a>ml_m <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
+<span id="cb91-17"><a href="unique.html#cb91-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-18"><a href="unique.html#cb91-18" aria-hidden="true" tabindex="-1"></a>obj_dml_data <span class="ot">&lt;-</span> </span>
+<span id="cb91-19"><a href="unique.html#cb91-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">double_ml_data_from_matrix</span>(<span class="at">X =</span> X,</span>
+<span id="cb91-20"><a href="unique.html#cb91-20" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> <span class="fu">as.numeric</span>(Y),</span>
+<span id="cb91-21"><a href="unique.html#cb91-21" aria-hidden="true" tabindex="-1"></a>                             <span class="at">d =</span> <span class="fu">as.numeric</span>(D))</span>
+<span id="cb91-22"><a href="unique.html#cb91-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-23"><a href="unique.html#cb91-23" aria-hidden="true" tabindex="-1"></a>dml_plr_obj <span class="ot">&lt;-</span> </span>
+<span id="cb91-24"><a href="unique.html#cb91-24" aria-hidden="true" tabindex="-1"></a>  DoubleMLPLR<span class="sc">$</span><span class="fu">new</span>(obj_dml_data, </span>
+<span id="cb91-25"><a href="unique.html#cb91-25" aria-hidden="true" tabindex="-1"></a>                  ml_g, </span>
+<span id="cb91-26"><a href="unique.html#cb91-26" aria-hidden="true" tabindex="-1"></a>                  ml_m, </span>
+<span id="cb91-27"><a href="unique.html#cb91-27" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dml_procedure=</span><span class="st">&quot;dml1&quot;</span>, </span>
+<span id="cb91-28"><a href="unique.html#cb91-28" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_rep =</span> <span class="dv">3</span>)</span>
+<span id="cb91-29"><a href="unique.html#cb91-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-30"><a href="unique.html#cb91-30" aria-hidden="true" tabindex="-1"></a>dml_plr_obj<span class="sc">$</span><span class="fu">fit</span>()</span></code></pre></div>
+<pre><code>## INFO  [17:24:34.853] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [17:24:34.994] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [17:24:35.102] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [17:24:35.207] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [17:24:35.306] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [17:24:35.570] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [17:24:35.672] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [17:24:35.769] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [17:24:35.860] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [17:24:35.959] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [17:24:36.133] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [17:24:36.237] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [17:24:36.331] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [17:24:36.430] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [17:24:36.531] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [17:24:36.693] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [17:24:36.792] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [17:24:36.887] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [17:24:36.982] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [17:24:37.084] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [17:24:37.251] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [17:24:37.362] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [17:24:37.461] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [17:24:37.556] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [17:24:37.658] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [17:24:37.829] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [17:24:37.922] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [17:24:38.022] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [17:24:38.114] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [17:24:38.210] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5)</code></pre>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="unique.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dml_plr_obj)</span></code></pre></div>
 <pre><code>## ================= DoubleMLPLR Object ==================
 ## 
 ## 

@@ -130,6 +130,8 @@ library(MatchIt)
 
 ### Nearest neighbor matching
 
+- 傾向スコアを用いた最近旁マッチング
+
 ```{r}
 fit.m <- matchit(insurance ~ region + age + afam + gender + school,
                  data = raw,
@@ -169,6 +171,48 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school,
 ```
 
 
+### Subclassification
+
+- 傾向スコアを用いたStratification マッチング
+
+```{r}
+fit.m <- matchit(insurance ~ region + age + afam + gender + school,
+                 data = raw,
+                 method = "subclass",
+                 estimand = "ATC"
+                 )
+```
+
+- マッチング結果
+
+```{r}
+sum.m <- summary(fit.m)
+
+sum.m
+```
+
+
+- マッチング結果の図示
+
+```{r}
+plot(sum.m, xlim=c(0,2))
+```
+
+- マッチングしたデータを用いた推定
+
+  - 新たに作成されるweight (defaltではweights)を用いた、加重推定で実装
+  
+  - replacement無しの場合ｍマッチングしたペア(subclass)でクラスタリングしたrobust standard errorの利用を推奨 [@abadie2021robust]
+
+```{r}
+df <- match.data(fit.m) # マッチング結果を含んだ
+
+lm_robust(visits ~ insurance + region + age + afam + gender + school,
+          df,
+          weights = weights)
+```
+
+
 ### Coarsened exact matching
 
 - Coarsened exact matching[@iacus2012causal]の実装
@@ -177,7 +221,6 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school,
 fit.m <- matchit(insurance ~ region + age + afam + gender + school,
                  data = raw,
                  method = "cem",
-                 k2k = TRUE,
                  estimand = "ATC")
 ```
 
@@ -276,7 +319,6 @@ library(DoubleML)
 library(mlr3)
 library(mlr3learners)
 library(data.table)
-
 
 X <- model.matrix(~ - 1+ region + age + afam + gender + school,
                   raw)

@@ -36,6 +36,7 @@ unique
 線形モデルの推定
 マッチング法による修正
 nearest-neighbor-matching
+subclassification
 coarsened-exact-matching
 部分推計モデルの推定
 double-selection-rlassoeffect-hdm
