@@ -35,9 +35,10 @@ unique
 データ
 線形モデルの推定
 マッチング法による修正
-nearest-neighbor-matching
-subclassification
+exact-matching
 coarsened-exact-matching
+propensity-score-with-subclassification
+nearest-neighbor-matching
 部分推計モデルの推定
 double-selection-rlassoeffect-hdm
 double-machine-learning-doubleml

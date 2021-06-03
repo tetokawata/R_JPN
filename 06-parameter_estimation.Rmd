@@ -128,9 +128,160 @@ library(MatchIt)
 
 - 多数のマッチング法が実装されている
 
+### Exact matching
+
+- $X$が完全に同じサンプル同士をマッチングする
+
+- 原因変数の分布に偏りがある場合（本例ではコントロールグループが少ない）、少ないグループ内での平均効果(Average treatment effect for treat または control)の推定を目指すことでマッチできないサンプルを減らすことが期待できる。
+
+```{r}
+fit.m <- matchit(insurance ~ region + age + afam + gender + school,
+                 data = raw,
+                 method = "exact",
+                 estimand = "ATC"
+                 )
+```
+
+- マッチング結果の表示
+
+```{r}
+summary(fit.m)
+```
+
+- Sample sizesにて、マッチングできなかったサンプル数（985のコントロールグループ中、267サンプルがマッチングできなかった）が確認できる
+
+
+- マッチング結果の図示
+
+```{r}
+sum.m <- summary(fit.m)
+
+plot(sum.m, xlim=c(0,2))
+```
+
+- マッチング結果を変数として含んだデータを作成
+
+```{r}
+df <- match.data(fit.m)
+```
+
+- "subclass": マッチングしたグループ
+
+- "weights"：マッチング後の推計に用いるウェイト
+
+- マッチングしたデータを用いた推定
+
+  - 新たに作成されるweight (defaltではweights)を用いた、加重推定で実装
+
+```{r}
+lm_robust(visits ~ insurance,
+          df,
+          weights = weights)
+```
+
+
+### Coarsened exact matching
+
+- Coarsened exact matching[@iacus2012causal]の実装
+
+  - 連続変数をカテゴリー変数化することで、マッチングできるサンプルサイズを増やすことが期待できる
+
+```{r}
+fit.m <- matchit(insurance ~ region + age + afam + gender + school,
+                 data = raw,
+                 method = "cem",
+                 estimand = "ATC")
+```
+
+- マッチング結果
+
+```{r}
+sum.m <- summary(fit.m)
+
+sum.m
+```
+
+- 可視化
+
+```{r}
+plot(sum.m, xlim=c(0,2))
+```
+
+- Exact matching以外のマッチング法では、マッチングされたサンプル内でも$X$の違いが残る
+
+  - マッチングされたサンプル内で回帰分析を行うことで、再調整する
+
+```{r}
+df <- match.data(fit.m)
+
+lm_robust(visits ~ insurance + region + age + afam + gender + school,
+          df,
+          weights = weights)
+```
+
+
+### Propensity score with subclassification
+
+- Coarsened exact matchingでもマッチングできないサンプルが多数出てくる可能性
+
+  - とくに$X$が大量にある場合
+
+- 1次元の距離指標を用いて、マッチングを行う
+
+  - 距離指標としては、Mahalanobis' Distance、Propensity scoreなど
+  
+- ここではPropensity score $p_d(X)$を用いる
+
+$$p_d(X)\equiv \Pr[D=d|X]$$
+
+  - 属性$X$のユニットの中で、原因変数の値が$d$である人の割合
+  
+  - 未知の場合、データから推定する必要がある
+
+- 推定された傾向スコアを用いたStratification マッチング
+
+  -　ロジットにて傾向スコアを推定
+
+```{r}
+fit.m <- matchit(insurance ~ region + age + afam + gender + school,
+                 data = raw,
+                 method = "subclass",
+                 estimand = "ATC"
+                 )
+```
+
+- マッチング結果
+
+```{r}
+sum.m <- summary(fit.m)
+
+sum.m
+```
+
+- マッチング結果の図示
+
+```{r}
+plot(sum.m, xlim=c(0,2))
+```
+
+- マッチングしたデータを用いた推定
+
+```{r}
+df <- match.data(fit.m) # マッチング結果を含んだ
+
+lm_robust(visits ~ insurance + region + age + afam + gender + school,
+          df,
+          weights = weights)
+```
+
+
 ### Nearest neighbor matching
 
 - 傾向スコアを用いた最近旁マッチング
+
+  - 傾向スコアがもっとも似ているサンプルとマッチングする
+  
+  - デフォルトでは、Replacement無しのマッチングを行う
 
 ```{r}
 fit.m <- matchit(insurance ~ region + age + afam + gender + school,
@@ -157,8 +308,6 @@ plot(sum.m, xlim=c(0,2))
 
 - マッチングしたデータを用いた推定
 
-  - 新たに作成されるweight (defaltではweights)を用いた、加重推定で実装
-  
   - replacement無しの場合ｍマッチングしたペア(subclass)でクラスタリングしたrobust standard errorの利用を推奨 [@abadie2021robust]
 
 ```{r}
@@ -171,84 +320,6 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school,
 ```
 
 
-### Subclassification
-
-- 傾向スコアを用いたStratification マッチング
-
-```{r}
-fit.m <- matchit(insurance ~ region + age + afam + gender + school,
-                 data = raw,
-                 method = "subclass",
-                 estimand = "ATC"
-                 )
-```
-
-- マッチング結果
-
-```{r}
-sum.m <- summary(fit.m)
-
-sum.m
-```
-
-
-- マッチング結果の図示
-
-```{r}
-plot(sum.m, xlim=c(0,2))
-```
-
-- マッチングしたデータを用いた推定
-
-  - 新たに作成されるweight (defaltではweights)を用いた、加重推定で実装
-  
-  - replacement無しの場合ｍマッチングしたペア(subclass)でクラスタリングしたrobust standard errorの利用を推奨 [@abadie2021robust]
-
-```{r}
-df <- match.data(fit.m) # マッチング結果を含んだ
-
-lm_robust(visits ~ insurance + region + age + afam + gender + school,
-          df,
-          weights = weights)
-```
-
-
-### Coarsened exact matching
-
-- Coarsened exact matching[@iacus2012causal]の実装
-
-```{r}
-fit.m <- matchit(insurance ~ region + age + afam + gender + school,
-                 data = raw,
-                 method = "cem",
-                 estimand = "ATC")
-```
-
-- マッチング結果
-
-```{r}
-sum.m <- summary(fit.m)
-
-sum.m
-```
-
-
-- 可視化
-
-```{r}
-plot(sum.m, xlim=c(0,2))
-```
-
-- 推定
-
-```{r}
-df <- match.data(fit.m)
-
-lm_robust(visits ~ insurance + region + age + afam + gender + school,
-          df,
-          clusters = subclass,
-          weights = weights)
-```
 
 ## 部分推計モデルの推定
 
