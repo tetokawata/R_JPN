@@ -47,3 +47,4 @@ casual-forest
 distribution-of-predicted-individual-effects
 best-linear-predictors
 tree-presentation
+entropy

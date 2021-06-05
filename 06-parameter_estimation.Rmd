@@ -38,7 +38,7 @@ library(estimatr)
 - lm_robust関数で推定
 
 ```{r}
-lm_robust(visits ~ insurance + region + age + afam + gender + school,
+lm_robust(visits ~ insurance + region + age + afam + gender + school + income + employed + married,
           data = raw)
 ```
 
@@ -98,7 +98,8 @@ ggplot(fit, aes(y = term,
                 x = estimate,
                 xmin = conf.low,
                 xmax = conf.high)) +
-  geom_pointrange()
+  geom_pointrange() +
+  geom_vline(xintercept = 0)
 ```
 
 
@@ -135,12 +136,14 @@ library(MatchIt)
 - 原因変数の分布に偏りがある場合（本例ではコントロールグループが少ない）、少ないグループ内での平均効果(Average treatment effect for treat または control)の推定を目指すことでマッチできないサンプルを減らすことが期待できる。
 
 ```{r}
-fit.m <- matchit(insurance ~ region + age + afam + gender + school,
+fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + employed,
                  data = raw,
                  method = "exact",
                  estimand = "ATC"
                  )
 ```
+
+- この例では、incomeもコントロール変数に加えた場合、Exact matching不可能（一つもマッチングできない）
 
 - マッチング結果の表示
 
@@ -148,7 +151,7 @@ fit.m <- matchit(insurance ~ region + age + afam + gender + school,
 summary(fit.m)
 ```
 
-- Sample sizesにて、マッチングできなかったサンプル数（985のコントロールグループ中、267サンプルがマッチングできなかった）が確認できる
+- Sample sizesにて、マッチングできなかったサンプル数（985のコントロールグループ中、667サンプルがマッチングできなかった）が確認できる
 
 
 - マッチング結果の図示
@@ -187,7 +190,7 @@ lm_robust(visits ~ insurance,
   - 連続変数をカテゴリー変数化することで、マッチングできるサンプルサイズを増やすことが期待できる
 
 ```{r}
-fit.m <- matchit(insurance ~ region + age + afam + gender + school,
+fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + employed + income,
                  data = raw,
                  method = "cem",
                  estimand = "ATC")
@@ -214,7 +217,7 @@ plot(sum.m, xlim=c(0,2))
 ```{r}
 df <- match.data(fit.m)
 
-lm_robust(visits ~ insurance + region + age + afam + gender + school,
+lm_robust(visits ~ insurance + region + age + afam + gender + school+ married + employed + income,
           df,
           weights = weights)
 ```
@@ -243,7 +246,7 @@ $$p_d(X)\equiv \Pr[D=d|X]$$
   -　ロジットにて傾向スコアを推定
 
 ```{r}
-fit.m <- matchit(insurance ~ region + age + afam + gender + school,
+fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + employed + income,
                  data = raw,
                  method = "subclass",
                  estimand = "ATC"
@@ -269,7 +272,7 @@ plot(sum.m, xlim=c(0,2))
 ```{r}
 df <- match.data(fit.m) # マッチング結果を含んだ
 
-lm_robust(visits ~ insurance + region + age + afam + gender + school,
+lm_robust(visits ~ insurance + region + age + afam + gender + school+ married + employed,
           df,
           weights = weights)
 ```
@@ -284,7 +287,7 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school,
   - デフォルトでは、Replacement無しのマッチングを行う
 
 ```{r}
-fit.m <- matchit(insurance ~ region + age + afam + gender + school,
+fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + employed + income,
                  data = raw,
                  method = "nearest",
                  estimand = "ATC"
@@ -313,12 +316,37 @@ plot(sum.m, xlim=c(0,2))
 ```{r}
 df <- match.data(fit.m) # マッチング結果を含んだ
 
-lm_robust(visits ~ insurance + region + age + afam + gender + school,
+lm_robust(visits ~ insurance + region + age + afam + gender + school+ married + employed + income,
           df,
           clusters = subclass,
           weights = weights)
 ```
 
+### Entropy
+
+```{r}
+library(WeightIt)
+
+W.out <- weightit(insurance ~ region + age + afam + gender + school+ married + employed + income,
+                  data = raw,
+                  estimand = "ATC",
+                  method = "ebal")
+
+summary(W.out)
+```
+
+```{r}
+library(cobalt)
+
+bal.tab(W.out, m.threshold = .05, disp.v.ratio = TRUE)
+```
+
+
+```{r}
+lm_robust(visits ~ insurance + age + region + afam + gender + school+ married + employed + income,
+          raw,
+          weights = W.out$weights)
+```
 
 
 ## 部分推計モデルの推定
