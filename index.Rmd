@@ -36,7 +36,8 @@ knitr::write_bib(
     "AER",
     "causaldata",
     "gtsummary",
-    "MatchIt"),
+    "MatchIt",
+    "rdrobust"),
   'packages.bib')
 ```
 

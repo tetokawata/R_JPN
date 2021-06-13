@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-06-03" />
+<meta name="date" content="2021-06-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="unique.html"/>
-<link rel="next" href="references.html"/>
+<link rel="next" href="regression-discontinuity.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -201,6 +201,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.3.2" data-path="unique.html"><a href="unique.html#coarsened-exact-matching"><i class="fa fa-check"></i><b>6.3.2</b> Coarsened exact matching</a></li>
 <li class="chapter" data-level="6.3.3" data-path="unique.html"><a href="unique.html#propensity-score-with-subclassification"><i class="fa fa-check"></i><b>6.3.3</b> Propensity score with subclassification</a></li>
 <li class="chapter" data-level="6.3.4" data-path="unique.html"><a href="unique.html#nearest-neighbor-matching"><i class="fa fa-check"></i><b>6.3.4</b> Nearest neighbor matching</a></li>
+<li class="chapter" data-level="6.3.5" data-path="unique.html"><a href="unique.html#entropy"><i class="fa fa-check"></i><b>6.3.5</b> Entropy</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="unique.html"><a href="unique.html#部分推計モデルの推定"><i class="fa fa-check"></i><b>6.4</b> 部分推計モデルの推定</a></li>
 </ul></li>
@@ -210,6 +211,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.2" data-path="条件付き平均効果関数の推定.html"><a href="条件付き平均効果関数の推定.html#distribution-of-predicted-individual-effects"><i class="fa fa-check"></i><b>7.2</b> Distribution of predicted individual effects</a></li>
 <li class="chapter" data-level="7.3" data-path="条件付き平均効果関数の推定.html"><a href="条件付き平均効果関数の推定.html#best-linear-predictors"><i class="fa fa-check"></i><b>7.3</b> Best linear predictors</a></li>
 <li class="chapter" data-level="7.4" data-path="条件付き平均効果関数の推定.html"><a href="条件付き平均効果関数の推定.html#tree-presentation"><i class="fa fa-check"></i><b>7.4</b> Tree presentation</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="regression-discontinuity.html"><a href="regression-discontinuity.html"><i class="fa fa-check"></i><b>8</b> Regression-discontinuity</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="regression-discontinuity.html"><a href="regression-discontinuity.html#shap-disconiniuity"><i class="fa fa-check"></i><b>8.1</b> Shap disconiniuity</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -234,59 +239,59 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="条件付き平均効果関数の推定" class="section level1" number="7">
 <h1><span class="header-section-number">Chapter 7</span> 条件付き平均効果関数の推定</h1>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="条件付き平均効果関数の推定.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb102-2"><a href="条件付き平均効果関数の推定.html#cb102-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-3"><a href="条件付き平均効果関数の推定.html#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
-<span id="cb102-4"><a href="条件付き平均効果関数の推定.html#cb102-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
-<span id="cb102-5"><a href="条件付き平均効果関数の推定.html#cb102-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-6"><a href="条件付き平均効果関数の推定.html#cb102-6" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(NMES1988)</span>
-<span id="cb102-7"><a href="条件付き平均効果関数の推定.html#cb102-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-8"><a href="条件付き平均効果関数の推定.html#cb102-8" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
-<span id="cb102-9"><a href="条件付き平均効果関数の推定.html#cb102-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">no_insurance =</span> <span class="fu">if_else</span>(insurance <span class="sc">==</span> <span class="st">&quot;no&quot;</span>,<span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb102-10"><a href="条件付き平均効果関数の推定.html#cb102-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-11"><a href="条件付き平均効果関数の推定.html#cb102-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-12"><a href="条件付き平均効果関数の推定.html#cb102-12" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>visits</span>
-<span id="cb102-13"><a href="条件付き平均効果関数の推定.html#cb102-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-14"><a href="条件付き平均効果関数の推定.html#cb102-14" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> raw<span class="sc">$</span>no_insurance</span>
-<span id="cb102-15"><a href="条件付き平均効果関数の推定.html#cb102-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-16"><a href="条件付き平均効果関数の推定.html#cb102-16" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
-<span id="cb102-17"><a href="条件付き平均効果関数の推定.html#cb102-17" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
-<span id="cb102-18"><a href="条件付き平均効果関数の推定.html#cb102-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-19"><a href="条件付き平均効果関数の推定.html#cb102-19" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="条件付き平均効果関数の推定.html#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb108-2"><a href="条件付き平均効果関数の推定.html#cb108-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-3"><a href="条件付き平均効果関数の推定.html#cb108-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
+<span id="cb108-4"><a href="条件付き平均効果関数の推定.html#cb108-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
+<span id="cb108-5"><a href="条件付き平均効果関数の推定.html#cb108-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-6"><a href="条件付き平均効果関数の推定.html#cb108-6" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(NMES1988)</span>
+<span id="cb108-7"><a href="条件付き平均効果関数の推定.html#cb108-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-8"><a href="条件付き平均効果関数の推定.html#cb108-8" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
+<span id="cb108-9"><a href="条件付き平均効果関数の推定.html#cb108-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">no_insurance =</span> <span class="fu">if_else</span>(insurance <span class="sc">==</span> <span class="st">&quot;no&quot;</span>,<span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb108-10"><a href="条件付き平均効果関数の推定.html#cb108-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-11"><a href="条件付き平均効果関数の推定.html#cb108-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-12"><a href="条件付き平均効果関数の推定.html#cb108-12" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>visits</span>
+<span id="cb108-13"><a href="条件付き平均効果関数の推定.html#cb108-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-14"><a href="条件付き平均効果関数の推定.html#cb108-14" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> raw<span class="sc">$</span>no_insurance</span>
+<span id="cb108-15"><a href="条件付き平均効果関数の推定.html#cb108-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-16"><a href="条件付き平均効果関数の推定.html#cb108-16" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
+<span id="cb108-17"><a href="条件付き平均効果関数の推定.html#cb108-17" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
+<span id="cb108-18"><a href="条件付き平均効果関数の推定.html#cb108-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-19"><a href="条件付き平均効果関数の推定.html#cb108-19" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span></code></pre></div>
 <div id="casual-forest" class="section level2" number="7.1">
 <h2><span class="header-section-number">7.1</span> Casual Forest</h2>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="条件付き平均効果関数の推定.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grf)</span>
-<span id="cb103-2"><a href="条件付き平均効果関数の推定.html#cb103-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-3"><a href="条件付き平均効果関数の推定.html#cb103-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">regression_forest</span>(<span class="at">X =</span> X,</span>
-<span id="cb103-4"><a href="条件付き平均効果関数の推定.html#cb103-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Y =</span> Y)</span>
-<span id="cb103-5"><a href="条件付き平均効果関数の推定.html#cb103-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-6"><a href="条件付き平均効果関数の推定.html#cb103-6" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit)<span class="sc">$</span>predictions</span>
-<span id="cb103-7"><a href="条件付き平均効果関数の推定.html#cb103-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-8"><a href="条件付き平均効果関数の推定.html#cb103-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">regression_forest</span>(<span class="at">X =</span> X,</span>
-<span id="cb103-9"><a href="条件付き平均効果関数の推定.html#cb103-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Y =</span> D)</span>
-<span id="cb103-10"><a href="条件付き平均効果関数の推定.html#cb103-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-11"><a href="条件付き平均効果関数の推定.html#cb103-11" aria-hidden="true" tabindex="-1"></a>D.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit)<span class="sc">$</span>predictions</span>
-<span id="cb103-12"><a href="条件付き平均効果関数の推定.html#cb103-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-13"><a href="条件付き平均効果関数の推定.html#cb103-13" aria-hidden="true" tabindex="-1"></a>fit.CF <span class="ot">&lt;-</span> <span class="fu">causal_forest</span>(<span class="at">X =</span> X,</span>
-<span id="cb103-14"><a href="条件付き平均効果関数の推定.html#cb103-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">W =</span> D,</span>
-<span id="cb103-15"><a href="条件付き平均効果関数の推定.html#cb103-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Y =</span> Y,</span>
-<span id="cb103-16"><a href="条件付き平均効果関数の推定.html#cb103-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Y.hat =</span> Y.hat,</span>
-<span id="cb103-17"><a href="条件付き平均効果関数の推定.html#cb103-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">W.hat =</span> D.hat)</span>
-<span id="cb103-18"><a href="条件付き平均効果関数の推定.html#cb103-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-19"><a href="条件付き平均効果関数の推定.html#cb103-19" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
-<span id="cb103-20"><a href="条件付き平均効果関数の推定.html#cb103-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">tau.grf =</span> <span class="fu">predict</span>(fit.CF)<span class="sc">$</span>predictions)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="条件付き平均効果関数の推定.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grf)</span>
+<span id="cb109-2"><a href="条件付き平均効果関数の推定.html#cb109-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-3"><a href="条件付き平均効果関数の推定.html#cb109-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">regression_forest</span>(<span class="at">X =</span> X,</span>
+<span id="cb109-4"><a href="条件付き平均効果関数の推定.html#cb109-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Y =</span> Y)</span>
+<span id="cb109-5"><a href="条件付き平均効果関数の推定.html#cb109-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-6"><a href="条件付き平均効果関数の推定.html#cb109-6" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit)<span class="sc">$</span>predictions</span>
+<span id="cb109-7"><a href="条件付き平均効果関数の推定.html#cb109-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-8"><a href="条件付き平均効果関数の推定.html#cb109-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">regression_forest</span>(<span class="at">X =</span> X,</span>
+<span id="cb109-9"><a href="条件付き平均効果関数の推定.html#cb109-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Y =</span> D)</span>
+<span id="cb109-10"><a href="条件付き平均効果関数の推定.html#cb109-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-11"><a href="条件付き平均効果関数の推定.html#cb109-11" aria-hidden="true" tabindex="-1"></a>D.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit)<span class="sc">$</span>predictions</span>
+<span id="cb109-12"><a href="条件付き平均効果関数の推定.html#cb109-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-13"><a href="条件付き平均効果関数の推定.html#cb109-13" aria-hidden="true" tabindex="-1"></a>fit.CF <span class="ot">&lt;-</span> <span class="fu">causal_forest</span>(<span class="at">X =</span> X,</span>
+<span id="cb109-14"><a href="条件付き平均効果関数の推定.html#cb109-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">W =</span> D,</span>
+<span id="cb109-15"><a href="条件付き平均効果関数の推定.html#cb109-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Y =</span> Y,</span>
+<span id="cb109-16"><a href="条件付き平均効果関数の推定.html#cb109-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Y.hat =</span> Y.hat,</span>
+<span id="cb109-17"><a href="条件付き平均効果関数の推定.html#cb109-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">W.hat =</span> D.hat)</span>
+<span id="cb109-18"><a href="条件付き平均効果関数の推定.html#cb109-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-19"><a href="条件付き平均効果関数の推定.html#cb109-19" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
+<span id="cb109-20"><a href="条件付き平均効果関数の推定.html#cb109-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">tau.grf =</span> <span class="fu">predict</span>(fit.CF)<span class="sc">$</span>predictions)</span></code></pre></div>
 </div>
 <div id="distribution-of-predicted-individual-effects" class="section level2" number="7.2">
 <h2><span class="header-section-number">7.2</span> Distribution of predicted individual effects</h2>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="条件付き平均効果関数の推定.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df,</span>
-<span id="cb104-2"><a href="条件付き平均効果関数の推定.html#cb104-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> tau.grf)</span>
-<span id="cb104-3"><a href="条件付き平均効果関数の推定.html#cb104-3" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb104-4"><a href="条件付き平均効果関数の推定.html#cb104-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-78-1.png" width="672" /></p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="条件付き平均効果関数の推定.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df,</span>
+<span id="cb110-2"><a href="条件付き平均効果関数の推定.html#cb110-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> tau.grf)</span>
+<span id="cb110-3"><a href="条件付き平均効果関数の推定.html#cb110-3" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb110-4"><a href="条件付き平均効果関数の推定.html#cb110-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-81-1.png" width="672" /></p>
 </div>
 <div id="best-linear-predictors" class="section level2" number="7.3">
 <h2><span class="header-section-number">7.3</span> Best linear predictors</h2>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="条件付き平均効果関数の推定.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">best_linear_projection</span>(fit.CF,X)</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="条件付き平均効果関数の推定.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">best_linear_projection</span>(fit.CF,X)</span></code></pre></div>
 <pre><code>## 
 ## Best linear projection of the conditional average treatment effect.
 ## Confidence intervals are cluster- and heteroskedasticity-robust (HC3):
@@ -305,17 +310,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="tree-presentation" class="section level2" number="7.4">
 <h2><span class="header-section-number">7.4</span> Tree presentation</h2>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="条件付き平均効果関数の推定.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
-<span id="cb107-2"><a href="条件付き平均効果関数の推定.html#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot)</span>
-<span id="cb107-3"><a href="条件付き平均効果関数の推定.html#cb107-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb107-4"><a href="条件付き平均効果関数の推定.html#cb107-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rpart</span>(tau.grf <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> medicaid,</span>
-<span id="cb107-5"><a href="条件付き平均効果関数の推定.html#cb107-5" aria-hidden="true" tabindex="-1"></a>             df,</span>
-<span id="cb107-6"><a href="条件付き平均効果関数の推定.html#cb107-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">control =</span> <span class="fu">rpart.control</span>(<span class="at">cp =</span> <span class="dv">0</span>,</span>
-<span id="cb107-7"><a href="条件付き平均効果関数の推定.html#cb107-7" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">maxdepth =</span> <span class="dv">2</span>)</span>
-<span id="cb107-8"><a href="条件付き平均効果関数の推定.html#cb107-8" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb107-9"><a href="条件付き平均効果関数の推定.html#cb107-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb107-10"><a href="条件付き平均効果関数の推定.html#cb107-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(fit)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-80-1.png" width="672" /></p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="条件付き平均効果関数の推定.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb113-2"><a href="条件付き平均効果関数の推定.html#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot)</span>
+<span id="cb113-3"><a href="条件付き平均効果関数の推定.html#cb113-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-4"><a href="条件付き平均効果関数の推定.html#cb113-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rpart</span>(tau.grf <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> medicaid,</span>
+<span id="cb113-5"><a href="条件付き平均効果関数の推定.html#cb113-5" aria-hidden="true" tabindex="-1"></a>             df,</span>
+<span id="cb113-6"><a href="条件付き平均効果関数の推定.html#cb113-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">control =</span> <span class="fu">rpart.control</span>(<span class="at">cp =</span> <span class="dv">0</span>,</span>
+<span id="cb113-7"><a href="条件付き平均効果関数の推定.html#cb113-7" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">maxdepth =</span> <span class="dv">2</span>)</span>
+<span id="cb113-8"><a href="条件付き平均効果関数の推定.html#cb113-8" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb113-9"><a href="条件付き平均効果関数の推定.html#cb113-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-10"><a href="条件付き平均効果関数の推定.html#cb113-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(fit)</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-83-1.png" width="672" /></p>
 
 </div>
 </div>
@@ -325,7 +330,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="unique.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="regression-discontinuity.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 可視化 | Rによる比較・予測・因果推論入門 ver0.1</title>
+  <title>Chapter 8 Regression-discontinuity | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 可視化 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:title" content="Chapter 8 Regression-discontinuity | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 可視化 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta name="twitter:title" content="Chapter 8 Regression-discontinuity | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="データ整備.html"/>
-<link rel="next" href="prediction.html"/>
+<link rel="prev" href="条件付き平均効果関数の推定.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -237,95 +237,109 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="可視化" class="section level1" number="3">
-<h1><span class="header-section-number">Chapter 3</span> 可視化</h1>
+<div id="regression-discontinuity" class="section level1" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Regression-discontinuity</h1>
 <ul>
-<li>tidyverseに含まれるggplot2パッケージ<span class="citation">(<a href="references.html#ref-R-ggplot2" role="doc-biblioref">Wickham et al. 2020</a>)</span>を利用</li>
+<li><p>通常、Cutoffの近傍には少数のサンプルしかないので、外挿する必要がある。</p></li>
+<li><p>polynomial regressionによる局所的外挿は、rdrobustパッケージ <span class="citation">(<a href="references.html#ref-R-rdrobust" role="doc-biblioref">Calonico et al. 2021</a>)</span>により実装できる。</p></li>
+<li><p>同パッケージによる実装も含んだ包括的な入門は <span class="citation"><a href="references.html#ref-cattaneo2019practicala" role="doc-biblioref">Cattaneo, Idrobo, and Titiunik</a> (<a href="references.html#ref-cattaneo2019practicala" role="doc-biblioref">2019b</a>)</span>, <span class="citation"><a href="references.html#ref-cattaneo2019practicalb" role="doc-biblioref">Cattaneo, Idrobo, and Titiunik</a> (<a href="references.html#ref-cattaneo2019practicalb" role="doc-biblioref">2019a</a>)</span>.</p></li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="可視化.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="regression-discontinuity.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rdrobust)</span></code></pre></div>
+<div id="shap-disconiniuity" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Shap disconiniuity</h2>
 <ul>
-<li>引き続きcausaldataに含まれるclose_collegeを使用</li>
-</ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="可視化.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
-<span id="cb11-2"><a href="可視化.html#cb11-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
-<span id="cb11-3"><a href="可視化.html#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="可視化.html#cb11-4" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span></code></pre></div>
-<div id="y連続xカテゴリ" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Y=連続、X＝カテゴリ</h2>
-<div id="ヒストグラム-geom_histogram-tidyverse" class="section level3" number="3.1.1">
-<h3><span class="header-section-number">3.1.1</span> ヒストグラム: geom_histogram (tidyverse)</h3>
+<li><p>Rdrobustに同梱されれいるExample data <span class="citation">(<a href="references.html#ref-cattaneo2015randomization" role="doc-biblioref">Cattaneo, Frandsen, and Titiunik 2015</a>)</span>を使用</p>
 <ul>
-<li>医療機関の利用回数</li>
+<li><p>選挙における現職効果（現在議席を得ている候補者のほうが選挙で有利になる）を推定</p></li>
+<li><p>running variable <span class="math inline">\(=\)</span> margin (前回の選挙におけるライバル政党との得票率差)</p></li>
+<li><p>cutoff <span class="math inline">\(=\)</span> 0 (差がない)</p></li>
+<li><p>outcome variable <span class="math inline">\(=\)</span> vote (選挙における得票率)</p></li>
+</ul></li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="可視化.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb12-2"><a href="可視化.html#cb12-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits)</span>
-<span id="cb12-3"><a href="可視化.html#cb12-3" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb12-4"><a href="可視化.html#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="regression-discontinuity.html#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;rdrobust_RDsenate&quot;</span>)</span>
+<span id="cb115-2"><a href="regression-discontinuity.html#cb115-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-3"><a href="regression-discontinuity.html#cb115-3" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> rdrobust_RDsenate</span>
+<span id="cb115-4"><a href="regression-discontinuity.html#cb115-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-5"><a href="regression-discontinuity.html#cb115-5" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>vote</span>
+<span id="cb115-6"><a href="regression-discontinuity.html#cb115-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-7"><a href="regression-discontinuity.html#cb115-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> raw<span class="sc">$</span>margin</span></code></pre></div>
 <ul>
-<li>保険の有無別</li>
+<li>図示：High (4th) order polynomial.</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="可視化.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb13-2"><a href="可視化.html#cb13-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
-<span id="cb13-3"><a href="可視化.html#cb13-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> insurance)</span>
-<span id="cb13-4"><a href="可視化.html#cb13-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb13-5"><a href="可視化.html#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
-<span id="cb13-6"><a href="可視化.html#cb13-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-</div>
-<div id="密度-geom_density-tidyverse" class="section level3" number="3.1.2">
-<h3><span class="header-section-number">3.1.2</span> 密度: geom_density (tidyverse)</h3>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="regression-discontinuity.html#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rdplot</span>(<span class="at">y =</span> Y,</span>
+<span id="cb116-2"><a href="regression-discontinuity.html#cb116-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> X,</span>
+<span id="cb116-3"><a href="regression-discontinuity.html#cb116-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">p =</span> <span class="dv">4</span>)</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-86-1.png" width="672" /></p>
 <ul>
-<li>保険の有無別分布</li>
+<li>推定結果表 + 標準誤差</li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="可視化.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb14-2"><a href="可視化.html#cb14-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
-<span id="cb14-3"><a href="可視化.html#cb14-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> insurance)</span>
-<span id="cb14-4"><a href="可視化.html#cb14-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="可視化.html#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
-<span id="cb14-6"><a href="可視化.html#cb14-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-</div>
-<div id="boxplot-geom_boxplot-tidyverse" class="section level3" number="3.1.3">
-<h3><span class="header-section-number">3.1.3</span> Boxplot: geom_boxplot (tidyverse)</h3>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="可視化.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb15-2"><a href="可視化.html#cb15-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> visits,</span>
-<span id="cb15-3"><a href="可視化.html#cb15-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> insurance)</span>
-<span id="cb15-4"><a href="可視化.html#cb15-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb15-5"><a href="可視化.html#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
-</div>
-</div>
-<div id="y連続x連続" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Y=連続、X=連続</h2>
-<div id="散布図-geom_point-tidyverse" class="section level3" number="3.2.1">
-<h3><span class="header-section-number">3.2.1</span> 散布図: geom_point (tidyverse)</h3>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="regression-discontinuity.html#cb117-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rdrobust</span>(<span class="at">y =</span> Y,</span>
+<span id="cb117-2"><a href="regression-discontinuity.html#cb117-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> X,</span>
+<span id="cb117-3"><a href="regression-discontinuity.html#cb117-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">p =</span> <span class="dv">4</span>)</span>
+<span id="cb117-4"><a href="regression-discontinuity.html#cb117-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-5"><a href="regression-discontinuity.html#cb117-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<pre><code>## Call: rdrobust
+## 
+## Number of Obs.                 1297
+## BW type                       mserd
+## Kernel                   Triangular
+## VCE method                       NN
+## 
+## Number of Obs.                 595         702
+## Eff. Number of Obs.            471         450
+## Order est. (p)                   4           4
+## Order bias  (q)                  5           5
+## BW est. (h)                 29.242      29.242
+## BW bias (b)                 41.586      41.586
+## rho (h/b)                    0.703       0.703
+## Unique Obs.                    595         665
+## 
+## =============================================================================
+##         Method     Coef. Std. Err.         z     P&gt;|z|      [ 95% C.I. ]       
+## =============================================================================
+##   Conventional    10.530     2.693     3.910     0.000     [5.251 , 15.809]    
+##         Robust         -         -     3.895     0.000     [5.487 , 16.604]    
+## =============================================================================</code></pre>
 <ul>
-<li>散布図：連続変数間の関係性を可視化する図</li>
+<li>Low (2nd) order polynominalを用いた推計 (<span class="citation"><a href="references.html#ref-gelman2019whyhigh" role="doc-biblioref">Gelman and Imbens</a> (<a href="references.html#ref-gelman2019whyhigh" role="doc-biblioref">2019</a>)</span> により推奨)</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="可視化.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb16-2"><a href="可視化.html#cb16-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> age,</span>
-<span id="cb16-3"><a href="可視化.html#cb16-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
-<span id="cb16-4"><a href="可視化.html#cb16-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb16-5"><a href="可視化.html#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="regression-discontinuity.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rdplot</span>(<span class="at">y =</span> Y,</span>
+<span id="cb119-2"><a href="regression-discontinuity.html#cb119-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> X,</span>
+<span id="cb119-3"><a href="regression-discontinuity.html#cb119-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">p =</span> <span class="dv">2</span>,</span>
+<span id="cb119-4"><a href="regression-discontinuity.html#cb119-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">c =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="R_book_files/figure-html/unnamed-chunk-88-1.png" width="672" /></p>
 <ul>
-<li>サンプルサイズが大きくなると機能しない</li>
+<li>推計結果表</li>
 </ul>
-</div>
-<div id="ヒートマップ-geom_bin2d-tidyverse" class="section level3" number="3.2.2">
-<h3><span class="header-section-number">3.2.2</span> ヒートマップ: geom_bin2d (tidyverse)</h3>
-<ul>
-<li>代替案はヒートマップ</li>
-</ul>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="可視化.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb17-2"><a href="可視化.html#cb17-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> age,</span>
-<span id="cb17-3"><a href="可視化.html#cb17-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
-<span id="cb17-4"><a href="可視化.html#cb17-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb17-5"><a href="可視化.html#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bin2d</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="regression-discontinuity.html#cb120-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rdrobust</span>(<span class="at">y =</span> Y,</span>
+<span id="cb120-2"><a href="regression-discontinuity.html#cb120-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> X,</span>
+<span id="cb120-3"><a href="regression-discontinuity.html#cb120-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">p =</span> <span class="dv">2</span>,</span>
+<span id="cb120-4"><a href="regression-discontinuity.html#cb120-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">c =</span> <span class="dv">0</span>)</span>
+<span id="cb120-5"><a href="regression-discontinuity.html#cb120-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb120-6"><a href="regression-discontinuity.html#cb120-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<pre><code>## Call: rdrobust
+## 
+## Number of Obs.                 1297
+## BW type                       mserd
+## Kernel                   Triangular
+## VCE method                       NN
+## 
+## Number of Obs.                 595         702
+## Eff. Number of Obs.            409         370
+## Order est. (p)                   2           2
+## Order bias  (q)                  3           3
+## BW est. (h)                 22.256      22.256
+## BW bias (b)                 33.284      33.284
+## rho (h/b)                    0.669       0.669
+## Unique Obs.                    595         665
+## 
+## =============================================================================
+##         Method     Coef. Std. Err.         z     P&gt;|z|      [ 95% C.I. ]       
+## =============================================================================
+##   Conventional     8.045     1.888     4.262     0.000     [4.345 , 11.745]    
+##         Robust         -         -     3.973     0.000     [4.214 , 12.419]    
+## =============================================================================</code></pre>
 
-</div>
 </div>
 </div>
             </section>
@@ -333,8 +347,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="データ整備.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="prediction.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="条件付き平均効果関数の推定.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -24,14 +24,14 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-06-03" />
+<meta name="date" content="2021-06-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="条件付き平均効果関数の推定.html"/>
+<link rel="prev" href="regression-discontinuity.html"/>
 
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -201,6 +201,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.3.2" data-path="unique.html"><a href="unique.html#coarsened-exact-matching"><i class="fa fa-check"></i><b>6.3.2</b> Coarsened exact matching</a></li>
 <li class="chapter" data-level="6.3.3" data-path="unique.html"><a href="unique.html#propensity-score-with-subclassification"><i class="fa fa-check"></i><b>6.3.3</b> Propensity score with subclassification</a></li>
 <li class="chapter" data-level="6.3.4" data-path="unique.html"><a href="unique.html#nearest-neighbor-matching"><i class="fa fa-check"></i><b>6.3.4</b> Nearest neighbor matching</a></li>
+<li class="chapter" data-level="6.3.5" data-path="unique.html"><a href="unique.html#entropy"><i class="fa fa-check"></i><b>6.3.5</b> Entropy</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="unique.html"><a href="unique.html#部分推計モデルの推定"><i class="fa fa-check"></i><b>6.4</b> 部分推計モデルの推定</a></li>
 </ul></li>
@@ -210,6 +211,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.2" data-path="条件付き平均効果関数の推定.html"><a href="条件付き平均効果関数の推定.html#distribution-of-predicted-individual-effects"><i class="fa fa-check"></i><b>7.2</b> Distribution of predicted individual effects</a></li>
 <li class="chapter" data-level="7.3" data-path="条件付き平均効果関数の推定.html"><a href="条件付き平均効果関数の推定.html#best-linear-predictors"><i class="fa fa-check"></i><b>7.3</b> Best linear predictors</a></li>
 <li class="chapter" data-level="7.4" data-path="条件付き平均効果関数の推定.html"><a href="条件付き平均効果関数の推定.html#tree-presentation"><i class="fa fa-check"></i><b>7.4</b> Tree presentation</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="regression-discontinuity.html"><a href="regression-discontinuity.html"><i class="fa fa-check"></i><b>8</b> Regression-discontinuity</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="regression-discontinuity.html"><a href="regression-discontinuity.html#shap-disconiniuity"><i class="fa fa-check"></i><b>8.1</b> Shap disconiniuity</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -248,11 +253,26 @@ Belloni, Alexandre, Victor Chernozhukov, and Christian Hansen. 2014. <span>“In
 <div id="ref-R-estimatr" class="csl-entry">
 Blair, Graeme, Jasper Cooper, Alexander Coppock, Macartan Humphreys, and Luke Sonnet. 2021. <em>Estimatr: Fast Estimators for Design-Based Inference</em>. <a href="https://CRAN.R-project.org/package=estimatr">https://CRAN.R-project.org/package=estimatr</a>.
 </div>
+<div id="ref-R-rdrobust" class="csl-entry">
+Calonico, Sebastian, Matias D. Cattaneo, Max H. Farrell, and Rocio Titiunik. 2021. <em>Rdrobust: Robust Data-Driven Statistical Inference in Regression-Discontinuity Designs</em>. <a href="https://CRAN.R-project.org/package=rdrobust">https://CRAN.R-project.org/package=rdrobust</a>.
+</div>
+<div id="ref-cattaneo2015randomization" class="csl-entry">
+Cattaneo, Matias D, Brigham R Frandsen, and Rocio Titiunik. 2015. <span>“Randomization Inference in the Regression Discontinuity Design: An Application to Party Advantages in the US Senate.”</span> <em>Journal of Causal Inference</em> 3 (1): 1–24.
+</div>
+<div id="ref-cattaneo2019practicalb" class="csl-entry">
+Cattaneo, Matias D, Nicolás Idrobo, and Rocı́o Titiunik. 2019a. <em>A Practical Introduction to Regression Discontinuity Designs: Extensions</em>. Cambridge University Press.
+</div>
+<div id="ref-cattaneo2019practicala" class="csl-entry">
+———. 2019b. <em>A Practical Introduction to Regression Discontinuity Designs: Foundations</em>. Cambridge University Press.
+</div>
 <div id="ref-chernozhukov2018double" class="csl-entry">
 Chernozhukov, Victor, Denis Chetverikov, Mert Demirer, Esther Duflo, Christian Hansen, Whitney Newey, and James Robins. 2018. <span>“Double/Debiased Machine Learning for Treatment and Structural Parameters: Double/Debiased Machine Learning.”</span> <em>The Econometrics Journal</em> 21 (1).
 </div>
 <div id="ref-R-glmnet" class="csl-entry">
 Friedman, Jerome, Trevor Hastie, Rob Tibshirani, Balasubramanian Narasimhan, Kenneth Tay, and Noah Simon. 2021. <em>Glmnet: Lasso and Elastic-Net Regularized Generalized Linear Models</em>. <a href="https://CRAN.R-project.org/package=glmnet">https://CRAN.R-project.org/package=glmnet</a>.
+</div>
+<div id="ref-gelman2019whyhigh" class="csl-entry">
+Gelman, Andrew, and Guido Imbens. 2019. <span>“Why High-Order Polynominals Should Not Be Used in Regression Discontinuity Designs.”</span> <em>Journal of Business and Econmomic Statistics</em> 37 (3): 447–56.
 </div>
 <div id="ref-MatchIt2011" class="csl-entry">
 Ho, Daniel E., Kosuke Imai, Gary King, and Elizabeth A. Stuart. 2011. <span>“<span>MatchIt</span>: Nonparametric Preprocessing for Parametric Causal Inference.”</span> <em>Journal of Statistical Software</em> 42 (8): 1–28. <a href="https://www.jstatsoft.org/v42/i08/">https://www.jstatsoft.org/v42/i08/</a>.
@@ -300,7 +320,7 @@ Wright, Marvin N., Stefan Wager, and Philipp Probst. 2020. <em>Ranger: A Fast Im
           </div>
         </div>
       </div>
-<a href="条件付き平均効果関数の推定.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="regression-discontinuity.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>

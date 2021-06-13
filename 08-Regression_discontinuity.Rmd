@@ -1,0 +1,71 @@
+# Regression-discontinuity
+
+- 通常、Cutoffの近傍には少数のサンプルしかないので、外挿する必要がある。
+
+- polynomial regressionによる局所的外挿は、rdrobustパッケージ [@R-rdrobust]により実装できる。
+
+- 同パッケージによる実装も含んだ包括的な入門は @cattaneo2019practicala, @cattaneo2019practicalb.
+
+```{r}
+library(rdrobust)
+```
+
+## Shap disconiniuity
+
+- Rdrobustに同梱されれいるExample data [@cattaneo2015randomization]を使用
+
+  - 選挙における現職効果（現在議席を得ている候補者のほうが選挙で有利になる）を推定
+  
+  - running variable $=$ margin (前回の選挙におけるライバル政党との得票率差)
+  
+  - cutoff $=$ 0 (差がない)
+  
+  - outcome variable $=$ vote (選挙における得票率)
+
+```{r}
+data("rdrobust_RDsenate")
+
+raw <- rdrobust_RDsenate
+
+Y <- raw$vote
+
+X <- raw$margin
+```
+
+- 図示：High (4th) order polynomial.
+
+```{r}
+rdplot(y = Y,
+       x = X,
+       p = 4)
+```
+
+- 推定結果表 + 標準誤差
+
+```{r}
+fit <- rdrobust(y = Y,
+                x = X,
+                p = 4)
+
+summary(fit)
+```
+
+- Low (2nd) order polynominalを用いた推計 (@gelman2019whyhigh により推奨)
+
+```{r}
+rdplot(y = Y,
+       x = X,
+       p = 2,
+       c = 0)
+```
+
+- 推計結果表
+
+```{r}
+fit <- rdrobust(y = Y,
+                x = X,
+                p = 2,
+                c = 0)
+
+summary(fit)
+```

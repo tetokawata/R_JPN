@@ -39,6 +39,7 @@ exact-matching
 coarsened-exact-matching
 propensity-score-with-subclassification
 nearest-neighbor-matching
+entropy
 部分推計モデルの推定
 double-selection-rlassoeffect-hdm
 double-machine-learning-doubleml
@@ -47,4 +48,5 @@ casual-forest
 distribution-of-predicted-individual-effects
 best-linear-predictors
 tree-presentation
-entropy
+regression-discontinuity
+shap-disconiniuity
