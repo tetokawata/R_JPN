@@ -8,6 +8,7 @@
 
 ```{r}
 library(rdrobust)
+library(rdlocrand)
 ```
 
 ## Shap disconiniuity
@@ -69,3 +70,13 @@ fit <- rdrobust(y = Y,
 
 summary(fit)
 ```
+
+### Local Randomization
+
+```{r}
+fit <- rdrandinf(Y = Y,
+                 R = X)
+
+fit
+```
+

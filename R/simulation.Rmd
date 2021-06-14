@@ -1,0 +1,45 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+# Randomized treatment
+
+```{r}
+n <- 100
+
+df <- tibble(D = c(runif(0.1*n, -30, 0),
+                   runif(0.9*n,0,30)),
+             Y = D/sqrt(1 + D^2)
+             )
+
+ggplot(df,
+       aes(x = D,
+           y = Y)
+       ) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  geom_hline(yintercept = 0)
+```
+
+
+```{r}
+n <- 100
+
+df <- tibble(D = c(runif(0.9*n, -30, 0),
+                   runif(0.1*n,0,30)),
+             Y = D/sqrt(1 + D^2)
+             )
+
+ggplot(df,
+       aes(x = D,
+           y = Y)
+       ) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  geom_hline(yintercept = 0)
+```
