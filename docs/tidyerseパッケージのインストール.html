@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 データ整備 | R Notebook</title>
+  <title>Chapter 3 tidyerseパッケージのインストール | R Notebook</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 データ整備 | R Notebook" />
+  <meta property="og:title" content="Chapter 3 tidyerseパッケージのインストール | R Notebook" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 データ整備 | R Notebook" />
+  <meta name="twitter:title" content="Chapter 3 tidyerseパッケージのインストール | R Notebook" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -31,7 +31,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="intro.html"/>
+<link rel="prev" href="データ整備.html"/>
 <link rel="next" href="可視化.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -135,87 +135,78 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>はじめに</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 準備</a></li>
-<li class="chapter" data-level="2" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>2</b> データ整備</a>
+<li class="chapter" data-level="2" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>2</b> データ整備</a></li>
+<li class="chapter" data-level="3" data-path="tidyerseパッケージのインストール.html"><a href="tidyerseパッケージのインストール.html"><i class="fa fa-check"></i><b>3</b> tidyerseパッケージのインストール</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="データ整備.html"><a href="データ整備.html#tidyerseパッケージのインストール"><i class="fa fa-check"></i><b>2.1</b> tidyerseパッケージのインストール</a></li>
-<li class="chapter" data-level="2.2" data-path="データ整備.html"><a href="データ整備.html#新しい変数の作成-mutate-tidyverse"><i class="fa fa-check"></i><b>2.2</b> 新しい変数の作成: mutate (tidyverse)</a></li>
-<li class="chapter" data-level="2.3" data-path="データ整備.html"><a href="データ整備.html#変数の限定-select-tidyverse"><i class="fa fa-check"></i><b>2.3</b> 変数の限定: select (tidyverse)</a></li>
-<li class="chapter" data-level="2.4" data-path="データ整備.html"><a href="データ整備.html#サンプルの除外filter-tidyverse"><i class="fa fa-check"></i><b>2.4</b> サンプルの除外:filter (tidyverse)</a></li>
-<li class="chapter" data-level="2.5" data-path="データ整備.html"><a href="データ整備.html#pipe演算子"><i class="fa fa-check"></i><b>2.5</b> pipe演算子</a></li>
-<li class="chapter" data-level="2.6" data-path="データ整備.html"><a href="データ整備.html#記述統計表の作成"><i class="fa fa-check"></i><b>2.6</b> 記述統計表の作成</a></li>
+<li class="chapter" data-level="3.1" data-path="tidyerseパッケージのインストール.html"><a href="tidyerseパッケージのインストール.html#新しい変数の作成-mutate-tidyverse"><i class="fa fa-check"></i><b>3.1</b> 新しい変数の作成: mutate (tidyverse)</a></li>
+<li class="chapter" data-level="3.2" data-path="tidyerseパッケージのインストール.html"><a href="tidyerseパッケージのインストール.html#変数の限定-select-tidyverse"><i class="fa fa-check"></i><b>3.2</b> 変数の限定: select (tidyverse)</a></li>
+<li class="chapter" data-level="3.3" data-path="tidyerseパッケージのインストール.html"><a href="tidyerseパッケージのインストール.html#サンプルの除外filter-tidyverse"><i class="fa fa-check"></i><b>3.3</b> サンプルの除外:filter (tidyverse)</a></li>
+<li class="chapter" data-level="3.4" data-path="tidyerseパッケージのインストール.html"><a href="tidyerseパッケージのインストール.html#pipe演算子"><i class="fa fa-check"></i><b>3.4</b> pipe演算子</a></li>
+<li class="chapter" data-level="3.5" data-path="tidyerseパッケージのインストール.html"><a href="tidyerseパッケージのインストール.html#記述統計表の作成"><i class="fa fa-check"></i><b>3.5</b> 記述統計表の作成</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="可視化.html"><a href="可視化.html"><i class="fa fa-check"></i><b>3</b> 可視化</a>
+<li class="chapter" data-level="4" data-path="可視化.html"><a href="可視化.html"><i class="fa fa-check"></i><b>4</b> 可視化</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="可視化.html"><a href="可視化.html#問題設定"><i class="fa fa-check"></i><b>3.1</b> 問題設定</a></li>
-<li class="chapter" data-level="3.2" data-path="可視化.html"><a href="可視化.html#データ"><i class="fa fa-check"></i><b>3.2</b> データ</a></li>
-<li class="chapter" data-level="3.3" data-path="可視化.html"><a href="可視化.html#連続-カテゴリのケース"><i class="fa fa-check"></i><b>3.3</b> 連続-カテゴリのケース</a>
+<li class="chapter" data-level="4.1" data-path="可視化.html"><a href="可視化.html#y連続xカテゴリ"><i class="fa fa-check"></i><b>4.1</b> Y=連続、X＝カテゴリ</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム-geom_histogram-tidyverse"><i class="fa fa-check"></i><b>3.3.1</b> ヒストグラム: geom_histogram (tidyverse)</a></li>
-<li class="chapter" data-level="3.3.2" data-path="可視化.html"><a href="可視化.html#密度-geom_density-tidyverse"><i class="fa fa-check"></i><b>3.3.2</b> 密度: geom_density (tidyverse)</a></li>
-<li class="chapter" data-level="3.3.3" data-path="可視化.html"><a href="可視化.html#boxplot-geom_boxplot-tidyverse"><i class="fa fa-check"></i><b>3.3.3</b> Boxplot: geom_boxplot (tidyverse)</a></li>
+<li class="chapter" data-level="4.1.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム-geom_histogram-tidyverse"><i class="fa fa-check"></i><b>4.1.1</b> ヒストグラム: geom_histogram (tidyverse)</a></li>
+<li class="chapter" data-level="4.1.2" data-path="可視化.html"><a href="可視化.html#密度-geom_density-tidyverse"><i class="fa fa-check"></i><b>4.1.2</b> 密度: geom_density (tidyverse)</a></li>
+<li class="chapter" data-level="4.1.3" data-path="可視化.html"><a href="可視化.html#boxplot-geom_boxplot-tidyverse"><i class="fa fa-check"></i><b>4.1.3</b> Boxplot: geom_boxplot (tidyverse)</a></li>
 </ul></li>
-<li class="chapter" data-level="3.4" data-path="可視化.html"><a href="可視化.html#連続-連続のケース"><i class="fa fa-check"></i><b>3.4</b> 連続-連続のケース</a>
+<li class="chapter" data-level="4.2" data-path="可視化.html"><a href="可視化.html#y連続x連続"><i class="fa fa-check"></i><b>4.2</b> Y=連続、X=連続</a>
 <ul>
-<li class="chapter" data-level="3.4.1" data-path="可視化.html"><a href="可視化.html#散布図-geom_point-tidyverse"><i class="fa fa-check"></i><b>3.4.1</b> 散布図: geom_point (tidyverse)</a></li>
-<li class="chapter" data-level="3.4.2" data-path="可視化.html"><a href="可視化.html#ヒートマップ-geom_bin2d-tidyverse"><i class="fa fa-check"></i><b>3.4.2</b> ヒートマップ: geom_bin2d (tidyverse)</a></li>
+<li class="chapter" data-level="4.2.1" data-path="可視化.html"><a href="可視化.html#散布図-geom_point-tidyverse"><i class="fa fa-check"></i><b>4.2.1</b> 散布図: geom_point (tidyverse)</a></li>
+<li class="chapter" data-level="4.2.2" data-path="可視化.html"><a href="可視化.html#ヒートマップ-geom_bin2d-tidyverse"><i class="fa fa-check"></i><b>4.2.2</b> ヒートマップ: geom_bin2d (tidyverse)</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>4</b> 予測</a>
+<li class="chapter" data-level="5" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>5</b> 予測</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="prediction.html"><a href="prediction.html#問題設定-1"><i class="fa fa-check"></i><b>4.1</b> 問題設定</a>
+<li class="chapter" data-level="5.1" data-path="prediction.html"><a href="prediction.html#問題設定"><i class="fa fa-check"></i><b>5.1</b> 問題設定</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="prediction.html"><a href="prediction.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>4.1.1</b> Bias-Variance tradeoff</a></li>
+<li class="chapter" data-level="5.1.1" data-path="prediction.html"><a href="prediction.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>5.1.1</b> Bias-Variance tradeoff</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="prediction.html"><a href="prediction.html#データの導入"><i class="fa fa-check"></i><b>4.2</b> データの導入</a></li>
-<li class="chapter" data-level="4.3" data-path="prediction.html"><a href="prediction.html#データ分割"><i class="fa fa-check"></i><b>4.3</b> データ分割</a></li>
-<li class="chapter" data-level="4.4" data-path="prediction.html"><a href="prediction.html#ols"><i class="fa fa-check"></i><b>4.4</b> OLS</a></li>
-<li class="chapter" data-level="4.5" data-path="prediction.html"><a href="prediction.html#lasso"><i class="fa fa-check"></i><b>4.5</b> LASSO</a></li>
-<li class="chapter" data-level="4.6" data-path="prediction.html"><a href="prediction.html#ridge"><i class="fa fa-check"></i><b>4.6</b> Ridge</a>
+<li class="chapter" data-level="5.2" data-path="prediction.html"><a href="prediction.html#データの導入"><i class="fa fa-check"></i><b>5.2</b> データの導入</a></li>
+<li class="chapter" data-level="5.3" data-path="prediction.html"><a href="prediction.html#データ分割"><i class="fa fa-check"></i><b>5.3</b> データ分割</a></li>
+<li class="chapter" data-level="5.4" data-path="prediction.html"><a href="prediction.html#ols"><i class="fa fa-check"></i><b>5.4</b> OLS</a></li>
+<li class="chapter" data-level="5.5" data-path="prediction.html"><a href="prediction.html#lasso"><i class="fa fa-check"></i><b>5.5</b> LASSO</a></li>
+<li class="chapter" data-level="5.6" data-path="prediction.html"><a href="prediction.html#ridge"><i class="fa fa-check"></i><b>5.6</b> Ridge</a>
 <ul>
-<li class="chapter" data-level="4.6.1" data-path="prediction.html"><a href="prediction.html#no-penalty"><i class="fa fa-check"></i><b>4.6.1</b> No penalty</a></li>
+<li class="chapter" data-level="5.6.1" data-path="prediction.html"><a href="prediction.html#no-penalty"><i class="fa fa-check"></i><b>5.6.1</b> No penalty</a></li>
 </ul></li>
-<li class="chapter" data-level="4.7" data-path="prediction.html"><a href="prediction.html#bagging"><i class="fa fa-check"></i><b>4.7</b> Bagging</a></li>
-<li class="chapter" data-level="4.8" data-path="prediction.html"><a href="prediction.html#random-forest"><i class="fa fa-check"></i><b>4.8</b> Random Forest</a></li>
+<li class="chapter" data-level="5.7" data-path="prediction.html"><a href="prediction.html#bagging"><i class="fa fa-check"></i><b>5.7</b> Bagging</a></li>
+<li class="chapter" data-level="5.8" data-path="prediction.html"><a href="prediction.html#random-forest"><i class="fa fa-check"></i><b>5.8</b> Random Forest</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="比較因果推論.html"><a href="比較因果推論.html"><i class="fa fa-check"></i><b>5</b> 比較・因果推論</a>
+<li class="chapter" data-level="6" data-path="比較因果推論.html"><a href="比較因果推論.html"><i class="fa fa-check"></i><b>6</b> 比較・因果推論</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="比較因果推論.html"><a href="比較因果推論.html#比較"><i class="fa fa-check"></i><b>5.1</b> 比較</a>
+<li class="chapter" data-level="6.1" data-path="比較因果推論.html"><a href="比較因果推論.html#比較"><i class="fa fa-check"></i><b>6.1</b> 比較</a>
 <ul>
-<li class="chapter" data-level="5.1.1" data-path="比較因果推論.html"><a href="比較因果推論.html#問題設定-2"><i class="fa fa-check"></i><b>5.1.1</b> 問題設定</a></li>
-<li class="chapter" data-level="5.1.2" data-path="比較因果推論.html"><a href="比較因果推論.html#推定上の問題"><i class="fa fa-check"></i><b>5.1.2</b> 推定上の問題</a></li>
+<li class="chapter" data-level="6.1.1" data-path="比較因果推論.html"><a href="比較因果推論.html#問題設定-1"><i class="fa fa-check"></i><b>6.1.1</b> 問題設定</a></li>
+<li class="chapter" data-level="6.1.2" data-path="比較因果推論.html"><a href="比較因果推論.html#推定上の問題"><i class="fa fa-check"></i><b>6.1.2</b> 推定上の問題</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="比較因果推論.html"><a href="比較因果推論.html#因果効果"><i class="fa fa-check"></i><b>5.2</b> 因果効果</a>
+<li class="chapter" data-level="6.2" data-path="比較因果推論.html"><a href="比較因果推論.html#因果効果"><i class="fa fa-check"></i><b>6.2</b> 因果効果</a>
 <ul>
-<li class="chapter" data-level="5.2.1" data-path="比較因果推論.html"><a href="比較因果推論.html#問題設定-3"><i class="fa fa-check"></i><b>5.2.1</b> 問題設定</a></li>
-<li class="chapter" data-level="5.2.2" data-path="比較因果推論.html"><a href="比較因果推論.html#識別の問題"><i class="fa fa-check"></i><b>5.2.2</b> 識別の問題</a></li>
-<li class="chapter" data-level="5.2.3" data-path="比較因果推論.html"><a href="比較因果推論.html#推定の問題"><i class="fa fa-check"></i><b>5.2.3</b> 推定の問題</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="unique.html"><a href="unique.html"><i class="fa fa-check"></i><b>6</b> 線形モデルの推定</a>
-<ul>
-<li class="chapter" data-level="6.1" data-path="unique.html"><a href="unique.html#データ-1"><i class="fa fa-check"></i><b>6.1</b> データ</a></li>
-<li class="chapter" data-level="6.2" data-path="unique.html"><a href="unique.html#線形モデルの推定"><i class="fa fa-check"></i><b>6.2</b> 線形モデルの推定</a>
-<ul>
-<li class="chapter" data-level="6.2.1" data-path="unique.html"><a href="unique.html#rctデータへの応用"><i class="fa fa-check"></i><b>6.2.1</b> RCTデータへの応用</a></li>
-</ul></li>
-<li class="chapter" data-level="6.3" data-path="unique.html"><a href="unique.html#マッチング法による修正"><i class="fa fa-check"></i><b>6.3</b> マッチング法による修正</a>
-<ul>
-<li class="chapter" data-level="6.3.1" data-path="unique.html"><a href="unique.html#exact-matching"><i class="fa fa-check"></i><b>6.3.1</b> Exact matching</a></li>
-<li class="chapter" data-level="6.3.2" data-path="unique.html"><a href="unique.html#coarsened-exact-matching"><i class="fa fa-check"></i><b>6.3.2</b> Coarsened exact matching</a></li>
-<li class="chapter" data-level="6.3.3" data-path="unique.html"><a href="unique.html#propensity-score-with-subclassification"><i class="fa fa-check"></i><b>6.3.3</b> Propensity score with subclassification</a></li>
-<li class="chapter" data-level="6.3.4" data-path="unique.html"><a href="unique.html#nearest-neighbor-matching"><i class="fa fa-check"></i><b>6.3.4</b> Nearest neighbor matching</a></li>
-</ul></li>
-<li class="chapter" data-level="6.4" data-path="unique.html"><a href="unique.html#付録推定結果の表示"><i class="fa fa-check"></i><b>6.4</b> 付録：推定結果の表示</a>
-<ul>
-<li class="chapter" data-level="6.4.1" data-path="unique.html"><a href="unique.html#推計結果表"><i class="fa fa-check"></i><b>6.4.1</b> 推計結果表</a></li>
-<li class="chapter" data-level="6.4.2" data-path="unique.html"><a href="unique.html#dot-and-whisker-plotによる可視化"><i class="fa fa-check"></i><b>6.4.2</b> Dot-and-Whisker plotによる可視化</a></li>
+<li class="chapter" data-level="6.2.1" data-path="比較因果推論.html"><a href="比較因果推論.html#問題設定-2"><i class="fa fa-check"></i><b>6.2.1</b> 問題設定</a></li>
+<li class="chapter" data-level="6.2.2" data-path="比較因果推論.html"><a href="比較因果推論.html#識別の問題"><i class="fa fa-check"></i><b>6.2.2</b> 識別の問題</a></li>
+<li class="chapter" data-level="6.2.3" data-path="比較因果推論.html"><a href="比較因果推論.html#推定の問題"><i class="fa fa-check"></i><b>6.2.3</b> 推定の問題</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="部分線形モデルの推定.html"><a href="部分線形モデルの推定.html"><i class="fa fa-check"></i><b>7</b> 部分線形モデルの推定</a>
+<li class="chapter" data-level="7" data-path="unique.html"><a href="unique.html"><i class="fa fa-check"></i><b>7</b> 部分線形モデルの推定</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="部分線形モデルの推定.html"><a href="部分線形モデルの推定.html#データ-2"><i class="fa fa-check"></i><b>7.1</b> データ</a></li>
-<li class="chapter" data-level="7.2" data-path="部分線形モデルの推定.html"><a href="部分線形モデルの推定.html#double-selection-rlassoeffect-hdm"><i class="fa fa-check"></i><b>7.2</b> Double selection: rlassoEffect (hdm)</a></li>
-<li class="chapter" data-level="7.3" data-path="部分線形モデルの推定.html"><a href="部分線形モデルの推定.html#double-machine-learning-doubleml"><i class="fa fa-check"></i><b>7.3</b> Double Machine Learning (DoubleML)</a></li>
+<li class="chapter" data-level="7.1" data-path="unique.html"><a href="unique.html#データ"><i class="fa fa-check"></i><b>7.1</b> データ</a></li>
+<li class="chapter" data-level="7.2" data-path="unique.html"><a href="unique.html#線形モデルの推定"><i class="fa fa-check"></i><b>7.2</b> 線形モデルの推定</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="unique.html"><a href="unique.html#rctデータへの応用"><i class="fa fa-check"></i><b>7.2.1</b> RCTデータへの応用</a></li>
+<li class="chapter" data-level="" data-path="unique.html"><a href="unique.html#発展推計結果表"><i class="fa fa-check"></i>発展:推計結果表</a></li>
+<li class="chapter" data-level="" data-path="unique.html"><a href="unique.html#発展dot-and-whisker-plotによる可視化"><i class="fa fa-check"></i>発展:Dot-and-Whisker plotによる可視化</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="unique.html"><a href="unique.html#マッチング法による修正"><i class="fa fa-check"></i><b>7.3</b> マッチング法による修正</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="unique.html"><a href="unique.html#exact-matching"><i class="fa fa-check"></i><b>7.3.1</b> Exact matching</a></li>
+<li class="chapter" data-level="7.3.2" data-path="unique.html"><a href="unique.html#coarsened-exact-matching"><i class="fa fa-check"></i><b>7.3.2</b> Coarsened exact matching</a></li>
+<li class="chapter" data-level="7.3.3" data-path="unique.html"><a href="unique.html#propensity-score-with-subclassification"><i class="fa fa-check"></i><b>7.3.3</b> Propensity score with subclassification</a></li>
+<li class="chapter" data-level="7.3.4" data-path="unique.html"><a href="unique.html#nearest-neighbor-matching"><i class="fa fa-check"></i><b>7.3.4</b> Nearest neighbor matching</a></li>
+<li class="chapter" data-level="7.3.5" data-path="unique.html"><a href="unique.html#entropy"><i class="fa fa-check"></i><b>7.3.5</b> Entropy</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="unique.html"><a href="unique.html#部分推計モデルの推定"><i class="fa fa-check"></i><b>7.4</b> 部分推計モデルの推定</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="条件付き平均効果関数の推定.html"><a href="条件付き平均効果関数の推定.html"><i class="fa fa-check"></i><b>8</b> 条件付き平均効果関数の推定</a>
 <ul>
@@ -234,7 +225,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10" data-path="panel-data.html"><a href="panel-data.html"><i class="fa fa-check"></i><b>10</b> Panel data</a>
 <ul>
 <li class="chapter" data-level="10.1" data-path="panel-data.html"><a href="panel-data.html#data"><i class="fa fa-check"></i><b>10.1</b> Data</a></li>
-<li class="chapter" data-level="10.2" data-path="panel-data.html"><a href="panel-data.html#difference-in-difference-in-two-by-two-case"><i class="fa fa-check"></i><b>10.2</b> Difference-in-difference in two-by-two case</a></li>
+<li class="chapter" data-level="10.2" data-path="panel-data.html"><a href="panel-data.html#可視化-1"><i class="fa fa-check"></i><b>10.2</b> 可視化</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -257,103 +248,105 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="データ整備" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> データ整備</h1>
-<ul>
-<li><p>パッケージ：追加関数やデータなどのバンドル</p></li>
-<li><p>AERパッケージに含まれるNMES1988を利用</p></li>
-</ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="データ整備.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
-<span id="cb1-2"><a href="データ整備.html#cb1-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
-<span id="cb1-3"><a href="データ整備.html#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="データ整備.html#cb1-4" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span></code></pre></div>
-<div id="tidyerseパッケージのインストール" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> tidyerseパッケージのインストール</h2>
+<div id="tidyerseパッケージのインストール" class="section level1" number="3">
+<h1><span class="header-section-number">Chapter 3</span> tidyerseパッケージのインストール</h1>
 <ul>
 <li>tidyverseパッケージ：、データ導入、整備、可視化等、多岐にわたる有益な関数を提供</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="データ整備.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
-</div>
-<div id="新しい変数の作成-mutate-tidyverse" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> 新しい変数の作成: mutate (tidyverse)</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="tidyerseパッケージのインストール.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.3     v purrr   0.3.4
+## v tibble  3.1.1     v dplyr   1.0.5
+## v tidyr   1.1.3     v stringr 1.4.0
+## v readr   1.4.0     v forcats 0.5.1</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.0.3</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.0.5</code></pre>
+<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.0.3</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.0.5</code></pre>
+<pre><code>## Warning: package &#39;forcats&#39; was built under R version 4.0.3</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<div id="新しい変数の作成-mutate-tidyverse" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> 新しい変数の作成: mutate (tidyverse)</h2>
 <ul>
 <li>mutate関数の利用</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="データ整備.html#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
-<span id="cb3-2"><a href="データ整備.html#cb3-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">age_2 =</span> age<span class="sc">^</span><span class="dv">2</span> <span class="co"># 年齢の二乗項を作成</span></span>
-<span id="cb3-3"><a href="データ整備.html#cb3-3" aria-hidden="true" tabindex="-1"></a>              )</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="tidyerseパッケージのインストール.html#cb11-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
+<span id="cb11-2"><a href="tidyerseパッケージのインストール.html#cb11-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">age_2 =</span> age<span class="sc">^</span><span class="dv">2</span> <span class="co"># 年齢の二乗項を作成</span></span>
+<span id="cb11-3"><a href="tidyerseパッケージのインストール.html#cb11-3" aria-hidden="true" tabindex="-1"></a>              )</span></code></pre></div>
 </div>
-<div id="変数の限定-select-tidyverse" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> 変数の限定: select (tidyverse)</h2>
+<div id="変数の限定-select-tidyverse" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> 変数の限定: select (tidyverse)</h2>
 <ul>
 <li>select関数の利用</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="データ整備.html#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">select</span>(raw,</span>
-<span id="cb4-2"><a href="データ整備.html#cb4-2" aria-hidden="true" tabindex="-1"></a>             age,</span>
-<span id="cb4-3"><a href="データ整備.html#cb4-3" aria-hidden="true" tabindex="-1"></a>             income</span>
-<span id="cb4-4"><a href="データ整備.html#cb4-4" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="tidyerseパッケージのインストール.html#cb12-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">select</span>(raw,</span>
+<span id="cb12-2"><a href="tidyerseパッケージのインストール.html#cb12-2" aria-hidden="true" tabindex="-1"></a>             age,</span>
+<span id="cb12-3"><a href="tidyerseパッケージのインストール.html#cb12-3" aria-hidden="true" tabindex="-1"></a>             income</span>
+<span id="cb12-4"><a href="tidyerseパッケージのインストール.html#cb12-4" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
 <ul>
 <li>特定の変数の除外</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="データ整備.html#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">select</span>(raw,</span>
-<span id="cb5-2"><a href="データ整備.html#cb5-2" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>age,</span>
-<span id="cb5-3"><a href="データ整備.html#cb5-3" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>income</span>
-<span id="cb5-4"><a href="データ整備.html#cb5-4" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="tidyerseパッケージのインストール.html#cb13-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">select</span>(raw,</span>
+<span id="cb13-2"><a href="tidyerseパッケージのインストール.html#cb13-2" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>age,</span>
+<span id="cb13-3"><a href="tidyerseパッケージのインストール.html#cb13-3" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span>income</span>
+<span id="cb13-4"><a href="tidyerseパッケージのインストール.html#cb13-4" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
 </div>
-<div id="サンプルの除外filter-tidyverse" class="section level2" number="2.4">
-<h2><span class="header-section-number">2.4</span> サンプルの除外:filter (tidyverse)</h2>
+<div id="サンプルの除外filter-tidyverse" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> サンプルの除外:filter (tidyverse)</h2>
 <ul>
 <li>filter関数の利用</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="データ整備.html#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">filter</span>(raw,</span>
-<span id="cb6-2"><a href="データ整備.html#cb6-2" aria-hidden="true" tabindex="-1"></a>             visits <span class="sc">&gt;=</span> <span class="dv">7</span></span>
-<span id="cb6-3"><a href="データ整備.html#cb6-3" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="tidyerseパッケージのインストール.html#cb14-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">filter</span>(raw,</span>
+<span id="cb14-2"><a href="tidyerseパッケージのインストール.html#cb14-2" aria-hidden="true" tabindex="-1"></a>             visits <span class="sc">&gt;=</span> <span class="dv">7</span></span>
+<span id="cb14-3"><a href="tidyerseパッケージのインストール.html#cb14-3" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
 </div>
-<div id="pipe演算子" class="section level2" number="2.5">
-<h2><span class="header-section-number">2.5</span> pipe演算子</h2>
+<div id="pipe演算子" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> pipe演算子</h2>
 <ul>
 <li><p>tidyverseパッケージに含まれるmagritterパッケージは、pipe演算子(%&gt;%)を提供する</p></li>
 <li><p>pipe演算子：二つの入力X1,X2から出力Yを得る関数fについて、pipe演算子を用いると、Y &lt;- X1 %&gt;% f(X2)と書き換えられる</p></li>
 <li><p>pipe演算子を使わない場合、入力として別の出力結果をもちいるためには、複数のobjectを作成する必要があり煩雑</p></li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="データ整備.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visits が7以上かつage2を含んだデータを作成</span></span>
-<span id="cb7-2"><a href="データ整備.html#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="データ整備.html#cb7-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">filter</span>(raw,</span>
-<span id="cb7-4"><a href="データ整備.html#cb7-4" aria-hidden="true" tabindex="-1"></a>             visits <span class="sc">&gt;=</span> <span class="dv">7</span>)</span>
-<span id="cb7-5"><a href="データ整備.html#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="データ整備.html#cb7-6" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(df,</span>
-<span id="cb7-7"><a href="データ整備.html#cb7-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">age2 =</span> age<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="tidyerseパッケージのインストール.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visits が7以上かつage2を含んだデータを作成</span></span>
+<span id="cb15-2"><a href="tidyerseパッケージのインストール.html#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="tidyerseパッケージのインストール.html#cb15-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">filter</span>(raw,</span>
+<span id="cb15-4"><a href="tidyerseパッケージのインストール.html#cb15-4" aria-hidden="true" tabindex="-1"></a>             visits <span class="sc">&gt;=</span> <span class="dv">7</span>)</span>
+<span id="cb15-5"><a href="tidyerseパッケージのインストール.html#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="tidyerseパッケージのインストール.html#cb15-6" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(df,</span>
+<span id="cb15-7"><a href="tidyerseパッケージのインストール.html#cb15-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">age2 =</span> age<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
 <ul>
 <li>pipe演算子を使うと、出力結果を直接入力でき、コードの可読性が改善することが期待できる</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="データ整備.html#cb8-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> </span>
-<span id="cb8-2"><a href="データ整備.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  raw <span class="sc">%&gt;%</span> <span class="co"># rawが最初の入力</span></span>
-<span id="cb8-3"><a href="データ整備.html#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(visits <span class="sc">&gt;=</span> <span class="dv">7</span>) <span class="sc">%&gt;%</span> <span class="co"># visitsが7以上のサンプルに絞る</span></span>
-<span id="cb8-4"><a href="データ整備.html#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age2 =</span> age<span class="sc">^</span><span class="dv">2</span>) <span class="co"># 年齢の二乗項を作成</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="tidyerseパッケージのインストール.html#cb16-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> </span>
+<span id="cb16-2"><a href="tidyerseパッケージのインストール.html#cb16-2" aria-hidden="true" tabindex="-1"></a>  raw <span class="sc">%&gt;%</span> <span class="co"># rawが最初の入力</span></span>
+<span id="cb16-3"><a href="tidyerseパッケージのインストール.html#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(visits <span class="sc">&gt;=</span> <span class="dv">7</span>) <span class="sc">%&gt;%</span> <span class="co"># visitsが7以上のサンプルに絞る</span></span>
+<span id="cb16-4"><a href="tidyerseパッケージのインストール.html#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age2 =</span> age<span class="sc">^</span><span class="dv">2</span>) <span class="co"># 年齢の二乗項を作成</span></span></code></pre></div>
 </div>
-<div id="記述統計表の作成" class="section level2" number="2.6">
-<h2><span class="header-section-number">2.6</span> 記述統計表の作成</h2>
+<div id="記述統計表の作成" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> 記述統計表の作成</h2>
 <ul>
 <li><p>記述統計の作成には多くの有益なパッケージが存在</p></li>
 <li><p>ここではgtsummary<span class="citation">(<a href="references.html#ref-R-gtsummary" role="doc-biblioref">Sjoberg et al. 2021</a>)</span>を使用</p></li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="データ整備.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="tidyerseパッケージのインストール.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span></code></pre></div>
 <ul>
 <li>select関数で必要な変数(visits, health, medicaid)を抜き出し、insuranceごとに連続変数については中央値、カテゴリ変数については頻度を記述</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="データ整備.html#cb10-1" aria-hidden="true" tabindex="-1"></a>raw <span class="sc">%&gt;%</span> <span class="co"># rawを入力とし</span></span>
-<span id="cb10-2"><a href="データ整備.html#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(visits,</span>
-<span id="cb10-3"><a href="データ整備.html#cb10-3" aria-hidden="true" tabindex="-1"></a>         health,</span>
-<span id="cb10-4"><a href="データ整備.html#cb10-4" aria-hidden="true" tabindex="-1"></a>         medicaid,</span>
-<span id="cb10-5"><a href="データ整備.html#cb10-5" aria-hidden="true" tabindex="-1"></a>         insurance</span>
-<span id="cb10-6"><a href="データ整備.html#cb10-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">%&gt;%</span> <span class="co"># 必要な変数を抜き出す</span></span>
-<span id="cb10-7"><a href="データ整備.html#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> insurance) <span class="co"># 記述統計を計算</span></span></code></pre></div>
-<div id="uwrbhhdhrp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="tidyerseパッケージのインストール.html#cb18-1" aria-hidden="true" tabindex="-1"></a>raw <span class="sc">%&gt;%</span> <span class="co"># rawを入力とし</span></span>
+<span id="cb18-2"><a href="tidyerseパッケージのインストール.html#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(visits,</span>
+<span id="cb18-3"><a href="tidyerseパッケージのインストール.html#cb18-3" aria-hidden="true" tabindex="-1"></a>         health,</span>
+<span id="cb18-4"><a href="tidyerseパッケージのインストール.html#cb18-4" aria-hidden="true" tabindex="-1"></a>         medicaid,</span>
+<span id="cb18-5"><a href="tidyerseパッケージのインストール.html#cb18-5" aria-hidden="true" tabindex="-1"></a>         insurance</span>
+<span id="cb18-6"><a href="tidyerseパッケージのインストール.html#cb18-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">%&gt;%</span> <span class="co"># 必要な変数を抜き出す</span></span>
+<span id="cb18-7"><a href="tidyerseパッケージのインストール.html#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> insurance) <span class="co"># 記述統計を計算</span></span></code></pre></div>
+<div id="fmfaeyzdjs" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#uwrbhhdhrp .gt_table {
+#fmfaeyzdjs .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -378,7 +371,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-left-color: #D3D3D3;
 }
 
-#uwrbhhdhrp .gt_heading {
+#fmfaeyzdjs .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -390,7 +383,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#uwrbhhdhrp .gt_title {
+#fmfaeyzdjs .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -400,7 +393,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-width: 0;
 }
 
-#uwrbhhdhrp .gt_subtitle {
+#fmfaeyzdjs .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -410,13 +403,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-width: 0;
 }
 
-#uwrbhhdhrp .gt_bottom_border {
+#fmfaeyzdjs .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#uwrbhhdhrp .gt_col_headings {
+#fmfaeyzdjs .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -431,7 +424,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#uwrbhhdhrp .gt_col_heading {
+#fmfaeyzdjs .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -451,7 +444,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-#uwrbhhdhrp .gt_column_spanner_outer {
+#fmfaeyzdjs .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -463,15 +456,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 4px;
 }
 
-#uwrbhhdhrp .gt_column_spanner_outer:first-child {
+#fmfaeyzdjs .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#uwrbhhdhrp .gt_column_spanner_outer:last-child {
+#fmfaeyzdjs .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#uwrbhhdhrp .gt_column_spanner {
+#fmfaeyzdjs .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -483,7 +476,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   width: 100%;
 }
 
-#uwrbhhdhrp .gt_group_heading {
+#fmfaeyzdjs .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -505,7 +498,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-#uwrbhhdhrp .gt_empty_group_heading {
+#fmfaeyzdjs .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -520,15 +513,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-#uwrbhhdhrp .gt_from_md > :first-child {
+#fmfaeyzdjs .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#uwrbhhdhrp .gt_from_md > :last-child {
+#fmfaeyzdjs .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#uwrbhhdhrp .gt_row {
+#fmfaeyzdjs .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -547,7 +540,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-#uwrbhhdhrp .gt_stub {
+#fmfaeyzdjs .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -559,7 +552,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-left: 12px;
 }
 
-#uwrbhhdhrp .gt_summary_row {
+#fmfaeyzdjs .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -569,7 +562,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#uwrbhhdhrp .gt_first_summary_row {
+#fmfaeyzdjs .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -579,7 +572,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-#uwrbhhdhrp .gt_grand_summary_row {
+#fmfaeyzdjs .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -589,7 +582,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#uwrbhhdhrp .gt_first_grand_summary_row {
+#fmfaeyzdjs .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -599,11 +592,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-#uwrbhhdhrp .gt_striped {
+#fmfaeyzdjs .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#uwrbhhdhrp .gt_table_body {
+#fmfaeyzdjs .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -612,7 +605,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-#uwrbhhdhrp .gt_footnotes {
+#fmfaeyzdjs .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -626,13 +619,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#uwrbhhdhrp .gt_footnote {
+#fmfaeyzdjs .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#uwrbhhdhrp .gt_sourcenotes {
+#fmfaeyzdjs .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -646,41 +639,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#uwrbhhdhrp .gt_sourcenote {
+#fmfaeyzdjs .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#uwrbhhdhrp .gt_left {
+#fmfaeyzdjs .gt_left {
   text-align: left;
 }
 
-#uwrbhhdhrp .gt_center {
+#fmfaeyzdjs .gt_center {
   text-align: center;
 }
 
-#uwrbhhdhrp .gt_right {
+#fmfaeyzdjs .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#uwrbhhdhrp .gt_font_normal {
+#fmfaeyzdjs .gt_font_normal {
   font-weight: normal;
 }
 
-#uwrbhhdhrp .gt_font_bold {
+#fmfaeyzdjs .gt_font_bold {
   font-weight: bold;
 }
 
-#uwrbhhdhrp .gt_font_italic {
+#fmfaeyzdjs .gt_font_italic {
   font-style: italic;
 }
 
-#uwrbhhdhrp .gt_super {
+#fmfaeyzdjs .gt_super {
   font-size: 65%;
 }
 
-#uwrbhhdhrp .gt_footnote_marks {
+#fmfaeyzdjs .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
@@ -735,21 +728,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>連続変数について、平均値と標準偏差を記述</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="データ整備.html#cb11-1" aria-hidden="true" tabindex="-1"></a>raw <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="データ整備.html#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(visits,</span>
-<span id="cb11-3"><a href="データ整備.html#cb11-3" aria-hidden="true" tabindex="-1"></a>         health,</span>
-<span id="cb11-4"><a href="データ整備.html#cb11-4" aria-hidden="true" tabindex="-1"></a>         medicaid,</span>
-<span id="cb11-5"><a href="データ整備.html#cb11-5" aria-hidden="true" tabindex="-1"></a>         insurance</span>
-<span id="cb11-6"><a href="データ整備.html#cb11-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a href="データ整備.html#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> insurance,</span>
-<span id="cb11-8"><a href="データ整備.html#cb11-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">statistic =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">&quot;{mean} ({sd})&quot;</span>) <span class="co"># 平均と標準誤差を表示</span></span>
-<span id="cb11-9"><a href="データ整備.html#cb11-9" aria-hidden="true" tabindex="-1"></a>            )</span></code></pre></div>
-<div id="fcmesarvlu" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="tidyerseパッケージのインストール.html#cb19-1" aria-hidden="true" tabindex="-1"></a>raw <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="tidyerseパッケージのインストール.html#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(visits,</span>
+<span id="cb19-3"><a href="tidyerseパッケージのインストール.html#cb19-3" aria-hidden="true" tabindex="-1"></a>         health,</span>
+<span id="cb19-4"><a href="tidyerseパッケージのインストール.html#cb19-4" aria-hidden="true" tabindex="-1"></a>         medicaid,</span>
+<span id="cb19-5"><a href="tidyerseパッケージのインストール.html#cb19-5" aria-hidden="true" tabindex="-1"></a>         insurance</span>
+<span id="cb19-6"><a href="tidyerseパッケージのインストール.html#cb19-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">%&gt;%</span></span>
+<span id="cb19-7"><a href="tidyerseパッケージのインストール.html#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> insurance,</span>
+<span id="cb19-8"><a href="tidyerseパッケージのインストール.html#cb19-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">statistic =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">&quot;{mean} ({sd})&quot;</span>) <span class="co"># 平均と標準誤差を表示</span></span>
+<span id="cb19-9"><a href="tidyerseパッケージのインストール.html#cb19-9" aria-hidden="true" tabindex="-1"></a>            )</span></code></pre></div>
+<div id="sltoxtshjr" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#fcmesarvlu .gt_table {
+#sltoxtshjr .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -774,7 +767,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-left-color: #D3D3D3;
 }
 
-#fcmesarvlu .gt_heading {
+#sltoxtshjr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -786,7 +779,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#fcmesarvlu .gt_title {
+#sltoxtshjr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -796,7 +789,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-width: 0;
 }
 
-#fcmesarvlu .gt_subtitle {
+#sltoxtshjr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -806,13 +799,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-width: 0;
 }
 
-#fcmesarvlu .gt_bottom_border {
+#sltoxtshjr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fcmesarvlu .gt_col_headings {
+#sltoxtshjr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -827,7 +820,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#fcmesarvlu .gt_col_heading {
+#sltoxtshjr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -847,7 +840,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-#fcmesarvlu .gt_column_spanner_outer {
+#sltoxtshjr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -859,15 +852,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 4px;
 }
 
-#fcmesarvlu .gt_column_spanner_outer:first-child {
+#sltoxtshjr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fcmesarvlu .gt_column_spanner_outer:last-child {
+#sltoxtshjr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fcmesarvlu .gt_column_spanner {
+#sltoxtshjr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -879,7 +872,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   width: 100%;
 }
 
-#fcmesarvlu .gt_group_heading {
+#sltoxtshjr .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -901,7 +894,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-#fcmesarvlu .gt_empty_group_heading {
+#sltoxtshjr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -916,15 +909,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-#fcmesarvlu .gt_from_md > :first-child {
+#sltoxtshjr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fcmesarvlu .gt_from_md > :last-child {
+#sltoxtshjr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fcmesarvlu .gt_row {
+#sltoxtshjr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -943,7 +936,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-#fcmesarvlu .gt_stub {
+#sltoxtshjr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -955,7 +948,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-left: 12px;
 }
 
-#fcmesarvlu .gt_summary_row {
+#sltoxtshjr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -965,7 +958,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#fcmesarvlu .gt_first_summary_row {
+#sltoxtshjr .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -975,7 +968,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-#fcmesarvlu .gt_grand_summary_row {
+#sltoxtshjr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -985,7 +978,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#fcmesarvlu .gt_first_grand_summary_row {
+#sltoxtshjr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -995,11 +988,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-#fcmesarvlu .gt_striped {
+#sltoxtshjr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fcmesarvlu .gt_table_body {
+#sltoxtshjr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1008,7 +1001,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-#fcmesarvlu .gt_footnotes {
+#sltoxtshjr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1022,13 +1015,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#fcmesarvlu .gt_footnote {
+#sltoxtshjr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#fcmesarvlu .gt_sourcenotes {
+#sltoxtshjr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1042,41 +1035,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#fcmesarvlu .gt_sourcenote {
+#sltoxtshjr .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#fcmesarvlu .gt_left {
+#sltoxtshjr .gt_left {
   text-align: left;
 }
 
-#fcmesarvlu .gt_center {
+#sltoxtshjr .gt_center {
   text-align: center;
 }
 
-#fcmesarvlu .gt_right {
+#sltoxtshjr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fcmesarvlu .gt_font_normal {
+#sltoxtshjr .gt_font_normal {
   font-weight: normal;
 }
 
-#fcmesarvlu .gt_font_bold {
+#sltoxtshjr .gt_font_bold {
   font-weight: bold;
 }
 
-#fcmesarvlu .gt_font_italic {
+#sltoxtshjr .gt_font_italic {
   font-style: italic;
 }
 
-#fcmesarvlu .gt_super {
+#sltoxtshjr .gt_super {
   font-size: 65%;
 }
 
-#fcmesarvlu .gt_footnote_marks {
+#sltoxtshjr .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
@@ -1136,7 +1129,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="データ整備.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="可視化.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

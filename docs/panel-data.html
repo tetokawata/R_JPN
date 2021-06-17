@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 可視化 | R Notebook</title>
+  <title>Chapter 10 Panel data | R Notebook</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 可視化 | R Notebook" />
+  <meta property="og:title" content="Chapter 10 Panel data | R Notebook" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 可視化 | R Notebook" />
+  <meta name="twitter:title" content="Chapter 10 Panel data | R Notebook" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="データ整備.html"/>
-<link rel="next" href="prediction.html"/>
+<link rel="prev" href="regression-discontinuity.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -257,109 +257,63 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="可視化" class="section level1" number="3">
-<h1><span class="header-section-number">Chapter 3</span> 可視化</h1>
-<div id="問題設定" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> 問題設定</h2>
+<div id="panel-data" class="section level1" number="10">
+<h1><span class="header-section-number">Chapter 10</span> Panel data</h1>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="panel-data.html#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb122-2"><a href="panel-data.html#cb122-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span>
+<span id="cb122-3"><a href="panel-data.html#cb122-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER) </span>
+<span id="cb122-4"><a href="panel-data.html#cb122-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(did) <span class="co"># weighted two-way fixed effect</span></span></code></pre></div>
+<div id="data" class="section level2" number="10.1">
+<h2><span class="header-section-number">10.1</span> Data</h2>
 <ul>
-<li><p>データ内におけるY/X間の関係性を整理・記述することが必要</p></li>
-<li><p>最有力な手法は可視化</p></li>
+<li><p>AERパッケージに含まれるパネルデータPSID7682を利用</p>
+<ul>
+<li>595名の回答者について、1976年から1983年までの7期間パネルデータ</li>
+</ul></li>
 </ul>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="panel-data.html#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;PSID7682&quot;</span>)</span>
+<span id="cb123-2"><a href="panel-data.html#cb123-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb123-3"><a href="panel-data.html#cb123-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span></span>
+<span id="cb123-4"><a href="panel-data.html#cb123-4" aria-hidden="true" tabindex="-1"></a>  PSID7682 <span class="sc">%&gt;%</span></span>
+<span id="cb123-5"><a href="panel-data.html#cb123-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
+<span id="cb123-6"><a href="panel-data.html#cb123-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">period =</span> <span class="fu">as.numeric</span>(year), <span class="co"># yearを連続変数化</span></span>
+<span id="cb123-7"><a href="panel-data.html#cb123-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">treatment.time =</span> <span class="fu">if_else</span>(married <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>,</span>
+<span id="cb123-8"><a href="panel-data.html#cb123-8" aria-hidden="true" tabindex="-1"></a>                                  period,</span>
+<span id="cb123-9"><a href="panel-data.html#cb123-9" aria-hidden="true" tabindex="-1"></a>                                  <span class="dv">999</span>),</span>
+<span id="cb123-10"><a href="panel-data.html#cb123-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">treatment.time =</span> <span class="fu">min</span>(treatment.time)</span>
+<span id="cb123-11"><a href="panel-data.html#cb123-11" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">%&gt;%</span> <span class="co"># 結婚したperiodを作成(結婚しなかったサンプル = 9999)</span></span>
+<span id="cb123-12"><a href="panel-data.html#cb123-12" aria-hidden="true" tabindex="-1"></a>  ungroup</span></code></pre></div>
+<ul>
+<li>記述統計</li>
+</ul>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="panel-data.html#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(data<span class="sc">$</span>treatment.time)</span></code></pre></div>
+<pre><code>## 
+##    1    2    3    4    5    6    7  999 
+## 3430   21   21   28   14   14    7  630</code></pre>
 </div>
-<div id="データ" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> データ</h2>
-<ul>
-<li>tidyverseに含まれるggplot2パッケージ<span class="citation">(<a href="references.html#ref-R-ggplot2" role="doc-biblioref">Wickham et al. 2020</a>)</span>を利用</li>
-</ul>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="可視化.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
-<ul>
-<li>引き続きcausaldataに含まれるclose_collegeを使用</li>
-</ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="可視化.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>,</span>
-<span id="cb13-2"><a href="可視化.html#cb13-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
-<span id="cb13-3"><a href="可視化.html#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="可視化.html#cb13-4" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span></code></pre></div>
-<ul>
-<li>変数のタイプに応じて、変数間の関係性を記述するために有効な図は異なる。
-ここでは、Y/Xが共に連続(連続-連続)のケース、Xがカテゴリカル(連続-カテゴリ)なケースについて、代表的な図を紹介する</li>
-</ul>
-</div>
-<div id="連続-カテゴリのケース" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> 連続-カテゴリのケース</h2>
-<div id="ヒストグラム-geom_histogram-tidyverse" class="section level3" number="3.3.1">
-<h3><span class="header-section-number">3.3.1</span> ヒストグラム: geom_histogram (tidyverse)</h3>
-<ul>
-<li>医療機関の利用回数</li>
-</ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="可視化.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb14-2"><a href="可視化.html#cb14-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits)</span>
-<span id="cb14-3"><a href="可視化.html#cb14-3" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb14-4"><a href="可視化.html#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<ul>
-<li>保険の有無別</li>
-</ul>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="可視化.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb15-2"><a href="可視化.html#cb15-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
-<span id="cb15-3"><a href="可視化.html#cb15-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> insurance)</span>
-<span id="cb15-4"><a href="可視化.html#cb15-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb15-5"><a href="可視化.html#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
-<span id="cb15-6"><a href="可視化.html#cb15-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
-</div>
-<div id="密度-geom_density-tidyverse" class="section level3" number="3.3.2">
-<h3><span class="header-section-number">3.3.2</span> 密度: geom_density (tidyverse)</h3>
-<ul>
-<li>保険の有無別分布</li>
-</ul>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="可視化.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw, </span>
-<span id="cb16-2"><a href="可視化.html#cb16-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits,</span>
-<span id="cb16-3"><a href="可視化.html#cb16-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> insurance)</span>
-<span id="cb16-4"><a href="可視化.html#cb16-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb16-5"><a href="可視化.html#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
-<span id="cb16-6"><a href="可視化.html#cb16-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
-</div>
-<div id="boxplot-geom_boxplot-tidyverse" class="section level3" number="3.3.3">
-<h3><span class="header-section-number">3.3.3</span> Boxplot: geom_boxplot (tidyverse)</h3>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="可視化.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb17-2"><a href="可視化.html#cb17-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> visits,</span>
-<span id="cb17-3"><a href="可視化.html#cb17-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> insurance)</span>
-<span id="cb17-4"><a href="可視化.html#cb17-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb17-5"><a href="可視化.html#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
-</div>
-</div>
-<div id="連続-連続のケース" class="section level2" number="3.4">
-<h2><span class="header-section-number">3.4</span> 連続-連続のケース</h2>
-<div id="散布図-geom_point-tidyverse" class="section level3" number="3.4.1">
-<h3><span class="header-section-number">3.4.1</span> 散布図: geom_point (tidyverse)</h3>
-<ul>
-<li>散布図：連続変数間の関係性を可視化する図</li>
-</ul>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="可視化.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb18-2"><a href="可視化.html#cb18-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> age,</span>
-<span id="cb18-3"><a href="可視化.html#cb18-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
-<span id="cb18-4"><a href="可視化.html#cb18-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb18-5"><a href="可視化.html#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
-<ul>
-<li>サンプルサイズが大きくなると機能しない</li>
-</ul>
-</div>
-<div id="ヒートマップ-geom_bin2d-tidyverse" class="section level3" number="3.4.2">
-<h3><span class="header-section-number">3.4.2</span> ヒートマップ: geom_bin2d (tidyverse)</h3>
-<ul>
-<li>代替案はヒートマップ</li>
-</ul>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="可視化.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw,</span>
-<span id="cb19-2"><a href="可視化.html#cb19-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> age,</span>
-<span id="cb19-3"><a href="可視化.html#cb19-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
-<span id="cb19-4"><a href="可視化.html#cb19-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb19-5"><a href="可視化.html#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bin2d</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<div id="difference-in-difference-in-two-by-two-case" class="section level2" number="10.2">
+<h2><span class="header-section-number">10.2</span> Difference-in-difference in two-by-two case</h2>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="panel-data.html#cb126-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb126-2"><a href="panel-data.html#cb126-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(period <span class="sc">&lt;=</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb126-3"><a href="panel-data.html#cb126-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(treatment.time <span class="sc">==</span> <span class="dv">999</span> <span class="sc">|</span></span>
+<span id="cb126-4"><a href="panel-data.html#cb126-4" aria-hidden="true" tabindex="-1"></a>           treatment.time <span class="sc">==</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb126-5"><a href="panel-data.html#cb126-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">D =</span> <span class="fu">if_else</span>(period <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> treatment.time <span class="sc">==</span> <span class="dv">2</span>,</span>
+<span id="cb126-6"><a href="panel-data.html#cb126-6" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">1</span>,</span>
+<span id="cb126-7"><a href="panel-data.html#cb126-7" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">0</span>)</span>
+<span id="cb126-8"><a href="panel-data.html#cb126-8" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">%&gt;%</span></span>
+<span id="cb126-9"><a href="panel-data.html#cb126-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(wage <span class="sc">~</span> </span>
+<span id="cb126-10"><a href="panel-data.html#cb126-10" aria-hidden="true" tabindex="-1"></a>              D <span class="sc">+</span></span>
+<span id="cb126-11"><a href="panel-data.html#cb126-11" aria-hidden="true" tabindex="-1"></a>              <span class="fu">factor</span>(period),</span>
+<span id="cb126-12"><a href="panel-data.html#cb126-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> .,</span>
+<span id="cb126-13"><a href="panel-data.html#cb126-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">clusters =</span> id,</span>
+<span id="cb126-14"><a href="panel-data.html#cb126-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">fixed_effects =</span> id)</span></code></pre></div>
+<pre><code>##                  Estimate Std. Error    t value     Pr(&gt;|t|)   CI Lower
+## D               -9.022222  30.801158 -0.2929183 7.956179e-01 -133.80790
+## factor(period)2 50.022222   9.185751  5.4456323 4.528356e-07   31.77033
+##                  CI Upper        DF
+## D               115.76346  2.135502
+## factor(period)2  68.27411 89.000000</code></pre>
 
-</div>
 </div>
 </div>
             </section>
@@ -367,8 +321,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="データ整備.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="prediction.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="regression-discontinuity.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

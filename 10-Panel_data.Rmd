@@ -1,0 +1,56 @@
+# Panel data
+
+```{r}
+library(tidyverse)
+library(estimatr)
+library(AER) 
+library(did) # weighted two-way fixed effect
+```
+
+## Data
+
+- AERパッケージに含まれるパネルデータPSID7682を利用
+
+  - 595名の回答者について、1976年から1983年までの7期間パネルデータ
+
+```{r}
+data("PSID7682")
+
+data <-
+  PSID7682 %>%
+  group_by(id) %>%
+  mutate(period = as.numeric(year), # yearを連続変数化
+         treatment.time = if_else(married == "yes",
+                                  period,
+                                  999),
+         treatment.time = min(treatment.time)
+         ) %>% # 結婚したperiodを作成(結婚しなかったサンプル = 9999)
+  ungroup
+```
+
+- 記述統計
+
+```{r}
+table(data$treatment.time)
+```
+
+## Difference-in-difference in two-by-two case
+
+```{r}
+data %>%
+  filter(period <= 2) %>%
+  filter(treatment.time == 999 |
+           treatment.time == 2) %>%
+  mutate(D = if_else(period == 2 & treatment.time == 2,
+                     1,
+                     0)
+         ) %>%
+  lm_robust(wage ~ 
+              D +
+              factor(period),
+            data = .,
+            clusters = id,
+            fixed_effects = id)
+```
+
+

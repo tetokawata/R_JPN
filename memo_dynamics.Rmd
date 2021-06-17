@@ -1,0 +1,13 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+- Delay experiment
+
+$$E[Y_1(1)-Y_1(0)|G=0]=E[Y_1(1)|D=T]-E[Y_1(0)|D=C]$$
+
+$$E[Y_2(1)|D=C]-E[Y_1(0)|D=C]-(E[Y_2(1)|D=T]-E[Y_1(1)|D=T])$$
+
+
+$$E[Y_2(1)-Y_2(0)|G=0]+E[Y_1(1)-Y_1(0)|G=0]-E[Y_2(1)-Y_2(0)|G=1]$$

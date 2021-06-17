@@ -1,5 +1,7 @@
 # データ整備
 
+- パッケージ：追加関数やデータなどのバンドル
+
 - AERパッケージに含まれるNMES1988を利用
 
 ```{r}
@@ -9,23 +11,23 @@ data("NMES1988",
 raw <- NMES1988
 ```
 
-## 新しい変数の作成: mutate (tidyverse)
+## tidyerseパッケージのインストール
 
-
-- tidyverseパッケージに含まれるdplyrパッケージ[@R-dplyr]は、有用な関数を提供
+- tidyverseパッケージ：、データ導入、整備、可視化等、多岐にわたる有益な関数を提供
 
 ```{r}
 library(tidyverse)
 ```
 
+## 新しい変数の作成: mutate (tidyverse)
+
 - mutate関数の利用
 
 ```{r}
 df <- mutate(raw,
-              age_2 = age^2
+              age_2 = age^2 # 年齢の二乗項を作成
               )
 ```
-
 
 ## 変数の限定: select (tidyverse)
 
@@ -58,6 +60,33 @@ df <- filter(raw,
 ```
 
 
+## pipe演算子
+
+- tidyverseパッケージに含まれるmagritterパッケージは、pipe演算子(%>%)を提供する
+
+- pipe演算子：二つの入力X1,X2から出力Yを得る関数fについて、pipe演算子を用いると、Y <- X1 %>% f(X2)と書き換えられる
+
+- pipe演算子を使わない場合、入力として別の出力結果をもちいるためには、複数のobjectを作成する必要があり煩雑
+
+```{r}
+# visits が7以上かつage2を含んだデータを作成
+
+df <- filter(raw,
+             visits >= 7)
+
+df <- mutate(df,
+             age2 = age^2)
+```
+
+- pipe演算子を使うと、出力結果を直接入力でき、コードの可読性が改善することが期待できる
+
+```{r}
+df <- 
+  raw %>% # rawが最初の入力
+  filter(visits >= 7) %>% # visitsが7以上のサンプルに絞る
+  mutate(age2 = age^2) # 年齢の二乗項を作成
+```
+
 
 ## 記述統計表の作成
 
@@ -72,22 +101,26 @@ library(gtsummary)
 - select関数で必要な変数(visits, health, medicaid)を抜き出し、insuranceごとに連続変数については中央値、カテゴリ変数については頻度を記述
 
 ```{r}
-descriptive <-
-  select(raw,
-         visits,
+raw %>% # rawを入力とし
+  select(visits,
          health,
          medicaid,
-         insurance)
-
-tbl_summary(descriptive,
-            by = insurance)
+         insurance
+         ) %>% # 必要な変数を抜き出す
+  tbl_summary(by = insurance) # 記述統計を計算
 ```
 
 - 連続変数について、平均値と標準偏差を記述
 
 ```{r}
-tbl_summary(descriptive,
-            by = insurance,
-            statistic = list(all_continuous() ~ "{mean} ({sd})"))
+raw %>%
+  select(visits,
+         health,
+         medicaid,
+         insurance
+         ) %>%
+  tbl_summary(by = insurance,
+            statistic = list(all_continuous() ~ "{mean} ({sd})") # 平均と標準誤差を表示
+            )
 ```
 

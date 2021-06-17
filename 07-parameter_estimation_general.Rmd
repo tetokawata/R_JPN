@@ -1,0 +1,118 @@
+# 部分線形モデルの推定
+
+- 部分線形モデル$=$線形モデルの一般化
+
+$$E[Y|D=d,X=x]=\underbrace{\tau}_{Interest\ parameter}\times d+\underbrace{f(x)}_{Nuisance\ function}$$
+
+- 部分線形モデルをロビンソン変換[@robinson1988root]
+
+$$Y_i-\underbrace{E[Y_i|X_i]}_{Nuisance\ term}=\tau\times [D_i-\underbrace{E[D_i|X_i]}_{Nuisance\ term}]+u_i$$
+
+- $E[Y_i|X_i],E[D_i|X_i]$を予測関数として推定し、予測誤差間を単回帰すればよい
+
+- 実際には$E[Y_i|X_i],E[D_i|X_i]$は未知の関数なので何らかの方法で推定する必要がある。関数の推定なので予測の手法が適用できる。
+
+
+## データ
+
+```{r}
+library(tidyverse)
+
+data("NMES1988",
+     package = "AER")
+
+raw <- na.omit(NMES1988)
+
+set.seed(123)
+```
+
+## Double selection: rlassoEffect (hdm)
+
+- 2重選択法[@belloni2014inference]を紹介
+
+- LASSOにより$Y_i,D_i$の両方あるいはどちらか一方を予測する上でrelevantな$X^c$を特定しコントロールする
+
+  - $Y_i,D_i$どちらの予測にもrelevantではない変数は除外する
+
+- hdmパッケージ[@R-hdm]を利用
+
+```{r}
+library(hdm)
+
+Y <- raw$visits
+
+D <- if_else(raw$insurance == "yes",1,0)
+
+X <- model.matrix(~ - 1+ region + age + afam + gender + school + 
+                    I(age^2) + I(school^2) +
+                    region:age + region:afam + region:gender + region:school +
+                    age:afam + age:gender + age:school +
+                    afam:gender + afam:school +
+                    gender:school,
+                  raw)
+
+fit <-
+  rlassoEffect(x = X,
+               y = Y,
+               d = D,
+               method = "double selection")
+```
+
+
+- 推定結果
+
+```{r}
+summary(fit)
+```
+
+- 選択されたコントロール変数
+
+```{r}
+fit$selection.index
+```
+
+
+## Double Machine Learning (DoubleML)
+
+- Double Machine Learning法[@chernozhukov2018double]を紹介
+
+- なんらかの方法（例、OLS、ランダムフォレスト、LASSO）で$E[Y|X],E[D|X]$の予測関数$f_Y(X),f_D(X)$を推定し、予測誤差を単回帰
+
+- DoubleMLパッケージ[@R-DoubleML]を利用
+
+```{r}
+library(DoubleML)
+library(mlr3)
+library(mlr3learners)
+library(data.table)
+
+X <- model.matrix(~ - 1+ region + age + afam + gender + school,
+                  raw)
+
+
+learner <- 
+  lrn("regr.ranger", 
+      num.trees = 100) # Require bigger num.trees in practice
+
+ml_g <- learner$clone()
+
+ml_m <- learner$clone()
+
+obj_dml_data <- 
+  double_ml_data_from_matrix(X = X,
+                             y = as.numeric(Y),
+                             d = as.numeric(D))
+
+dml_plr_obj <- 
+  DoubleMLPLR$new(obj_dml_data, 
+                  ml_g, 
+                  ml_m, 
+                  dml_procedure="dml1", 
+                  n_rep = 3)
+
+dml_plr_obj$fit()
+```
+
+```{r}
+print(dml_plr_obj)
+```

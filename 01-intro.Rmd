@@ -9,3 +9,5 @@
 - オンライン環境の整備
 
   - R cloudへの[登録](https://rstudio.cloud/)
+ 
+

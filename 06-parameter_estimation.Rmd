@@ -1,11 +1,14 @@
 
-# 部分線形モデルの推定 {#unique}
+# 線形モデルの推定 {#unique}
 
-- （条件付き）平均差の周辺化値の推定を目指します。
+- $E[Y|D,X]$の線形近似をデータから推定する
 
-- モデルに関心のあるパラメータを埋め込み、推定します。
+  - $E[Y|D,X]$そのものを推定しているとは解釈しない[@angrist2002covariance;@angrist2008mostly]
+  
+  - 典型的には、モデルに関心のあるパラメータを近似モデルに直接埋め込む
 
 $$E[Y|D=d,X=x]=\underbrace{\tau}_{Interest\ parameter}\times d+\underbrace{f(x)}_{Nuisance\ function}$$
+  - $f(X)=\beta_0 + \beta_1 X_1 + ...+\beta_LX_L$ 
 
 - 点推定だけでなく、信頼区間も推定する。
 
@@ -23,7 +26,6 @@ set.seed(123)
 ```
 
 ## 線形モデルの推定
-
 
 - $\tau(x)=\tau,f(x)=\beta_0+\beta_1x_1+...+\beta_Lx_L$と特定化
 
@@ -44,7 +46,7 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school + income + 
 
 - 線形モデルによる推定は、いくつかの問題がある
 
-  - 回帰式の定式化に強く依存する
+  - 異なるグループ間で、$X$の分布が異なる場合、回帰式の定式化に強く依存する
   
   - 一般に平均効果ではなく、加重平均が推計される
   
@@ -52,68 +54,17 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school + income + 
 
 - 以下ではマッチング法、機械学手法を用いた頑強な推定を目指す
 
-### 発展:推計結果表{-}
+### RCTデータへの応用
 
-- tidy関数により推定結果data.frameに変化することで、kable関数(knitrパッケージ)による推計結果表の整形、geom_pointrange関数による可視化が可能
+- 原因変数が完全にランダム化されている場合、因果効果の**識別**を目的に回帰分析を応用する必要はない
 
-- 点推定値(estimate)、標準誤差(std.error)のみを残した推計結果表
+- 因果効果の**推定**の改善、効率性向上、を目的として線形モデルの利用は議論されてきた。[@freedman2008regressiona; @freedman2008regressionb]
 
-```{r}
-library(knitr)
+- [@lin2013agnostic]は、以下のような交差項を導入したモデルを用いることで、平均の差の推定に比べて、漸近的効率性が悪化することはない（同等か改善する）ことを示した
 
-fit <- 
-  lm_robust(visits ~ insurance + region + age + afam + gender + school,
-            data = raw)
+$$E[Y|D,X]=\beta_{D}\times D+\beta_1\times X_1+...+\beta_L\times X_L$$
 
-fit <- tidy(fit)
-
-fit <- select(fit, term, estimate, std.error)
-
-kable(fit, digits = 2)
-```
-
-```{r}
-fit <- filter(fit,
-              term == "insuranceyes")
-
-kable(fit, digits = 2)
-```
-
-
-### 発展:Dot-and-Whisker plotによる可視化{-}
-
-- Dot-and-Whisker図により点推定量と信頼区間を可視化
-
-```{r}
-fit <- 
-  lm_robust(visits ~ insurance + region + age + afam + gender + school,
-            data = raw)
-
-fit <- tidy(fit)
-
-fit <- filter(fit,
-              term != "(Intercept)")
-
-ggplot(fit, aes(y = term,
-                x = estimate,
-                xmin = conf.low,
-                xmax = conf.high)) +
-  geom_pointrange() +
-  geom_vline(xintercept = 0)
-```
-
-
-```{r}
-fit <- filter(fit,
-              term == "insuranceyes")
-
-ggplot(fit, aes(y = term,
-                x = estimate,
-                xmin = conf.low,
-                xmax = conf.high)) +
-  geom_pointrange() +
-  geom_vline(xintercept = 0)
-```
+$$+\underbrace{\beta_{1D}\times D\times X_1+...+\beta_{LD}\times D\times X_L}_{交差項}$$
 
 ## マッチング法による修正
 
@@ -322,130 +273,51 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school+ married + 
           weights = weights)
 ```
 
-### Entropy
+## 付録：推定結果の表示
+
+### 推計結果表
+
+- tidy関数により推定結果data.frameに変化することで、kable関数(knitrパッケージ)による推計結果表の整形、geom_pointrange関数による可視化が可能
+
+- 点推定値(estimate)、標準誤差(std.error)のみを残した推計結果表
 
 ```{r}
-library(WeightIt)
+library(knitr)
 
-W.out <- weightit(insurance ~ region + age + afam + gender + school+ married + employed + income,
-                  data = raw,
-                  estimand = "ATC",
-                  method = "ebal")
-
-summary(W.out)
+lm_robust(visits ~ insurance + region + age + afam + gender + school,
+            data = raw
+            ) %>%
+  tidy %>%
+  select(term, estimate, std.error) %>%
+  kable(digits = 2)
 ```
 
 ```{r}
-library(cobalt)
-
-bal.tab(W.out, m.threshold = .05, disp.v.ratio = TRUE)
+lm_robust(visits ~ insurance + region + age + afam + gender + school,
+            data = raw
+            ) %>%
+  tidy %>%
+  select(term, estimate, std.error) %>%
+  filter(term == "insuranceyes") %>%
+  kable(digits = 2)
 ```
 
 
-```{r}
-lm_robust(visits ~ insurance + age + region + afam + gender + school+ married + employed + income,
-          raw,
-          weights = W.out$weights)
-```
+### Dot-and-Whisker plotによる可視化
 
-
-## 部分推計モデルの推定
-
-- 部分線形モデルをロビンソン変換[@robinson1988root]
-
-$$Y_i-\underbrace{E[Y_i|X_i]}_{Nuisance\ term}=\tau\times [D_i-\underbrace{E[D_i|X_i]}_{Nuisance\ term}]+u_i$$
-
-- $E[Y_i|X_i],E[D_i|X_i]$を予測関数として推定し、予測誤差間を単回帰すればよい
-
-- 実際には$E[Y_i|X_i],E[D_i|X_i]$は未知の関数なので何らかの方法で推定する必要がある。関数の推定なので予測の手法が適用できる。
-
-#### Double selection: rlassoEffect (hdm)
-
-- 2重選択法[@belloni2014inference]を紹介
-
-- LASSOにより$Y_i,D_i$の両方あるいはどちらか一方を予測する上でrelevantな$X^c$を特定しコントロールする
-
-  - $Y_i,D_i$どちらの予測にもrelevantではない変数は除外する
-
-- hdmパッケージ[@R-hdm]を利用
+- Dot-and-Whisker図により点推定量と信頼区間を可視化
 
 ```{r}
-library(hdm)
-
-Y <- raw$visits
-
-D <- if_else(raw$insurance == "yes",1,0)
-
-X <- model.matrix(~ - 1+ region + age + afam + gender + school + 
-                    I(age^2) + I(school^2) +
-                    region:age + region:afam + region:gender + region:school +
-                    age:afam + age:gender + age:school +
-                    afam:gender + afam:school +
-                    gender:school,
-                  raw)
-
-fit <-
-  rlassoEffect(x = X,
-               y = Y,
-               d = D,
-               method = "double selection")
-```
-
-
-- 推定結果
-
-```{r}
-summary(fit)
-```
-
-- 選択されたコントロール変数
-
-```{r}
-fit$selection.index
-```
-
-
-#### Double Machine Learning (DoubleML)
-
-- Double Machine Learning法[@chernozhukov2018double]を紹介
-
-- なんらかの方法（例、OLS、ランダムフォレスト、LASSO）で$E[Y|X],E[D|X]$の予測関数$f_Y(X),f_D(X)$を推定し、予測誤差を単回帰
-
-- DoubleMLパッケージ[@R-DoubleML]を利用
-
-```{r}
-library(DoubleML)
-library(mlr3)
-library(mlr3learners)
-library(data.table)
-
-X <- model.matrix(~ - 1+ region + age + afam + gender + school,
-                  raw)
-
-
-learner <- 
-  lrn("regr.ranger", 
-      num.trees = 100) # Require bigger num.trees in practice
-
-ml_g <- learner$clone()
-
-ml_m <- learner$clone()
-
-obj_dml_data <- 
-  double_ml_data_from_matrix(X = X,
-                             y = as.numeric(Y),
-                             d = as.numeric(D))
-
-dml_plr_obj <- 
-  DoubleMLPLR$new(obj_dml_data, 
-                  ml_g, 
-                  ml_m, 
-                  dml_procedure="dml1", 
-                  n_rep = 3)
-
-dml_plr_obj$fit()
-```
-
-```{r}
-print(dml_plr_obj)
+lm_robust(visits ~ insurance + region + age + afam + gender + school,
+            data = raw) %>%
+  tidy %>%
+  filter(term != "(Intercept)"
+         ) %>%
+  ggplot(aes(y = term,
+             x = estimate,
+             xmin = conf.low,
+             xmax = conf.high)
+         ) +
+  geom_pointrange() +
+  geom_vline(xintercept = 0)
 ```
