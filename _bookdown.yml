@@ -1,4 +1,4 @@
-book_filename: "R_book"
+book_filename: "Prediction, Comparison, and Causal inference by R"
 delete_merged_file: true
 language:
   ui:

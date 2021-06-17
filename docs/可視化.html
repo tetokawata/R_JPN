@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 可視化 | R Notebook</title>
+  <title>Chapter 3 可視化 | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 可視化 | R Notebook" />
+  <meta property="og:title" content="Chapter 3 可視化 | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 可視化 | R Notebook" />
+  <meta name="twitter:title" content="Chapter 3 可視化 | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -249,7 +249,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Notebook</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Rによる比較・予測・因果推論入門 ver0.1</a>
           </h1>
         </div>
 
@@ -295,7 +295,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb14-2"><a href="可視化.html#cb14-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> visits)</span>
 <span id="cb14-3"><a href="可視化.html#cb14-3" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
 <span id="cb14-4"><a href="可視化.html#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <ul>
 <li>保険の有無別</li>
 </ul>
@@ -305,7 +305,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb15-4"><a href="可視化.html#cb15-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
 <span id="cb15-5"><a href="可視化.html#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
 <span id="cb15-6"><a href="可視化.html#cb15-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
 <div id="密度-geom_density-tidyverse" class="section level3" number="3.3.2">
 <h3><span class="header-section-number">3.3.2</span> 密度: geom_density (tidyverse)</h3>
@@ -318,7 +318,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb16-4"><a href="可視化.html#cb16-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
 <span id="cb16-5"><a href="可視化.html#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
 <span id="cb16-6"><a href="可視化.html#cb16-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
 <div id="boxplot-geom_boxplot-tidyverse" class="section level3" number="3.3.3">
 <h3><span class="header-section-number">3.3.3</span> Boxplot: geom_boxplot (tidyverse)</h3>
@@ -327,7 +327,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb17-3"><a href="可視化.html#cb17-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> insurance)</span>
 <span id="cb17-4"><a href="可視化.html#cb17-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
 <span id="cb17-5"><a href="可視化.html#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 </div>
 </div>
 <div id="連続-連続のケース" class="section level2" number="3.4">
@@ -342,7 +342,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb18-3"><a href="可視化.html#cb18-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
 <span id="cb18-4"><a href="可視化.html#cb18-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
 <span id="cb18-5"><a href="可視化.html#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <ul>
 <li>サンプルサイズが大きくなると機能しない</li>
 </ul>
@@ -357,7 +357,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb19-3"><a href="可視化.html#cb19-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> visits)</span>
 <span id="cb19-4"><a href="可視化.html#cb19-4" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
 <span id="cb19-5"><a href="可視化.html#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bin2d</span>()</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 
 </div>
 </div>
@@ -410,7 +410,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["R_book.epub"],
+"download": ["Prediction, Comparison, and Causal inference by R.epub"],
 "toc": {
 "collapse": "subsection"
 }

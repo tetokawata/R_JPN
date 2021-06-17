@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 線形モデルの推定 | R Notebook</title>
+  <title>Chapter 6 線形モデルの推定 | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 線形モデルの推定 | R Notebook" />
+  <meta property="og:title" content="Chapter 6 線形モデルの推定 | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 線形モデルの推定 | R Notebook" />
+  <meta name="twitter:title" content="Chapter 6 線形モデルの推定 | Rによる比較・予測・因果推論入門 ver0.1" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -249,7 +249,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Notebook</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Rによる比較・予測・因果推論入門 ver0.1</a>
           </h1>
         </div>
 
@@ -472,7 +472,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="unique.html#cb69-1" aria-hidden="true" tabindex="-1"></a>sum.m <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit.m)</span>
 <span id="cb69-2"><a href="unique.html#cb69-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb69-3"><a href="unique.html#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sum.m, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p>
 <ul>
 <li>マッチング結果を変数として含んだデータを作成</li>
 </ul>
@@ -614,7 +614,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>可視化</li>
 </ul>
 <div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="unique.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sum.m, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-59-1.png" width="672" /></p>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-59-1.png" width="672" /></p>
 <ul>
 <li><p>Exact matching以外のマッチング法では、マッチングされたサンプル内でも<span class="math inline">\(X\)</span>の違いが残る</p>
 <ul>
@@ -792,7 +792,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>マッチング結果の図示</li>
 </ul>
 <div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="unique.html#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sum.m, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
 <ul>
 <li>マッチングしたデータを用いた推定</li>
 </ul>
@@ -954,7 +954,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>マッチング結果の図示</li>
 </ul>
 <div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="unique.html#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sum.m, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-67-1.png" width="672" /></p>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-67-1.png" width="672" /></p>
 <ul>
 <li><p>マッチングしたデータを用いた推定</p>
 <ul>
@@ -1108,7 +1108,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb93-10"><a href="unique.html#cb93-10" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">+</span></span>
 <span id="cb93-11"><a href="unique.html#cb93-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>() <span class="sc">+</span></span>
 <span id="cb93-12"><a href="unique.html#cb93-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>)</span></code></pre></div>
-<p><img src="R_book_files/figure-html/unnamed-chunk-71-1.png" width="672" /></p>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-71-1.png" width="672" /></p>
 
 </div>
 </div>
@@ -1161,7 +1161,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["R_book.epub"],
+"download": ["Prediction, Comparison, and Causal inference by R.epub"],
 "toc": {
 "collapse": "subsection"
 }
