@@ -1,5 +1,7 @@
 # Panel data
 
+## パッケージ
+
 ```{r}
 library(tidyverse)
 library(estimatr)
@@ -34,18 +36,39 @@ data <-
 table(data$treatment.time)
 ```
 
-## Difference-in-difference in two-by-two case
+## Two-way fixed effect model in the two-by-two case
+
+- 2時点・2グループデータ
 
 ```{r}
 data %>%
   filter(period <= 2) %>%
   filter(treatment.time == 999 |
            treatment.time == 2) %>%
-  mutate(D = if_else(period == 2 & treatment.time == 2,
+  mutate(D = if_else(period >= treatment.time,
                      1,
                      0)
          ) %>%
-  lm_robust(wage ~ 
+  lm_robust(weeks ~ 
+              D +
+              factor(period),
+            data = .,
+            clusters = id,
+            fixed_effects = id)
+```
+
+### Two-way fixed effect model
+
+- 2時点・2グループデータ
+
+```{r}
+data %>%
+  filter(treatment.time != 1) %>%
+  mutate(D = if_else(period >= treatment.time,
+                     1,
+                     0)
+         ) %>%
+  lm_robust(weeks ~ 
               D +
               factor(period),
             data = .,
@@ -54,3 +77,35 @@ data %>%
 ```
 
 
+## Weighted two-way fixed effect model
+
+```{r}
+fit <-
+  data %>%
+  filter(treatment.time != 1) %>%
+  mutate(id = as.numeric(id),
+         treatment.time = if_else(treatment.time == 999,
+                                  0,
+                                  treatment.time)
+         ) %>%
+  att_gt(yname = "weeks",
+         tname = "period",
+         idname = "id",
+         gname = "treatment.time",
+         data = .,
+         control_group = 999)
+
+fit
+```
+
+```{r}
+aggte(fit, 
+      type = "simple") %>%
+  summary
+```
+
+```{r}
+aggte(fit, 
+      type = "dynamic") %>%
+  ggdid
+```

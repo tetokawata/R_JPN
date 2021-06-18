@@ -46,15 +46,22 @@ $$=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E
 
 - Bias-variance tradeoffを分析者が解くこと（最善のモデル設定を行うこと）は困難です。Chapter \@ref(prediction) で紹介するLASSO/Ridge/Random Forestなどの手法は、bias-varianceのバランスをよりデータ主導型かつ現実的な計算時間で達成することを目指します。
 
+## パッケージ
+
+```{r}
+library(tidyverse)
+library(AER)
+library(glmnet)
+library(ranger)
+```
+
+
 ## データの導入
 
 - 引き続きcausaldataに含まれるclose_collegeを使用
 
 ```{r}
-library(tidyverse)
-
-data("NMES1988",
-     package = "AER")
+data("NMES1988")
 
 raw <- na.omit(NMES1988)
 
@@ -108,8 +115,6 @@ mean((raw$visits - Y.hat)[group != 1]^2)
 - glmentパッケージ[@R-glmnet]を利用
 
 ```{r}
-library(glmnet)
-
 Y <- raw$visits
 
 X <- model.matrix(visits ~ -1 + . + .^2 + 
@@ -224,8 +229,6 @@ mean((Y - Y.hat)[group != 1]^2)
 - rangerパッケージ[@R-ranger]を利用
 
 ```{r}
-library(ranger)
-
 X <- model.matrix(visits ~ -1 + .,
                   data = raw)
 

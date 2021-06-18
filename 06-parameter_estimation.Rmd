@@ -12,13 +12,20 @@ $$E[Y|D=d,X=x]=\underbrace{\tau}_{Interest\ parameter}\times d+\underbrace{f(x)}
 
 - 点推定だけでなく、信頼区間も推定する。
 
-## データ
+## パッケージ
 
 ```{r}
 library(tidyverse)
+library(AER)
+library(estimatr)
+library(MatchIt)
+```
 
-data("NMES1988",
-     package = "AER")
+
+## データ
+
+```{r}
+data("NMES1988")
 
 raw <- na.omit(NMES1988)
 
@@ -32,10 +39,6 @@ set.seed(123)
 - サンプル内MSEを最大化するように推定
 
 - robust standard errorを計算するためにestimatrパッケージ[@R-estimatr]を利用
-
-```{r}
-library(estimatr)
-```
 
 - lm_robust関数で推定
 
@@ -73,10 +76,6 @@ $$+\underbrace{\beta_{1D}\times D\times X_1+...+\beta_{LD}\times D\times X_L}_{�
   - 重回帰が持つ関数形への依存度を減らせる [@ho2007matching]
   
   - MathItパッケージ [@MatchIt2011]を利用
-
-```{r}
-library(MatchIt)
-```
 
 - 多数のマッチング法が実装されている
 

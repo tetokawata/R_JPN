@@ -1,11 +1,19 @@
 # 条件付き平均効果関数の推定
 
+## パッケージ
 
 ```{r}
 library(tidyverse)
+library(AER)
+library(grf)
+library(rpart)
+library(rpart.plot)
+```
 
-data("NMES1988",
-     package = "AER")
+## データ
+
+```{r}
+data("NMES1988")
 
 raw <- na.omit(NMES1988)
 
@@ -23,13 +31,9 @@ X <- model.matrix(~ - 1+ region + age + afam + gender + school,
 set.seed(123)
 ```
 
-
-
 ## Casual Forest
 
 ```{r}
-library(grf)
-
 fit <- regression_forest(X = X,
                          Y = Y)
 
@@ -69,9 +73,6 @@ best_linear_projection(fit.CF,X)
 ## Tree presentation
 
 ```{r}
-library(rpart)
-library(rpart.plot)
-
 fit <- rpart(tau.grf ~ region + age + afam + gender + school + medicaid,
              df,
              control = rpart.control(cp = 0,

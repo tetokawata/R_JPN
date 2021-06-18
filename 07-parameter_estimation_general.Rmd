@@ -12,14 +12,23 @@ $$Y_i-\underbrace{E[Y_i|X_i]}_{Nuisance\ term}=\tau\times [D_i-\underbrace{E[D_i
 
 - 実際には$E[Y_i|X_i],E[D_i|X_i]$は未知の関数なので何らかの方法で推定する必要がある。関数の推定なので予測の手法が適用できる。
 
+## パッケージ
+
+```{r}
+library(tidyverse)
+library(AER)
+library(hdm)
+library(DoubleML)
+library(mlr3)
+library(mlr3learners)
+library(data.table)
+```
+
 
 ## データ
 
 ```{r}
-library(tidyverse)
-
-data("NMES1988",
-     package = "AER")
+data("NMES1988")
 
 raw <- na.omit(NMES1988)
 
@@ -37,8 +46,6 @@ set.seed(123)
 - hdmパッケージ[@R-hdm]を利用
 
 ```{r}
-library(hdm)
-
 Y <- raw$visits
 
 D <- if_else(raw$insurance == "yes",1,0)
@@ -81,11 +88,6 @@ fit$selection.index
 - DoubleMLパッケージ[@R-DoubleML]を利用
 
 ```{r}
-library(DoubleML)
-library(mlr3)
-library(mlr3learners)
-library(data.table)
-
 X <- model.matrix(~ - 1+ region + age + afam + gender + school,
                   raw)
 

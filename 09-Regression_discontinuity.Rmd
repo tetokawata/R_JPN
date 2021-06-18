@@ -4,6 +4,8 @@
 
 - polynomial regressionによる局所的外挿は、rdrobustパッケージ [@R-rdrobust]により実装できる。
 
+## パッケージ
+
 - 同パッケージによる実装も含んだ包括的な入門は @cattaneo2019practicala, @cattaneo2019practicalb.
 
 ```{r}
@@ -33,40 +35,20 @@ Y <- raw$vote
 X <- raw$margin
 ```
 
-- 図示：High (4th) order polynomial.
+- 図示
+
+  - 初期設定では2nd oder local polynominalを利用 (@gelman2019whyhigh の推奨)
 
 ```{r}
 rdplot(y = Y,
-       x = X,
-       p = 4)
+       x = X)
 ```
 
 - 推定結果表 + 標準誤差
 
 ```{r}
 fit <- rdrobust(y = Y,
-                x = X,
-                p = 4)
-
-summary(fit)
-```
-
-- Low (2nd) order polynominalを用いた推計 (@gelman2019whyhigh により推奨)
-
-```{r}
-rdplot(y = Y,
-       x = X,
-       p = 2,
-       c = 0)
-```
-
-- 推計結果表
-
-```{r}
-fit <- rdrobust(y = Y,
-                x = X,
-                p = 2,
-                c = 0)
+                x = X)
 
 summary(fit)
 ```

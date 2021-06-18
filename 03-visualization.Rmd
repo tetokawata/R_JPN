@@ -6,20 +6,19 @@
 
 - 最有力な手法は可視化
 
-## データ
+## パッケージ
 
 - tidyverseに含まれるggplot2パッケージ[@R-ggplot2]を利用
 
 ```{r}
 library(tidyverse)
+library(AER)
 ```
 
-
-- 引き続きcausaldataに含まれるclose_collegeを使用
+## データ
 
 ```{r}
-data("NMES1988",
-     package = "AER")
+data("NMES1988")
 
 raw <- NMES1988
 ```
