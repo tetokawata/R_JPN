@@ -1,5 +1,11 @@
 # 可視化
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
 ## 問題設定
 
 - データ内におけるY/X間の関係性を整理・記述することが必要

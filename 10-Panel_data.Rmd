@@ -1,4 +1,14 @@
-# Panel data
+# Panel data {#panel}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+- $\{Y_{it},D_{it},X_{it}\}$が観察できるデータを想定する
+
+  - $i:$回答者、$t:$回答時点
 
 ## パッケージ
 
@@ -19,93 +29,116 @@ library(did) # weighted two-way fixed effect
 data("PSID7682")
 
 data <-
-  PSID7682 %>%
-  group_by(id) %>%
+  PSID7682 |> 
+  group_by(id) |> 
   mutate(period = as.numeric(year), # yearを連続変数化
          treatment.time = if_else(married == "yes",
                                   period,
                                   999),
          treatment.time = min(treatment.time)
-         ) %>% # 結婚したperiodを作成(結婚しなかったサンプル = 9999)
-  ungroup
+         ) |>  # 結婚したperiodを作成(結婚しなかったサンプル = 9999)
+  ungroup()
 ```
 
-- 記述統計
+## 識別: Pallarel trend in the two-by-two case
 
-```{r}
-table(data$treatment.time)
-```
-
-## Two-way fixed effect model in the two-by-two case
 
 - 2時点・2グループデータ
 
+  - トリートメントグループ: 2期目に介入を受ける
+  
+  - コントロールグループ: 両期間ともに介入を受けない
+
+- Pallalel trendの仮定 $E[Y_{2i}(0)-Y_{1i}(0)|i\in Treatment]-E[Y_{2i}(0)-Y_{1i}(0)|i\in Control]$  
+
+- 差の差の推定量を推定
+
+$$E[Y_{i2}|i\in Treatment]-E[Y_{i1}|i \in Treatment]$$
+
+$$-(E[Y_{i2}|i\in Control]-E[Y_{i1}|i \in Control])$$
+
+$$= E[Y_{i2}(1) - Y_{i2}(0)|i \in Treatment]$$
+
+## 推定: Two-way fixed effect model
+
+- Two-way fixed effect model
+
+$$E[Y_{it}|D_{it}=d,f_{i},f_{t}]=\beta_\tau\times d + f_i + f_t$$
+
+- Two-by-two dataのもとでは、差の差の推定と同値
+
+- Two-by-two dataの整備
+
 ```{r}
-data %>%
-  filter(period <= 2) %>%
-  filter(treatment.time == 999 |
-           treatment.time == 2) %>%
+df <-
+  data |> 
+  filter(period <= 2) |> # 1,2期目データ
+  filter(treatment.time == 999 | 
+           treatment.time == 2) |> # トリートメント/コントロールグループ 
   mutate(D = if_else(period >= treatment.time,
                      1,
                      0)
-         ) %>%
-  lm_robust(weeks ~ 
-              D +
-              factor(period),
-            data = .,
-            clusters = id,
-            fixed_effects = id)
+         ) # 介入後ダミー
 ```
 
-### Two-way fixed effect model
-
-- 2時点・2グループデータ
+- Two-way fixed effectの推定
 
 ```{r}
-data %>%
-  filter(treatment.time != 1) %>%
-  mutate(D = if_else(period >= treatment.time,
-                     1,
-                     0)
-         ) %>%
-  lm_robust(weeks ~ 
-              D +
-              factor(period),
-            data = .,
-            clusters = id,
-            fixed_effects = id)
+
+
+lm_robust(weeks ~ 
+            D +
+            factor(period),
+          data = df,
+          clusters = id,
+          fixed_effects = id)
 ```
 
+## 推定:Weighted two-way fixed effect model
 
-## Weighted two-way fixed effect model
+- 2期間以上のデータにおいて、parallel trendの仮定に基づいて因果効果を推定する手法
+
+- ここでは @callaway2020difference を紹介
+
+- データ整備
 
 ```{r}
-fit <-
-  data %>%
-  filter(treatment.time != 1) %>%
+df <-
+  data |> 
+  filter(treatment.time != 1) |> 
   mutate(id = as.numeric(id),
          treatment.time = if_else(treatment.time == 999,
                                   0,
                                   treatment.time)
-         ) %>%
+         )
+```
+
+- 推計
+
+```{r}
+fit <-
   att_gt(yname = "weeks",
          tname = "period",
          idname = "id",
          gname = "treatment.time",
-         data = .,
+         data = df,
          control_group = 999)
 
 fit
 ```
 
-```{r}
-aggte(fit, 
-      type = "simple") %>%
-  summary
-```
+- 単純平均効果
 
 ```{r}
-aggte(fit, 
-      type = "dynamic") %>%
-  ggdid
+fit |> 
+  aggte(type = "simple") |> 
+  summary()
+```
+
+- 動学効果
+
+```{r}
+fit |> 
+  aggte(type = "dynamic") |> 
+  ggdid()
 ```

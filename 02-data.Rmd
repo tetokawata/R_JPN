@@ -1,5 +1,12 @@
 # データ整備
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+
 - パッケージ：追加関数やデータなどのバンドル
 
 - AERパッケージに含まれるNMES1988を利用
@@ -62,9 +69,13 @@ df <- filter(raw,
 
 ## pipe演算子
 
-- tidyverseパッケージに含まれるmagritterパッケージは、pipe演算子(%>%)を提供する
+- Rのversion 4.1からpipe演算子が、追加パッケージなしで利用可能になる
 
-- pipe演算子：二つの入力X1,X2から出力Yを得る関数fについて、pipe演算子を用いると、Y <- X1 %>% f(X2)と書き換えられる
+  - Tools -> Global option -> Code -> "Use native pipe operator" をチェックする
+  
+  - Ctr + Shift + mがショートカット
+
+- pipe演算子：二つの入力X1,X2から出力Yを得る関数fについて、pipe演算子を用いると、Y <- X1 |> f(X2)と書き換えられる
 
 - pipe演算子を使わない場合、入力として別の出力結果をもちいるためには、複数のobjectを作成する必要があり煩雑
 
@@ -82,7 +93,7 @@ df <- mutate(df,
 
 ```{r}
 df <- 
-  raw %>% # rawが最初の入力
+  raw |> # rawが最初の入力
   filter(visits >= 7) %>% # visitsが7以上のサンプルに絞る
   mutate(age2 = age^2) # 年齢の二乗項を作成
 ```
@@ -101,24 +112,24 @@ library(gtsummary)
 - select関数で必要な変数(visits, health, medicaid)を抜き出し、insuranceごとに連続変数については中央値、カテゴリ変数については頻度を記述
 
 ```{r}
-raw %>% # rawを入力とし
+raw |>  # rawを入力とし
   select(visits,
          health,
          medicaid,
          insurance
-         ) %>% # 必要な変数を抜き出す
+         ) |> # 必要な変数を抜き出す
   tbl_summary(by = insurance) # 記述統計を計算
 ```
 
 - 連続変数について、平均値と標準偏差を記述
 
 ```{r}
-raw %>%
+raw |> 
   select(visits,
          health,
          medicaid,
          insurance
-         ) %>%
+         ) |> 
   tbl_summary(by = insurance,
             statistic = list(all_continuous() ~ "{mean} ({sd})") # 平均と標準誤差を表示
             )

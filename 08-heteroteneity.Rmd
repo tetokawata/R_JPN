@@ -1,4 +1,10 @@
-# 条件付き平均効果関数の推定
+# 条件付き平均効果関数の推定 {#hetero}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
 
 ## パッケージ
 

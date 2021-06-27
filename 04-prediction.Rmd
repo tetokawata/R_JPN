@@ -1,6 +1,13 @@
 
 # 予測 {#prediction}
 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
 ## 問題設定
 
 - データと同じ母集団から新しくランダムサンプリングされ、$X$のみが観察できるサンプルについて$Y$の値を予測することを目的とします。
@@ -193,8 +200,6 @@ mean((Y - Y.hat)[group != 1]^2)
 ### No penalty
 
 ```{r}
-library(glmnet)
-
 Y <- raw$visits
 
 X <- model.matrix(visits ~ -1 + . + .^2 + I(age^2) + I(school^2) + I(income^2),

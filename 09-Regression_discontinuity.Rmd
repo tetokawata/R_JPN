@@ -1,8 +1,18 @@
-# Regression-discontinuity
+# Regression-discontinuity {#RD}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+- 識別の仮定：ある変数$X$について、以下の条件を満たすcutoff $c$が存在する
+
+  - $\lim_{x\uparrow c}\Pr[D_i=d|X=x]\neq \lim_{x\downarrow c}\Pr[D_i=d|X=x]$: 原因変数の分布がcutoffの前後で非連続的に変化している
 
 - 通常、Cutoffの近傍には少数のサンプルしかないので、外挿する必要がある。
 
-- polynomial regressionによる局所的外挿は、rdrobustパッケージ [@R-rdrobust]により実装できる。
+- Local polynomial regressionによる局所的外挿は、rdrobustパッケージ [@R-rdrobust]により実装できる。
 
 ## パッケージ
 
@@ -52,13 +62,3 @@ fit <- rdrobust(y = Y,
 
 summary(fit)
 ```
-
-### Local Randomization
-
-```{r}
-fit <- rdrandinf(Y = Y,
-                 R = X)
-
-fit
-```
-

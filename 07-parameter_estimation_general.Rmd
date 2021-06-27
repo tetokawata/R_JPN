@@ -1,4 +1,10 @@
-# 部分線形モデルの推定
+# 部分線形モデルの推定 {#general}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
 
 - 部分線形モデル$=$線形モデルの一般化
 

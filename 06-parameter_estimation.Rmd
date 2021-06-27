@@ -1,6 +1,13 @@
 
 # 線形モデルの推定 {#unique}
 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
 - $E[Y|D,X]$の線形近似をデータから推定する
 
   - $E[Y|D,X]$そのものを推定しているとは解釈しない[@angrist2002covariance;@angrist2008mostly]
@@ -28,8 +35,6 @@ library(MatchIt)
 data("NMES1988")
 
 raw <- na.omit(NMES1988)
-
-set.seed(123)
 ```
 
 ## 線形モデルの推定
@@ -107,9 +112,9 @@ summary(fit.m)
 - マッチング結果の図示
 
 ```{r}
-sum.m <- summary(fit.m)
-
-plot(sum.m, xlim=c(0,2))
+fit.m |> 
+  summary() |> 
+  plot(xlim = c(0,2))
 ```
 
 - マッチング結果を変数として含んだデータを作成
@@ -149,15 +154,15 @@ fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + em
 - マッチング結果
 
 ```{r}
-sum.m <- summary(fit.m)
-
-sum.m
+summary(fit.m)
 ```
 
 - 可視化
 
 ```{r}
-plot(sum.m, xlim=c(0,2))
+fit.m |> 
+  summary() |> 
+  plot(xlim = c(0,2))
 ```
 
 - Exact matching以外のマッチング法では、マッチングされたサンプル内でも$X$の違いが残る
@@ -206,15 +211,15 @@ fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + em
 - マッチング結果
 
 ```{r}
-sum.m <- summary(fit.m)
-
-sum.m
+summary(fit.m)
 ```
 
 - マッチング結果の図示
 
 ```{r}
-plot(sum.m, xlim=c(0,2))
+fit.m |> 
+  summary() |> 
+  plot(xlim = c(0,2))
 ```
 
 - マッチングしたデータを用いた推定
@@ -247,16 +252,16 @@ fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + em
 - マッチング結果
 
 ```{r}
-sum.m <- summary(fit.m)
-
-sum.m
+summary(fit.m)
 ```
 
 
 - マッチング結果の図示
 
 ```{r}
-plot(sum.m, xlim=c(0,2))
+fit.m |> 
+  summary() |> 
+  plot(xlim = c(0,2))
 ```
 
 - マッチングしたデータを用いた推定
@@ -285,19 +290,19 @@ library(knitr)
 
 lm_robust(visits ~ insurance + region + age + afam + gender + school,
             data = raw
-            ) %>%
-  tidy %>%
-  select(term, estimate, std.error) %>%
+            ) |> 
+  tidy() |> 
+  select(term, estimate, std.error) |> 
   kable(digits = 2)
 ```
 
 ```{r}
 lm_robust(visits ~ insurance + region + age + afam + gender + school,
             data = raw
-            ) %>%
-  tidy %>%
-  select(term, estimate, std.error) %>%
-  filter(term == "insuranceyes") %>%
+            ) |> 
+  tidy() |> 
+  select(term, estimate, std.error) |> 
+  filter(term == "insuranceyes") |> 
   kable(digits = 2)
 ```
 
@@ -308,10 +313,10 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school,
 
 ```{r}
 lm_robust(visits ~ insurance + region + age + afam + gender + school,
-            data = raw) %>%
-  tidy %>%
+            data = raw) |> 
+  tidy() |> 
   filter(term != "(Intercept)"
-         ) %>%
+         ) |> 
   ggplot(aes(y = term,
              x = estimate,
              xmin = conf.low,
