@@ -6,108 +6,70 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
+- Chapter \@ref(mutate)-\@ref(filter) : tidyverseに同梱されるdplyrパッケージに含まれる関数を用いた、データの加工法を紹介
 
-- パッケージ：追加関数やデータなどのバンドル
+- Chapter \@ref(gtsummary) : gtsummaryパッケージ[@R-gtsummary]を用いた記述統計表を作成
 
-- AERパッケージに含まれるNMES1988を利用
-
-```{r}
-data("NMES1988",
-     package = "AER")
-
-raw <- NMES1988
-```
-
-## tidyerseパッケージのインストール
-
-- tidyverseパッケージ：、データ導入、整備、可視化等、多岐にわたる有益な関数を提供
+## パッケージ & データ
 
 ```{r}
-library(tidyverse)
+library(tidyverse) # データ整備
+
+library(AER) # Example データ
+
+library(gtsummary) # 記述統計量
+
+data("NMES1988") ## データの取得
+
+raw <- NMES1988 ## rawという名前に変更
 ```
 
-## 新しい変数の作成: mutate (tidyverse)
+
+## 新しい変数の作成 {#mutate}
 
 - mutate関数の利用
 
 ```{r}
-df <- mutate(raw,
-              age_2 = age^2 # 年齢の二乗項を作成
-              )
+df <- 
+  raw |> 
+  mutate(age_2 = age^2) # 年齢の二乗項を作成
 ```
 
-## 変数の限定: select (tidyverse)
+## 変数の限定 {#select}
 
 - select関数の利用
 
 ```{r}
-df <- select(raw,
-             age,
-             income
-             )
+df <- 
+  raw |> 
+  select(age,
+         income)
 ```
 
 - 特定の変数の除外
 
 ```{r}
-df <- select(raw,
-             -age,
-             -income
-             )
+df <- 
+  raw |> 
+  select(-age,
+         -income)
 ```
 
-## サンプルの除外:filter (tidyverse)
+## サンプルの除外 {#filter}
 
 - filter関数の利用
 
 ```{r}
-df <- filter(raw,
-             visits >= 7
-             )
-```
-
-
-## pipe演算子
-
-- Rのversion 4.1からpipe演算子が、追加パッケージなしで利用可能になる
-
-  - Tools -> Global option -> Code -> "Use native pipe operator" をチェックする
-  
-  - Ctr + Shift + mがショートカット
-
-- pipe演算子：二つの入力X1,X2から出力Yを得る関数fについて、pipe演算子を用いると、Y <- X1 |> f(X2)と書き換えられる
-
-- pipe演算子を使わない場合、入力として別の出力結果をもちいるためには、複数のobjectを作成する必要があり煩雑
-
-```{r}
-# visits が7以上かつage2を含んだデータを作成
-
-df <- filter(raw,
-             visits >= 7)
-
-df <- mutate(df,
-             age2 = age^2)
-```
-
-- pipe演算子を使うと、出力結果を直接入力でき、コードの可読性が改善することが期待できる
-
-```{r}
 df <- 
-  raw |> # rawが最初の入力
-  filter(visits >= 7) %>% # visitsが7以上のサンプルに絞る
-  mutate(age2 = age^2) # 年齢の二乗項を作成
+  raw |> 
+  filter(visits >= 7)
 ```
 
-
-## 記述統計表の作成
+## 記述統計表の作成 {#gtsummary}
 
 - 記述統計の作成には多くの有益なパッケージが存在
 
-- ここではgtsummary[@R-gtsummary]を使用
-
-```{r}
-library(gtsummary)
-```
+- ここではgtsummaryを使用
 
 - select関数で必要な変数(visits, health, medicaid)を抜き出し、insuranceごとに連続変数については中央値、カテゴリ変数については頻度を記述
 

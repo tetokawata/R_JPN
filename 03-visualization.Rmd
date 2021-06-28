@@ -6,103 +6,102 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
-## 問題設定
+- 議論の出発点として、データ内におけるY/X間の関係性を整理・記述することが重要
 
-- データ内におけるY/X間の関係性を整理・記述することが必要
+  - 最有力な手法は可視化
 
-- 最有力な手法は可視化
+- tidyverseに含まれるggplot2パッケージ[@R-ggplot2]を利用し、可視化
 
-## パッケージ
+- Chapter \@ref(category) : Yが連続変数、Xがカテゴリー変数のケースについて有効なヒストグラム、密度関数、boxplotを描写
 
-- tidyverseに含まれるggplot2パッケージ[@R-ggplot2]を利用
+- Chapter \@ref(continous) :Xも連続変数のケースについて有効な散布図、ヒートマップを描写
 
-```{r}
-library(tidyverse)
-library(AER)
-```
-
-## データ
+## パッケージ & データ
 
 ```{r}
-data("NMES1988")
+library(tidyverse) # 可視化
 
-raw <- NMES1988
+library(AER) # 例データ
+
+data("NMES1988") # データの取り込み
+
+raw <- NMES1988 # 名前変更
 ```
 
 - 変数のタイプに応じて、変数間の関係性を記述するために有効な図は異なる。
 ここでは、Y/Xが共に連続(連続-連続)のケース、Xがカテゴリカル(連続-カテゴリ)なケースについて、代表的な図を紹介する
 
-## 連続-カテゴリのケース
 
-### ヒストグラム: geom_histogram (tidyverse)
+## 連続-カテゴリのケース {#category}
+
+### ヒストグラム
 
 - 医療機関の利用回数
 
 ```{r}
-ggplot(raw, 
-       aes(x = visits)
-       ) +
+raw |> 
+  ggplot(aes(x = visits)) +
   geom_histogram()
 ```
 
 - 保険の有無別
 
 ```{r}
-ggplot(raw, 
-       aes(x = visits,
-           fill = insurance)
-       ) +
+raw |> 
+  ggplot(aes(x = visits,
+             fill = insurance)
+         ) +
   geom_histogram(position = "identity",
                  alpha = 0.5)
 ```
 
-### 密度: geom_density (tidyverse)
+### 密度
 
 - 保険の有無別分布
 
 ````{r}
-ggplot(raw, 
-       aes(x = visits,
-           fill = insurance)
-       ) +
+raw |> 
+  ggplot(aes(x = visits,
+             fill = insurance)
+         ) +
   geom_density(position = "identity",
-                 alpha = 0.5)
+               alpha = 0.5)
 ```
 
-### Boxplot: geom_boxplot (tidyverse)
+### Boxplot
 
 ```{r}
-ggplot(raw,
-       aes(y = visits,
-           x = insurance)
-       ) +
+raw |> 
+  ggplot(aes(y = visits,
+             x = insurance)
+         ) +
   geom_boxplot()
 ```
 
-## 連続-連続のケース
+## 連続-連続のケース {#continous}
 
-### 散布図: geom_point (tidyverse)
+### 散布図
 
 - 散布図：連続変数間の関係性を可視化する図
 
 ```{r}
-ggplot(raw,
-       aes(x = age,
-           y = visits)
-       ) +
+raw |> 
+  ggplot(aes(x = age,
+             y = visits)
+         ) +
   geom_point()
 ```
 
 - サンプルサイズが大きくなると機能しない
 
-### ヒートマップ: geom_bin2d (tidyverse)
+### ヒートマップ
 
 - 代替案はヒートマップ
 
 ```{r}
-ggplot(raw,
-       aes(x = age,
-           y = visits)
-       ) +
+raw |> 
+  ggplot(aes(x = age,
+             y = visits)
+         ) +
   geom_bin2d()
 ```

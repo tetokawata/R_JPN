@@ -1,28 +1,41 @@
 
 # 予測 {#prediction}
 
-
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       warning = FALSE,
                       message = FALSE)
 ```
 
-## 問題設定
+- データと同じ母集団から新しくランダムサンプリングされ、$X$のみが観察できるサンプルについて$Y$の値を予測する。
 
-- データと同じ母集団から新しくランダムサンプリングされ、$X$のみが観察できるサンプルについて$Y$の値を予測することを目的とします。
+  - データ分割を用いたモデル評価を行う
 
-- 具体的には、事前に定義する損失関数の期待値を最小化するような、予測関数$f(X)$の推定をめざします。
-以下ではMean squared error(MSE)を損失関数として用います。
-所与の$f(X)$、母分布に従う確率変数$Y,X$についてMSEは以下のように定義されます。
+- Chapter \@ref(purpose) : 予測問題の論点を紹介
+
+- Chapter \@ref(samplesplit) : データ分割
+
+- Chapter \@ref(OLS) : 線形モデルをOLSで推定する手法を紹介
+
+- Chapter \@ref(LASSO)-\@ref(Ridge) : 線形モデルを罰則付き回帰(LASSO, Ridge)で推定する手法を紹介
+
+- Chapter \@ref(Tree) : 予測木モデルを推定する手法を紹介
+
+- Chapter \@ref(Bagging)-\@ref(RandomForest) : 予測木モデルをモデル平均加法(Bagging, Random Forest)で推定する手法を紹介
+
+## 問題設定 {#purpose}
+
+- 事前に定義する損失関数の期待値を最小化するような、予測関数$f(X)$の推定を目指す。
+
+  - 以下ではMean squared error(MSE)を損失関数として用いる。所与の$f(X)$、母分布に従う確率変数$Y,X$についてMSEは以下のように定義される。
 
 $$MSE = E_{X,Y}[(Y_i-f(X_i))^2]$$
 
-- 一般にMSEは以下のように書き換えられます。
+  - 一般にMSEは以下のように書き換えられます。
 
 $$MSE = \underbrace{E_{X,Y}[(Y_i-\bar{Y}(X_i))^2]}_{Irreducible\ error}+\underbrace{E_{X,Y}[(\bar{Y}(X_i)-f(X_i))^2]}_{Reducible\ error}$$
 ただし$\bar{Y}(X_i)=E[Y_i|X_i]$。
-上記式から以下が確認できます。
+上記式から以下が確認できる。
 
   - 最善の予測関数は条件付き母平均$\bar{Y}(X_i)$(Reducible error = 0)
   
@@ -32,110 +45,128 @@ $$MSE = \underbrace{E_{X,Y}[(Y_i-\bar{Y}(X_i))^2]}_{Irreducible\ error}+\underbr
 
 ### Bias-Variance tradeoff
 
-- 実際の$f(X_i)$はランダムサンプリングされたデータから推定される必要があり、実際には確率分布を持ちます。
+- 実際の$f(X_i)$はランダムサンプリングされたデータから推定される。このためデータの入手前の段階では、確率分布を持つ。
 
-- Reducible errorは一般に以下のように書き換えられます。
+  - Reducible errorは一般に以下のように書き換えられます。
 
 $$E_{Y,X,f(X)}[(\bar{Y}(X_i)-f(X_i))^2]$$
 
 $$=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E_{Y,X,f(X)}[(\bar{f}(X_i)-f(X_i))^2]}_{Variance}.$$
 ただし$\bar{f}(X_i)=f(X_i)$。
 
-- 上記式は推定される予測関数が平均的にどの程度条件付き母平均を近似できているのか(Biasがどの程度小さいのか)だけでなく、予測関数の分布がどの程度散らばっているのか（VArianceがどの程度大木のか）、についても考慮する必要があることを示しています。
+- 上記式は推定される予測関数が平均的にどの程度条件付き母平均を近似できているのか(Biasがどの程度小さいのか)だけでなく、予測関数の分布がどの程度散らばっているのか（VArianceがどの程度大木のか）、についても考慮する必要性を示す。
 
-- 母平均$\bar Y(X_i)$が単純な既知の関数形に従い、かつサンプルサイズが大きい場合、OLS推定された$f(X_i)$は$Bias=0$かつ小さいVarianceを達成します。
-しかしながら社会科学における多くの応用においては、$\bar Y(X_i)$は未知かつ複雑であることが予想され、その複雑さに対してサンプルサイズが小さいことを想定する必要があります。
-このような状況では、OLSやサブサンプル平均により推定された予測モデルは、Bias-Variance tradeoffに直面します。
+  - 母平均$\bar Y(X_i)$が単純な既知の関数形に従い、かつサンプルサイズが大きい場合、OLS推定された$f(X_i)$は$Bias=0$かつ小さなVarianceを達成する。
+  
+  - しかしながら社会科学における多くの応用においては、$\bar Y(X_i)$は未知かつ複雑であることが予想され、その複雑さに対してサンプルサイズが小さいことが想定される。
+
+
+  - このような状況では、OLSやサブサンプル平均により推定された予測モデルは、Bias-Variance tradeoffに直面する。
 
   - 少ないパラメータ（短い回帰式、少ないサブサンプル分割）を推定する場合、大きなBiasを持つ
   
   - 多くのパラメータ（長い回帰式、多いサブサンプル分割）を推定する場合、大きなVarianceを持つ。
 
-- Bias-variance tradeoffを分析者が解くこと（最善のモデル設定を行うこと）は困難です。Chapter \@ref(prediction) で紹介するLASSO/Ridge/Random Forestなどの手法は、bias-varianceのバランスをよりデータ主導型かつ現実的な計算時間で達成することを目指します。
+- Bias-variance tradeoffを分析者が解くこと（最善のモデル設定を行うこと）は困難です。\@ref{LASSO} - \@ref(RandomForest) で紹介するLASSO/Ridge/Random Forestなどの手法は、bias-variance問題をよりデータ主導型かつ現実的な計算時間の手法で解決することを目指す。
 
-## パッケージ
+## パッケージ & データ
 
 ```{r}
 library(tidyverse)
+
 library(AER)
-library(glmnet)
-library(ranger)
-```
 
+library(glmnet) # LASSO/Ridge
 
-## データの導入
+library(ranger) # Bagging/Random Forest
 
-- 引き続きcausaldataに含まれるclose_collegeを使用
-
-```{r}
 data("NMES1988")
 
-raw <- na.omit(NMES1988)
+raw <- NMES1988
 
 set.seed(123)
 ```
 
-
-
-## データ分割
+## データ分割 {#samplesplit}
 
 - ここでは5個のデータに分割する。
 
 ```{r}
-group <- sample(1:5,
-                size = nrow(raw),
-                replace = TRUE)
+group <- sample(1:5, # 1から5までの数字を発生される
+                size = nrow(raw), # サンプルサイズと同数発生される
+                replace = TRUE) # 同じ数字が発生することを許容する
 ```
 
+- 第1データをテストデータ、2－5データを訓練データとして使用する
 
-## OLS
+## OLS {#OLS}
 
-- 線形予測関数$f(X)=\beta_0 + \beta_1X_1+...+\beta_LX_L$を仮定し、最小二乗法にて推定する。
+- 線形予測関数$f(X)=\beta_0 + \beta_1X_1+...+\beta_LX_L$を想定
+
+  - $\beta_0,...,\beta_L$を最小二乗法にて推定
+  
+$$\min\sum_i (Y_i-f(X))^2$$
 
 ```{r}
 fit <- lm(visits ~ .,
-          data = raw[group != 1,])
+          data = raw[group != 1,]) # 第1グループ以外を使用してOLS推定
 
-coef(fit)
+coef(fit) # モデル（係数値）を確認
 ```
 
-- 予測値の導出
+- 訓練/テストデータについて、予測値の導出
 
 ```{r}
 Y.hat <- predict(fit,raw)
 ```
 
-- テストデータへの適合
+- テストデータへの適合度を測定
 
 ```{r}
 mean((raw$visits - Y.hat)[group == 1]^2)
 ```
 
-- 訓練データへの適合
+- 訓練データへの適合度を測定
 
 ```{r}
 mean((raw$visits - Y.hat)[group != 1]^2)
 ```
 
-## LASSO
+## LASSO {#LASSO}
+
+- LASSO推定：線形モデルを以下の最適化問題の解として推定
+
+$$\min\sum_i (Y_i-f(X_i))^2+\underbrace{\lambda\sum_l|\beta_l|}_{Penalty\ term}$$
+
+  - $\lambda$ : チューニングパラメタ、Cross-validationを用いて設定可能
 
 - glmentパッケージ[@R-glmnet]を利用
 
+  - glmnetはdata.frameを直接の入力できず、matrix(vector)に変換する必要がある
+
 ```{r}
-Y <- raw$visits
+Y <- raw$visits # 結果変数のベクトル
 
 X <- model.matrix(visits ~ -1 + . + .^2 + 
                     I(age^2) + I(school^2) + I(income^2) + I(nvisits^2) + I(ovisits^2) + I(hospital^2),
-                  data = raw)
+                  data = raw) # 予測変数の行列
+```
 
-cv <- cv.glmnet(x = X[group != 1,],
-                y = Y[group != 1],
-                alpha = 1)
+- Cross validationを用いたパラメータチューニング
 
+```{r}
+cv <- cv.glmnet(x = X[group != 1,], # 予測変数
+                y = Y[group != 1], # 結果変数
+                alpha = 1) # LASSO推定であることを指定
+```
+
+- LASSO推定
+
+```{r}
 fit <- glmnet(x = X[group != 1,],
               y = Y[group != 1],
               alpha = 1,
-              lambda = cv$lambda.min)
+              lambda = cv$lambda.min) # 推定されたパラメータ
 ```
 
 - 予測モデルの確認
@@ -143,7 +174,6 @@ fit <- glmnet(x = X[group != 1,],
 ```{r}
 coef(fit)
 ```
-
 
 - 予測値の導出
 
@@ -164,14 +194,20 @@ mean((Y - Y.hat)[group != 1]^2)
 ```
 
 
-## Ridge
+## Ridge {#Ridge}
+
+- Ridge推定：線形モデルを以下の最適化問題の解として推定
+
+$$\min\sum_i (Y_i-f(X_i))^2+\underbrace{\lambda\sum_l(\beta_l)^2}_{Penalty\ term}$$
+
+  - $\lambda$ : チューニングパラメタ、Cross-validationを用いて設定可能
 
 - 引き続きglmentパッケージ[@R-glmnet]を利用
 
 ```{r}
 cv <- cv.glmnet(x = X[group != 1,],
                 y = Y[group != 1],
-                alpha = 0)
+                alpha = 0) # alpha = 0ならばRidge推定
 
 fit <- glmnet(x = X[group != 1,],
               y = Y[group != 1],
@@ -197,39 +233,9 @@ mean((Y - Y.hat)[group == 1]^2)
 mean((Y - Y.hat)[group != 1]^2)
 ```
 
-### No penalty
+## Tree {#Tree}
 
-```{r}
-Y <- raw$visits
-
-X <- model.matrix(visits ~ -1 + . + .^2 + I(age^2) + I(school^2) + I(income^2),
-                  data = raw)
-
-fit <- glmnet(x = X[group != 1,],
-              y = Y[group != 1],
-              alpha = 1,
-              lambda = 0)
-```
-
-- 予測値の導出
-
-```{r}
-Y.hat <- predict(fit,X)
-```
-
-- テストデータへの適合
-
-```{r}
-mean((Y - Y.hat)[group == 1]^2)
-```
-
-- 訓練データへの適合
-
-```{r}
-mean((Y - Y.hat)[group != 1]^2)
-```
-
-## Bagging
+## Bagging {#Bagging}
 
 - rangerパッケージ[@R-ranger]を利用
 
@@ -262,7 +268,7 @@ mean((Y - Y.hat)[group == 1]^2)
 mean((Y - Y.hat)[group != 1]^2)
 ```
 
-## Random Forest
+## Random Forest {#RandomForest}
 
 - 引き続きrangerパッケージ[@R-ranger]を利用
 

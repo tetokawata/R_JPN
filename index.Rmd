@@ -16,7 +16,6 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
-
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(
@@ -37,7 +36,9 @@ knitr::write_bib(
     "causaldata",
     "gtsummary",
     "MatchIt",
-    "rdrobust"),
+    "rdrobust",
+    "did",
+    "BART"),
   'packages.bib')
 ```
 
@@ -50,18 +51,9 @@ knitr::write_bib(
 本ページでは、ある結果変数$Y$と独立変数（群）$X=X_1,...,X_L$の関係性に焦点を当てる。
 また$Y$と$X$がともに観察でき、関心のある母集団からランダムサンプリングされたデータが入手出来ている。
 
-- 具体的な分析目標は大きく（予測）$Y$の予測関数の推定、（比較）異なる$X$間での$Y$の比較、（因果効果）$X$の変化が$Y$に与える因果効果の推定、に大別できる。
+- 具体的な分析目標を大きく（予測）$Y$の予測関数の推定、（比較）異なる$X$間での$Y$の比較、（因果効果）$X$の変化が$Y$に与える因果効果の推定、に大別し、それぞれについて簡単な説明とRのサンプルコードの提供
 
-- 本ページの目的はそれぞれについて簡単な説明とRのサンプルコードの提供
 
 - データインポート、整理、可視化を行う関数群を統合的に提供するtidyverseパッケージ [@tidyverse2019]の利用
 
-- Example dataとしては、AERパッケージ [@AER2008]に含まれる(the US National Medical Expenditure Survey, NMES1988)を利用
-
-- 無料で公開されている有力な参考文献として、以下を推薦
-
-  - 機械学習を用いた予測：@james2013introduction [公開ページ](https://www.statlearning.com/)
-  
-  - 日本語によるR入門：[私たちのR: ベストプラクティスの探究](https://www.jaysong.net/RBook/)
-  
-  - tidyverseパッケージの利用： [公式ページ](https://www.tidyverse.org/learn/#books)
+- Example dataとしては、AERパッケージ [@AER2008]に含まれるNMES1988(the US National Medical Expenditure Survey)を利用
