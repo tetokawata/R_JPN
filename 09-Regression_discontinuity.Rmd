@@ -6,6 +6,15 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
+
+- Regression discontinuityに基づく推定方法を紹介
+
+- Chapter \@ref(motivation) : Regression discontinuityにおける問題意識を紹介
+
+- Chapter \@ref(sharp) : Sharp designに基づく推定方法を紹介
+
+## 問題意識 {#motivation}
+
 - 識別の仮定：ある変数$X$について、以下の条件を満たすcutoff $c$が存在する
 
   - $\lim_{x\uparrow c}\Pr[D_i=d|X=x]\neq \lim_{x\downarrow c}\Pr[D_i=d|X=x]$: 原因変数の分布がcutoffの前後で非連続的に変化している
@@ -14,16 +23,9 @@ knitr::opts_chunk$set(echo = TRUE,
 
 - Local polynomial regressionによる局所的外挿は、rdrobustパッケージ [@R-rdrobust]により実装できる。
 
-## パッケージ
-
 - 同パッケージによる実装も含んだ包括的な入門は @cattaneo2019practicala, @cattaneo2019practicalb.
 
-```{r}
-library(rdrobust)
-library(rdlocrand)
-```
-
-## Shap disconiniuity
+## パッケージ & データ
 
 - Rdrobustに同梱されれいるExample data [@cattaneo2015randomization]を使用
 
@@ -36,20 +38,36 @@ library(rdlocrand)
   - outcome variable $=$ vote (選挙における得票率)
 
 ```{r}
+library(rdrobust)
+
+library(tidyverse)
+
 data("rdrobust_RDsenate")
 
 raw <- rdrobust_RDsenate
+```
 
+## Shap disconiniuity {#sharp}
+
+- 推計前に$X$と$Y$についての散布図を確認することを推奨
+
+```{r}
+raw |> 
+  ggplot(aes(x = margin,
+             y = vote)
+         ) +
+  geom_point() +
+  geom_vline(xintercept = 0)
+```
+
+
+- 初期設定では2nd oder local polynominalを利用 (@gelman2019whyhigh の推奨)
+
+```{r}
 Y <- raw$vote
 
 X <- raw$margin
-```
 
-- 図示
-
-  - 初期設定では2nd oder local polynominalを利用 (@gelman2019whyhigh の推奨)
-
-```{r}
 rdplot(y = Y,
        x = X)
 ```
@@ -57,8 +75,7 @@ rdplot(y = Y,
 - 推定結果表 + 標準誤差
 
 ```{r}
-fit <- rdrobust(y = Y,
-                x = X)
-
-summary(fit)
+rdrobust(y = Y,
+         x = X) |> 
+  summary()
 ```

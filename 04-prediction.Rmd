@@ -80,6 +80,10 @@ library(glmnet) # LASSO/Ridge
 
 library(ranger) # Bagging/Random Forest
 
+library(rpart) # Tree
+
+library(rpart.plot) # Visualization with tree
+
 data("NMES1988")
 
 raw <- NMES1988
@@ -234,6 +238,15 @@ mean((Y - Y.hat)[group != 1]^2)
 ```
 
 ## Tree {#Tree}
+
+```{r}
+rpart(visits ~ .,
+      data = raw,
+      control = rpart.control(maxdepth = 2)
+      ) |> 
+  rpart.plot()
+```
+
 
 ## Bagging {#Bagging}
 

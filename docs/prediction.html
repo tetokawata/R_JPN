@@ -256,12 +256,13 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="9" data-path="RD.html"><a href="RD.html"><i class="fa fa-check"></i><b>9</b> Regression-discontinuity</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="RD.html"><a href="RD.html#パッケージ-3"><i class="fa fa-check"></i><b>9.1</b> パッケージ</a></li>
-<li class="chapter" data-level="9.2" data-path="RD.html"><a href="RD.html#shap-disconiniuity"><i class="fa fa-check"></i><b>9.2</b> Shap disconiniuity</a></li>
+<li class="chapter" data-level="9.1" data-path="RD.html"><a href="RD.html#motivation"><i class="fa fa-check"></i><b>9.1</b> 問題意識</a></li>
+<li class="chapter" data-level="9.2" data-path="RD.html"><a href="RD.html#パッケージ-データ-3"><i class="fa fa-check"></i><b>9.2</b> パッケージ &amp; データ</a></li>
+<li class="chapter" data-level="9.3" data-path="RD.html"><a href="RD.html#sharp"><i class="fa fa-check"></i><b>9.3</b> Shap disconiniuity</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="panel.html"><a href="panel.html"><i class="fa fa-check"></i><b>10</b> Panel data</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="panel.html"><a href="panel.html#パッケージ-4"><i class="fa fa-check"></i><b>10.1</b> パッケージ</a></li>
+<li class="chapter" data-level="10.1" data-path="panel.html"><a href="panel.html#パッケージ-3"><i class="fa fa-check"></i><b>10.1</b> パッケージ</a></li>
 <li class="chapter" data-level="10.2" data-path="panel.html"><a href="panel.html#data"><i class="fa fa-check"></i><b>10.2</b> Data</a></li>
 <li class="chapter" data-level="10.3" data-path="panel.html"><a href="panel.html#識別-pallarel-trend-in-the-two-by-two-case"><i class="fa fa-check"></i><b>10.3</b> 識別: Pallarel trend in the two-by-two case</a></li>
 <li class="chapter" data-level="10.4" data-path="panel.html"><a href="panel.html#推定-two-way-fixed-effect-model"><i class="fa fa-check"></i><b>10.4</b> 推定: Two-way fixed effect model</a></li>
@@ -356,11 +357,15 @@ div.csl-indent {
 <span id="cb17-6"><a href="prediction.html#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-7"><a href="prediction.html#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger) <span class="co"># Bagging/Random Forest</span></span>
 <span id="cb17-8"><a href="prediction.html#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="prediction.html#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>)</span>
+<span id="cb17-9"><a href="prediction.html#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart) <span class="co"># Tree</span></span>
 <span id="cb17-10"><a href="prediction.html#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-11"><a href="prediction.html#cb17-11" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span>
+<span id="cb17-11"><a href="prediction.html#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot) <span class="co"># Visualization with tree</span></span>
 <span id="cb17-12"><a href="prediction.html#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-13"><a href="prediction.html#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span></code></pre></div>
+<span id="cb17-13"><a href="prediction.html#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>)</span>
+<span id="cb17-14"><a href="prediction.html#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="prediction.html#cb17-15" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> NMES1988</span>
+<span id="cb17-16"><a href="prediction.html#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="prediction.html#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span></code></pre></div>
 </div>
 <div id="samplesplit" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> データ分割</h2>
@@ -734,56 +739,62 @@ div.csl-indent {
 </div>
 <div id="Tree" class="section level2" number="4.7">
 <h2><span class="header-section-number">4.7</span> Tree</h2>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="prediction.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart</span>(visits <span class="sc">~</span> .,</span>
+<span id="cb42-2"><a href="prediction.html#cb42-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> raw,</span>
+<span id="cb42-3"><a href="prediction.html#cb42-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">control =</span> <span class="fu">rpart.control</span>(<span class="at">maxdepth =</span> <span class="dv">2</span>)</span>
+<span id="cb42-4"><a href="prediction.html#cb42-4" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb42-5"><a href="prediction.html#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rpart.plot</span>()</span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
 </div>
 <div id="Bagging" class="section level2" number="4.8">
 <h2><span class="header-section-number">4.8</span> Bagging</h2>
 <ul>
 <li>rangerパッケージ<span class="citation">(<a href="#ref-R-ranger" role="doc-biblioref">Wright, Wager, and Probst 2020</a>)</span>を利用</li>
 </ul>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="prediction.html#cb42-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(visits <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> .,</span>
-<span id="cb42-2"><a href="prediction.html#cb42-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> raw)</span>
-<span id="cb42-3"><a href="prediction.html#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-4"><a href="prediction.html#cb42-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ranger</span>(<span class="at">x =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
-<span id="cb42-5"><a href="prediction.html#cb42-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
-<span id="cb42-6"><a href="prediction.html#cb42-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">num.trees =</span> <span class="dv">2000</span>,</span>
-<span id="cb42-7"><a href="prediction.html#cb42-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">mtry =</span> <span class="fu">ncol</span>(X))</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="prediction.html#cb43-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(visits <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> .,</span>
+<span id="cb43-2"><a href="prediction.html#cb43-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> raw)</span>
+<span id="cb43-3"><a href="prediction.html#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="prediction.html#cb43-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ranger</span>(<span class="at">x =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
+<span id="cb43-5"><a href="prediction.html#cb43-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
+<span id="cb43-6"><a href="prediction.html#cb43-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">num.trees =</span> <span class="dv">2000</span>,</span>
+<span id="cb43-7"><a href="prediction.html#cb43-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">mtry =</span> <span class="fu">ncol</span>(X))</span></code></pre></div>
 <ul>
 <li>予測値の計算</li>
 </ul>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="prediction.html#cb43-1" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>predictions</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="prediction.html#cb44-1" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>predictions</span></code></pre></div>
 <ul>
 <li>テストデータへの適合</li>
 </ul>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="prediction.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 41.12654</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="prediction.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 40.88156</code></pre>
 <ul>
 <li>訓練データへの適合</li>
 </ul>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="prediction.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 8.307017</code></pre>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="prediction.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 8.328717</code></pre>
 </div>
 <div id="RandomForest" class="section level2" number="4.9">
 <h2><span class="header-section-number">4.9</span> Random Forest</h2>
 <ul>
 <li>引き続きrangerパッケージ<span class="citation">(<a href="#ref-R-ranger" role="doc-biblioref">Wright, Wager, and Probst 2020</a>)</span>を利用</li>
 </ul>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="prediction.html#cb48-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ranger</span>(<span class="at">x =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
-<span id="cb48-2"><a href="prediction.html#cb48-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
-<span id="cb48-3"><a href="prediction.html#cb48-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">num.trees =</span> <span class="dv">2000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="prediction.html#cb49-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ranger</span>(<span class="at">x =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
+<span id="cb49-2"><a href="prediction.html#cb49-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
+<span id="cb49-3"><a href="prediction.html#cb49-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">num.trees =</span> <span class="dv">2000</span>)</span></code></pre></div>
 <ul>
 <li>予測値の計算</li>
 </ul>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="prediction.html#cb49-1" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>predictions</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="prediction.html#cb50-1" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>predictions</span></code></pre></div>
 <ul>
 <li>テストデータへの適合</li>
 </ul>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="prediction.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 37.99072</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="prediction.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 38.03616</code></pre>
 <ul>
 <li>訓練データへの適合</li>
 </ul>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="prediction.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 12.29817</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="prediction.html#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.hat)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 12.23539</code></pre>
 
 </div>
 </div>

@@ -64,10 +64,11 @@ distribution-of-predicted-individual-effects
 best-linear-predictors
 tree-presentation
 RD
-パッケージ-3
-shap-disconiniuity
+motivation
+パッケージ-データ-3
+sharp
 panel
-パッケージ-4
+パッケージ-3
 data
 識別-pallarel-trend-in-the-two-by-two-case
 推定-two-way-fixed-effect-model
