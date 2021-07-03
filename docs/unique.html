@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-06-29" />
+<meta name="date" content="2021-07-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -232,10 +232,12 @@ div.csl-indent {
 <li class="chapter" data-level="6.4.3" data-path="unique.html"><a href="unique.html#propensity-score-with-subclassification"><i class="fa fa-check"></i><b>6.4.3</b> Propensity score with subclassification</a></li>
 <li class="chapter" data-level="6.4.4" data-path="unique.html"><a href="unique.html#nearest-neighbor-matching"><i class="fa fa-check"></i><b>6.4.4</b> Nearest neighbor matching</a></li>
 </ul></li>
-<li class="chapter" data-level="6.5" data-path="unique.html"><a href="unique.html#付録推定結果の表示"><i class="fa fa-check"></i><b>6.5</b> 付録：推定結果の表示</a>
+<li class="chapter" data-level="6.5" data-path="unique.html"><a href="unique.html#付録推定結果の保存と表示"><i class="fa fa-check"></i><b>6.5</b> 付録：推定結果の保存と表示</a>
 <ul>
 <li class="chapter" data-level="6.5.1" data-path="unique.html"><a href="unique.html#推計結果表"><i class="fa fa-check"></i><b>6.5.1</b> 推計結果表</a></li>
 <li class="chapter" data-level="6.5.2" data-path="unique.html"><a href="unique.html#dot-and-whisker-plotによる可視化"><i class="fa fa-check"></i><b>6.5.2</b> Dot-and-Whisker plotによる可視化</a></li>
+<li class="chapter" data-level="6.5.3" data-path="unique.html"><a href="unique.html#サブサンプル分析結果の整理と可視化"><i class="fa fa-check"></i><b>6.5.3</b> サブサンプル分析結果の整理と可視化</a></li>
+<li class="chapter" data-level="6.5.4" data-path="unique.html"><a href="unique.html#複数の推定結果の整理と可視化"><i class="fa fa-check"></i><b>6.5.4</b> 複数の推定結果の整理と可視化</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="general.html"><a href="general.html"><i class="fa fa-check"></i><b>7</b> 部分線形モデルの推定</a>
@@ -305,16 +307,16 @@ div.csl-indent {
 </ul>
 <div id="パッケージ" class="section level2" number="6.1">
 <h2><span class="header-section-number">6.1</span> パッケージ</h2>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="unique.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb55-2"><a href="unique.html#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
-<span id="cb55-3"><a href="unique.html#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span>
-<span id="cb55-4"><a href="unique.html#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="unique.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="unique.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
+<span id="cb1-3"><a href="unique.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span>
+<span id="cb1-4"><a href="unique.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span></code></pre></div>
 </div>
 <div id="データ" class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> データ</h2>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="unique.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>)</span>
-<span id="cb56-2"><a href="unique.html#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-3"><a href="unique.html#cb56-3" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(NMES1988)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="unique.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>)</span>
+<span id="cb2-2"><a href="unique.html#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="unique.html#cb2-3" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(NMES1988)</span></code></pre></div>
 </div>
 <div id="線形モデルの推定" class="section level2" number="6.3">
 <h2><span class="header-section-number">6.3</span> 線形モデルの推定</h2>
@@ -324,8 +326,8 @@ div.csl-indent {
 <li><p>robust standard errorを計算するためにestimatrパッケージ<span class="citation">(<a href="#ref-R-estimatr" role="doc-biblioref">Blair et al. 2021</a>)</span>を利用</p></li>
 <li><p>lm_robust関数で推定</p></li>
 </ul>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="unique.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> married,</span>
-<span id="cb57-2"><a href="unique.html#cb57-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="unique.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> married,</span>
+<span id="cb3-2"><a href="unique.html#cb3-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> raw)</span></code></pre></div>
 <pre><code>##                    Estimate Std. Error    t value     Pr(&gt;|t|)    CI Lower
 ## (Intercept)      4.32086605 1.30928537  3.3001713 9.739642e-04  1.75400683
 ## insuranceyes     0.96591490 0.24785140  3.8971533 9.877947e-05  0.48000123
@@ -388,16 +390,16 @@ div.csl-indent {
 <li><p><span class="math inline">\(X\)</span>が完全に同じサンプル同士をマッチングする</p></li>
 <li><p>原因変数の分布に偏りがある場合（本例ではコントロールグループが少ない）、少ないグループ内での平均効果(Average treatment effect for treat または control)の推定を目指すことでマッチできないサンプルを減らすことが期待できる。</p></li>
 </ul>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="unique.html#cb59-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(insurance <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed,</span>
-<span id="cb59-2"><a href="unique.html#cb59-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw,</span>
-<span id="cb59-3"><a href="unique.html#cb59-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;exact&quot;</span>,</span>
-<span id="cb59-4"><a href="unique.html#cb59-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimand =</span> <span class="st">&quot;ATC&quot;</span></span>
-<span id="cb59-5"><a href="unique.html#cb59-5" aria-hidden="true" tabindex="-1"></a>                 )</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="unique.html#cb5-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(insurance <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed,</span>
+<span id="cb5-2"><a href="unique.html#cb5-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw,</span>
+<span id="cb5-3"><a href="unique.html#cb5-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;exact&quot;</span>,</span>
+<span id="cb5-4"><a href="unique.html#cb5-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimand =</span> <span class="st">&quot;ATC&quot;</span></span>
+<span id="cb5-5"><a href="unique.html#cb5-5" aria-hidden="true" tabindex="-1"></a>                 )</span></code></pre></div>
 <ul>
 <li><p>この例では、incomeもコントロール変数に加えた場合、Exact matching不可能（一つもマッチングできない）</p></li>
 <li><p>マッチング結果の表示</p></li>
 </ul>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="unique.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.m)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="unique.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.m)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## matchit(formula = insurance ~ region + age + afam + gender + 
@@ -497,14 +499,14 @@ div.csl-indent {
 <li><p>Sample sizesにて、マッチングできなかったサンプル数（985のコントロールグループ中、667サンプルがマッチングできなかった）が確認できる</p></li>
 <li><p>マッチング結果の図示</p></li>
 </ul>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="unique.html#cb62-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb62-2"><a href="unique.html#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb62-3"><a href="unique.html#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-53-1.png" width="672" /></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="unique.html#cb8-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb8-2"><a href="unique.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb8-3"><a href="unique.html#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <ul>
 <li>マッチング結果を変数として含んだデータを作成</li>
 </ul>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="unique.html#cb63-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">match.data</span>(fit.m)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="unique.html#cb9-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">match.data</span>(fit.m)</span></code></pre></div>
 <ul>
 <li><p>“subclass”: マッチングしたグループ</p></li>
 <li><p>“weights”：マッチング後の推計に用いるウェイト</p></li>
@@ -513,9 +515,9 @@ div.csl-indent {
 <li>新たに作成されるweight (defaltではweights)を用いた、加重推定で実装</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="unique.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance,</span>
-<span id="cb64-2"><a href="unique.html#cb64-2" aria-hidden="true" tabindex="-1"></a>          df,</span>
-<span id="cb64-3"><a href="unique.html#cb64-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">weights =</span> weights)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="unique.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance,</span>
+<span id="cb10-2"><a href="unique.html#cb10-2" aria-hidden="true" tabindex="-1"></a>          df,</span>
+<span id="cb10-3"><a href="unique.html#cb10-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">weights =</span> weights)</span></code></pre></div>
 <pre><code>##              Estimate Std. Error   t value     Pr(&gt;|t|)  CI Lower CI Upper  DF
 ## (Intercept)  4.707547  0.2978972 15.802589 4.605531e-50 4.1229266 5.292168 940
 ## insuranceyes 1.481104  0.4842812  3.058355 2.288589e-03 0.5307064 2.431501 940</code></pre>
@@ -528,14 +530,14 @@ div.csl-indent {
 <li>連続変数をカテゴリー変数化することで、マッチングできるサンプルサイズを増やすことが期待できる</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="unique.html#cb66-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(insurance <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed <span class="sc">+</span> income,</span>
-<span id="cb66-2"><a href="unique.html#cb66-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw,</span>
-<span id="cb66-3"><a href="unique.html#cb66-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;cem&quot;</span>,</span>
-<span id="cb66-4"><a href="unique.html#cb66-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimand =</span> <span class="st">&quot;ATC&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="unique.html#cb12-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(insurance <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed <span class="sc">+</span> income,</span>
+<span id="cb12-2"><a href="unique.html#cb12-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw,</span>
+<span id="cb12-3"><a href="unique.html#cb12-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;cem&quot;</span>,</span>
+<span id="cb12-4"><a href="unique.html#cb12-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimand =</span> <span class="st">&quot;ATC&quot;</span>)</span></code></pre></div>
 <ul>
 <li>マッチング結果</li>
 </ul>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="unique.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.m)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="unique.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.m)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## matchit(formula = insurance ~ region + age + afam + gender + 
@@ -639,21 +641,21 @@ div.csl-indent {
 <ul>
 <li>可視化</li>
 </ul>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="unique.html#cb69-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb69-2"><a href="unique.html#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb69-3"><a href="unique.html#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="unique.html#cb15-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb15-2"><a href="unique.html#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb15-3"><a href="unique.html#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <ul>
 <li><p>Exact matching以外のマッチング法では、マッチングされたサンプル内でも<span class="math inline">\(X\)</span>の違いが残る</p>
 <ul>
 <li>マッチングされたサンプル内で回帰分析を行うことで、再調整する</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="unique.html#cb70-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">match.data</span>(fit.m)</span>
-<span id="cb70-2"><a href="unique.html#cb70-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-3"><a href="unique.html#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed <span class="sc">+</span> income,</span>
-<span id="cb70-4"><a href="unique.html#cb70-4" aria-hidden="true" tabindex="-1"></a>          df,</span>
-<span id="cb70-5"><a href="unique.html#cb70-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">weights =</span> weights)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="unique.html#cb16-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">match.data</span>(fit.m)</span>
+<span id="cb16-2"><a href="unique.html#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="unique.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed <span class="sc">+</span> income,</span>
+<span id="cb16-4"><a href="unique.html#cb16-4" aria-hidden="true" tabindex="-1"></a>          df,</span>
+<span id="cb16-5"><a href="unique.html#cb16-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">weights =</span> weights)</span></code></pre></div>
 <pre><code>##                    Estimate Std. Error     t value     Pr(&gt;|t|)    CI Lower
 ## (Intercept)      0.07031894  3.1830746  0.02209152 9.823776e-01 -6.17296408
 ## insuranceyes     1.63803136  0.4111893  3.98364310 7.081498e-05  0.83152463
@@ -701,15 +703,15 @@ div.csl-indent {
 <li><p>推定された傾向スコアを用いたStratification マッチング</p>
 <p>-　ロジットにて傾向スコアを推定</p></li>
 </ul>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="unique.html#cb72-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(insurance <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed <span class="sc">+</span> income,</span>
-<span id="cb72-2"><a href="unique.html#cb72-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw,</span>
-<span id="cb72-3"><a href="unique.html#cb72-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;subclass&quot;</span>,</span>
-<span id="cb72-4"><a href="unique.html#cb72-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimand =</span> <span class="st">&quot;ATC&quot;</span></span>
-<span id="cb72-5"><a href="unique.html#cb72-5" aria-hidden="true" tabindex="-1"></a>                 )</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="unique.html#cb18-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(insurance <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed <span class="sc">+</span> income,</span>
+<span id="cb18-2"><a href="unique.html#cb18-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw,</span>
+<span id="cb18-3"><a href="unique.html#cb18-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;subclass&quot;</span>,</span>
+<span id="cb18-4"><a href="unique.html#cb18-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimand =</span> <span class="st">&quot;ATC&quot;</span></span>
+<span id="cb18-5"><a href="unique.html#cb18-5" aria-hidden="true" tabindex="-1"></a>                 )</span></code></pre></div>
 <ul>
 <li>マッチング結果</li>
 </ul>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="unique.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.m)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="unique.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.m)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## matchit(formula = insurance ~ region + age + afam + gender + 
@@ -817,18 +819,18 @@ div.csl-indent {
 <ul>
 <li>マッチング結果の図示</li>
 </ul>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="unique.html#cb75-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb75-2"><a href="unique.html#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb75-3"><a href="unique.html#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-62-1.png" width="672" /></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="unique.html#cb21-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb21-2"><a href="unique.html#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb21-3"><a href="unique.html#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <ul>
 <li>マッチングしたデータを用いた推定</li>
 </ul>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="unique.html#cb76-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">match.data</span>(fit.m) <span class="co"># マッチング結果を含んだ</span></span>
-<span id="cb76-2"><a href="unique.html#cb76-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb76-3"><a href="unique.html#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed,</span>
-<span id="cb76-4"><a href="unique.html#cb76-4" aria-hidden="true" tabindex="-1"></a>          df,</span>
-<span id="cb76-5"><a href="unique.html#cb76-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">weights =</span> weights)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="unique.html#cb22-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">match.data</span>(fit.m) <span class="co"># マッチング結果を含んだ</span></span>
+<span id="cb22-2"><a href="unique.html#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="unique.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed,</span>
+<span id="cb22-4"><a href="unique.html#cb22-4" aria-hidden="true" tabindex="-1"></a>          df,</span>
+<span id="cb22-5"><a href="unique.html#cb22-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">weights =</span> weights)</span></code></pre></div>
 <pre><code>##                    Estimate Std. Error    t value    Pr(&gt;|t|)    CI Lower
 ## (Intercept)      2.69483196 1.56827266  1.7183440 0.085804312 -0.37977270
 ## insuranceyes     0.86429413 0.30326930  2.8499229 0.004393338  0.26973348
@@ -863,15 +865,15 @@ div.csl-indent {
 <li><p>デフォルトでは、Replacement無しのマッチングを行う</p></li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="unique.html#cb78-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(insurance <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed <span class="sc">+</span> income,</span>
-<span id="cb78-2"><a href="unique.html#cb78-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw,</span>
-<span id="cb78-3"><a href="unique.html#cb78-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;nearest&quot;</span>,</span>
-<span id="cb78-4"><a href="unique.html#cb78-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimand =</span> <span class="st">&quot;ATC&quot;</span></span>
-<span id="cb78-5"><a href="unique.html#cb78-5" aria-hidden="true" tabindex="-1"></a>                 )</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="unique.html#cb24-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(insurance <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed <span class="sc">+</span> income,</span>
+<span id="cb24-2"><a href="unique.html#cb24-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> raw,</span>
+<span id="cb24-3"><a href="unique.html#cb24-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;nearest&quot;</span>,</span>
+<span id="cb24-4"><a href="unique.html#cb24-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimand =</span> <span class="st">&quot;ATC&quot;</span></span>
+<span id="cb24-5"><a href="unique.html#cb24-5" aria-hidden="true" tabindex="-1"></a>                 )</span></code></pre></div>
 <ul>
 <li>マッチング結果</li>
 </ul>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="unique.html#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.m)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="unique.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.m)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## matchit(formula = insurance ~ region + age + afam + gender + 
@@ -979,22 +981,22 @@ div.csl-indent {
 <ul>
 <li>マッチング結果の図示</li>
 </ul>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="unique.html#cb81-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb81-2"><a href="unique.html#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb81-3"><a href="unique.html#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-66-1.png" width="672" /></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="unique.html#cb27-1" aria-hidden="true" tabindex="-1"></a>fit.m <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb27-2"><a href="unique.html#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb27-3"><a href="unique.html#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 <ul>
 <li><p>マッチングしたデータを用いた推定</p>
 <ul>
 <li>replacement無しの場合ｍマッチングしたペア(subclass)でクラスタリングしたrobust standard errorの利用を推奨 <span class="citation">(<a href="#ref-abadie2021robust" role="doc-biblioref">Abadie and Spiess 2021</a>)</span></li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="unique.html#cb82-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">match.data</span>(fit.m) <span class="co"># マッチング結果を含んだ</span></span>
-<span id="cb82-2"><a href="unique.html#cb82-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-3"><a href="unique.html#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed <span class="sc">+</span> income,</span>
-<span id="cb82-4"><a href="unique.html#cb82-4" aria-hidden="true" tabindex="-1"></a>          df,</span>
-<span id="cb82-5"><a href="unique.html#cb82-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">clusters =</span> subclass,</span>
-<span id="cb82-6"><a href="unique.html#cb82-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">weights =</span> weights)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="unique.html#cb28-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">match.data</span>(fit.m) <span class="co"># マッチング結果を含んだ</span></span>
+<span id="cb28-2"><a href="unique.html#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="unique.html#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school<span class="sc">+</span> married <span class="sc">+</span> employed <span class="sc">+</span> income,</span>
+<span id="cb28-4"><a href="unique.html#cb28-4" aria-hidden="true" tabindex="-1"></a>          df,</span>
+<span id="cb28-5"><a href="unique.html#cb28-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">clusters =</span> subclass,</span>
+<span id="cb28-6"><a href="unique.html#cb28-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">weights =</span> weights)</span></code></pre></div>
 <pre><code>##                    Estimate Std. Error    t value     Pr(&gt;|t|)    CI Lower
 ## (Intercept)      4.28376769 1.80365512  2.3750481 0.0179117218  0.74034506
 ## insuranceyes     0.88089215 0.27930681  3.1538513 0.0016606844  0.33277940
@@ -1023,22 +1025,22 @@ div.csl-indent {
 ## income          -0.03502611 102.2246</code></pre>
 </div>
 </div>
-<div id="付録推定結果の表示" class="section level2" number="6.5">
-<h2><span class="header-section-number">6.5</span> 付録：推定結果の表示</h2>
+<div id="付録推定結果の保存と表示" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> 付録：推定結果の保存と表示</h2>
 <div id="推計結果表" class="section level3" number="6.5.1">
 <h3><span class="header-section-number">6.5.1</span> 推計結果表</h3>
 <ul>
 <li><p>tidy関数により推定結果data.frameに変化することで、kable関数(knitrパッケージ)による推計結果表の整形、geom_pointrange関数による可視化が可能</p></li>
 <li><p>点推定値(estimate)、標準誤差(std.error)のみを残した推計結果表</p></li>
 </ul>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="unique.html#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb84-2"><a href="unique.html#cb84-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb84-3"><a href="unique.html#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
-<span id="cb84-4"><a href="unique.html#cb84-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw</span>
-<span id="cb84-5"><a href="unique.html#cb84-5" aria-hidden="true" tabindex="-1"></a>            ) <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb84-6"><a href="unique.html#cb84-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb84-7"><a href="unique.html#cb84-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, std.error) <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb84-8"><a href="unique.html#cb84-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="unique.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb30-2"><a href="unique.html#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="unique.html#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
+<span id="cb30-4"><a href="unique.html#cb30-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw</span>
+<span id="cb30-5"><a href="unique.html#cb30-5" aria-hidden="true" tabindex="-1"></a>            ) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb30-6"><a href="unique.html#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb30-7"><a href="unique.html#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, std.error) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb30-8"><a href="unique.html#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1095,13 +1097,13 @@ div.csl-indent {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="unique.html#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
-<span id="cb85-2"><a href="unique.html#cb85-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw</span>
-<span id="cb85-3"><a href="unique.html#cb85-3" aria-hidden="true" tabindex="-1"></a>            ) <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb85-4"><a href="unique.html#cb85-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb85-5"><a href="unique.html#cb85-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, std.error) <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb85-6"><a href="unique.html#cb85-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">&quot;insuranceyes&quot;</span>) <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb85-7"><a href="unique.html#cb85-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="unique.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
+<span id="cb31-2"><a href="unique.html#cb31-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw</span>
+<span id="cb31-3"><a href="unique.html#cb31-3" aria-hidden="true" tabindex="-1"></a>            ) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb31-4"><a href="unique.html#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb31-5"><a href="unique.html#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, std.error) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb31-6"><a href="unique.html#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">&quot;insuranceyes&quot;</span>) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb31-7"><a href="unique.html#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1124,19 +1126,100 @@ div.csl-indent {
 <ul>
 <li>Dot-and-Whisker図により点推定量と信頼区間を可視化</li>
 </ul>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="unique.html#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
-<span id="cb86-2"><a href="unique.html#cb86-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw) <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb86-3"><a href="unique.html#cb86-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb86-4"><a href="unique.html#cb86-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">!=</span> <span class="st">&quot;(Intercept)&quot;</span></span>
-<span id="cb86-5"><a href="unique.html#cb86-5" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">|</span><span class="er">&gt;</span> </span>
-<span id="cb86-6"><a href="unique.html#cb86-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> term,</span>
-<span id="cb86-7"><a href="unique.html#cb86-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> estimate,</span>
-<span id="cb86-8"><a href="unique.html#cb86-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">xmin =</span> conf.low,</span>
-<span id="cb86-9"><a href="unique.html#cb86-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">xmax =</span> conf.high)</span>
-<span id="cb86-10"><a href="unique.html#cb86-10" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">+</span></span>
-<span id="cb86-11"><a href="unique.html#cb86-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>() <span class="sc">+</span></span>
-<span id="cb86-12"><a href="unique.html#cb86-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>)</span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-70-1.png" width="672" /></p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="unique.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
+<span id="cb32-2"><a href="unique.html#cb32-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb32-3"><a href="unique.html#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb32-4"><a href="unique.html#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">!=</span> <span class="st">&quot;(Intercept)&quot;</span></span>
+<span id="cb32-5"><a href="unique.html#cb32-5" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb32-6"><a href="unique.html#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> term,</span>
+<span id="cb32-7"><a href="unique.html#cb32-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> estimate,</span>
+<span id="cb32-8"><a href="unique.html#cb32-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">xmin =</span> conf.low,</span>
+<span id="cb32-9"><a href="unique.html#cb32-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">xmax =</span> conf.high)</span>
+<span id="cb32-10"><a href="unique.html#cb32-10" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">+</span></span>
+<span id="cb32-11"><a href="unique.html#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>() <span class="sc">+</span></span>
+<span id="cb32-12"><a href="unique.html#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+</div>
+<div id="サブサンプル分析結果の整理と可視化" class="section level3" number="6.5.3">
+<h3><span class="header-section-number">6.5.3</span> サブサンプル分析結果の整理と可視化</h3>
+<ul>
+<li><p>条件付き平均効果<span class="math inline">\(=E[Y_i(d)-Y_i(d&#39;)|X_i=x]\)</span></p>
+<ul>
+<li><p>因果効果の異質性を議論する上で、有力な要約値</p></li>
+<li><p>少数の<span class="math inline">\(x\)</span>を分析者が事前設定する場合、<span class="math inline">\(x\)</span>についてサブサンプルを作成し、推定すればOK</p></li>
+</ul></li>
+<li><p>tidyverseパッケージに含まれるnest/unnest関数を用いれば、整理したサブサンプル分析が可能でかつ、容易に可視化/表化できる</p>
+<ul>
+<li><p>推定結果を入子リスト形式に保存し、通常のデータフレーム形式に展開、可視化/表化する手順踏む</p></li>
+<li><p>関数をリストの構成要素に逐次適用する汎関数(map)を利用することで、同じデータフレーム内に結果を保存できる</p></li>
+</ul></li>
+<li><p>以下では“region”ごとに条件付き平均効果を推定する</p></li>
+</ul>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="unique.html#cb33-1" aria-hidden="true" tabindex="-1"></a>regression <span class="ot">&lt;-</span></span>
+<span id="cb33-2"><a href="unique.html#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(df){</span>
+<span id="cb33-3"><a href="unique.html#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> married,</span>
+<span id="cb33-4"><a href="unique.html#cb33-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> df) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb33-5"><a href="unique.html#cb33-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tidy</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb33-6"><a href="unique.html#cb33-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">&quot;insuranceyes&quot;</span>)</span>
+<span id="cb33-7"><a href="unique.html#cb33-7" aria-hidden="true" tabindex="-1"></a>  } <span class="co"># 推計し、関心のあるパラメータのみからなるデータフレーム化する関数</span></span>
+<span id="cb33-8"><a href="unique.html#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="unique.html#cb33-9" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> </span>
+<span id="cb33-10"><a href="unique.html#cb33-10" aria-hidden="true" tabindex="-1"></a>  raw <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb33-11"><a href="unique.html#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region) <span class="sc">|</span><span class="er">&gt;</span> <span class="co"># regoinごとにサブグループ化</span></span>
+<span id="cb33-12"><a href="unique.html#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|</span><span class="er">&gt;</span> <span class="co"># regionごとに入子データを作成</span></span>
+<span id="cb33-13"><a href="unique.html#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="fu">map</span>(data,regression)) <span class="sc">|</span><span class="er">&gt;</span> <span class="co"># 推定し、モデルとして結果をほぞpン</span></span>
+<span id="cb33-14"><a href="unique.html#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>() <span class="sc">|</span><span class="er">&gt;</span> <span class="co"># 入子構造を解消</span></span>
+<span id="cb33-15"><a href="unique.html#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(region,</span>
+<span id="cb33-16"><a href="unique.html#cb33-16" aria-hidden="true" tabindex="-1"></a>           estimate,</span>
+<span id="cb33-17"><a href="unique.html#cb33-17" aria-hidden="true" tabindex="-1"></a>           conf.low,</span>
+<span id="cb33-18"><a href="unique.html#cb33-18" aria-hidden="true" tabindex="-1"></a>           conf.high) <span class="co"># regionごとの結果表を作成</span></span></code></pre></div>
+<ul>
+<li>データフレームなので、容易に可視化できる</li>
+</ul>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="unique.html#cb34-1" aria-hidden="true" tabindex="-1"></a>result <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb34-2"><a href="unique.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> estimate,</span>
+<span id="cb34-3"><a href="unique.html#cb34-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> region,</span>
+<span id="cb34-4"><a href="unique.html#cb34-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">xmin =</span> conf.low,</span>
+<span id="cb34-5"><a href="unique.html#cb34-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">xmax =</span> conf.high)</span>
+<span id="cb34-6"><a href="unique.html#cb34-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">+</span></span>
+<span id="cb34-7"><a href="unique.html#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>() <span class="sc">+</span></span>
+<span id="cb34-8"><a href="unique.html#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+</div>
+<div id="複数の推定結果の整理と可視化" class="section level3" number="6.5.4">
+<h3><span class="header-section-number">6.5.4</span> 複数の推定結果の整理と可視化</h3>
+<ul>
+<li>listで保存し、data.frameに展開、という手順はより一般に複数の推定結果を整理することに使える</li>
+</ul>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="unique.html#cb35-1" aria-hidden="true" tabindex="-1"></a>list <span class="ot">&lt;-</span> <span class="fu">list</span>() <span class="co"># 空のリストを作成</span></span>
+<span id="cb35-2"><a href="unique.html#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="unique.html#cb35-3" aria-hidden="true" tabindex="-1"></a>list[[<span class="dv">1</span>]] <span class="ot">&lt;-</span> </span>
+<span id="cb35-4"><a href="unique.html#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(visits <span class="sc">~</span> insurance <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> married <span class="sc">+</span>region,</span>
+<span id="cb35-5"><a href="unique.html#cb35-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb35-6"><a href="unique.html#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb35-7"><a href="unique.html#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">&quot;insuranceyes&quot;</span>) <span class="co"># 推定結果をリストに保存</span></span>
+<span id="cb35-8"><a href="unique.html#cb35-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-9"><a href="unique.html#cb35-9" aria-hidden="true" tabindex="-1"></a>list[[<span class="dv">2</span>]] <span class="ot">&lt;-</span> </span>
+<span id="cb35-10"><a href="unique.html#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(nvisits <span class="sc">~</span> insurance <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> income <span class="sc">+</span> employed <span class="sc">+</span> married <span class="sc">+</span>region,</span>
+<span id="cb35-11"><a href="unique.html#cb35-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> raw) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb35-12"><a href="unique.html#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb35-13"><a href="unique.html#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">&quot;insuranceyes&quot;</span>) <span class="co"># 別の結果を保存</span></span>
+<span id="cb35-14"><a href="unique.html#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-15"><a href="unique.html#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(list) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;visits&quot;</span>,<span class="st">&quot;nvisits&quot;</span>) <span class="co"># 名づけ</span></span>
+<span id="cb35-16"><a href="unique.html#cb35-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-17"><a href="unique.html#cb35-17" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span></span>
+<span id="cb35-18"><a href="unique.html#cb35-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enframe</span>(list) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb35-19"><a href="unique.html#cb35-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>() <span class="co"># データフレーム化</span></span>
+<span id="cb35-20"><a href="unique.html#cb35-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-21"><a href="unique.html#cb35-21" aria-hidden="true" tabindex="-1"></a>result <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb35-22"><a href="unique.html#cb35-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> name,</span>
+<span id="cb35-23"><a href="unique.html#cb35-23" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> estimate,</span>
+<span id="cb35-24"><a href="unique.html#cb35-24" aria-hidden="true" tabindex="-1"></a>             <span class="at">xmin =</span> conf.low,</span>
+<span id="cb35-25"><a href="unique.html#cb35-25" aria-hidden="true" tabindex="-1"></a>             <span class="at">xmax =</span> conf.high</span>
+<span id="cb35-26"><a href="unique.html#cb35-26" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb35-27"><a href="unique.html#cb35-27" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">+</span></span>
+<span id="cb35-28"><a href="unique.html#cb35-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>() <span class="co"># 可視化</span></span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 
 </div>
 </div>

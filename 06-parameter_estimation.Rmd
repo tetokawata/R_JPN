@@ -277,7 +277,7 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school+ married + 
           weights = weights)
 ```
 
-## 付録：推定結果の表示
+## 付録：推定結果の保存と表示
 
 ### 推計結果表
 
@@ -325,3 +325,92 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school,
   geom_pointrange() +
   geom_vline(xintercept = 0)
 ```
+
+
+### サブサンプル分析結果の整理と可視化
+
+- 条件付き平均効果$=E[Y_i(d)-Y_i(d')|X_i=x]$
+
+  - 因果効果の異質性を議論する上で、有力な要約値
+  
+  - 少数の$x$を分析者が事前設定する場合、$x$についてサブサンプルを作成し、推定すればOK
+  
+- tidyverseパッケージに含まれるnest/unnest関数を用いれば、整理したサブサンプル分析が可能でかつ、容易に可視化/表化できる
+
+  - 推定結果を入子リスト形式に保存し、通常のデータフレーム形式に展開、可視化/表化する手順踏む
+  
+  - 関数をリストの構成要素に逐次適用する汎関数(map)を利用することで、同じデータフレーム内に結果を保存できる
+  
+- 以下では"region"ごとに条件付き平均効果を推定する
+
+```{r}
+regression <-
+  function(df){
+    lm_robust(visits ~ insurance + age + afam + gender + school + income + employed + married,
+              data = df) |> 
+      tidy() |> 
+      filter(term == "insuranceyes")
+  } # 推計し、関心のあるパラメータのみからなるデータフレーム化する関数
+
+result <- 
+  raw |> 
+  group_by(region) |> # regoinごとにサブグループ化
+  nest() |> # regionごとに入子データを作成
+  mutate(model = map(data,regression)) |> # 推定し、モデルとして結果をほぞpン
+  unnest() |> # 入子構造を解消
+  distinct(region,
+           estimate,
+           conf.low,
+           conf.high) # regionごとの結果表を作成
+```
+
+- データフレームなので、容易に可視化できる
+
+```{r}
+result |> 
+  ggplot(aes(x = estimate,
+             y = region,
+             xmin = conf.low,
+             xmax = conf.high)
+         ) +
+  geom_pointrange() +
+  geom_vline(xintercept = 0)
+```
+
+
+### 複数の推定結果の整理と可視化
+
+- listで保存し、data.frameに展開、という手順はより一般に複数の推定結果を整理することに使える
+
+```{r}
+list <- list() # 空のリストを作成
+
+list[[1]] <- 
+  lm_robust(visits ~ insurance + age + afam + gender + school + income + employed + married +region,
+            data = raw) |> 
+  tidy() |> 
+  filter(term == "insuranceyes") # 推定結果をリストに保存
+
+list[[2]] <- 
+  lm_robust(nvisits ~ insurance + age + afam + gender + school + income + employed + married +region,
+            data = raw) |> 
+  tidy() |> 
+  filter(term == "insuranceyes") # 別の結果を保存
+
+names(list) <- c("visits","nvisits") # 名づけ
+
+result <-
+  enframe(list) |> 
+  unnest() # データフレーム化
+
+result |> 
+  ggplot(aes(y = name,
+             x = estimate,
+             xmin = conf.low,
+             xmax = conf.high
+             )
+         ) +
+  geom_pointrange() # 可視化
+```
+
+

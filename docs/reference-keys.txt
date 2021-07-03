@@ -73,3 +73,7 @@ data
 識別-pallarel-trend-in-the-two-by-two-case
 推定-two-way-fixed-effect-model
 推定weighted-two-way-fixed-effect-model
+サブサンプル分析と結果の効率的保存
+付録推定結果の保存と表示
+サブサンプル分析結果の整理と可視化
+複数の推定結果の整理と可視化
