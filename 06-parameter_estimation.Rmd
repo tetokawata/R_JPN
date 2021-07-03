@@ -1,43 +1,41 @@
 
 # 線形モデルの推定 {#unique}
 
-
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       warning = FALSE,
                       message = FALSE)
 ```
 
-- $E[Y|D,X]$の線形近似をデータから推定する
+- 関心のあるパラメータ$\tau(X)=E[Y|d,X]-E[Y|d',X]$を埋め込んだ線形モデルを推定する。
 
-  - $E[Y|D,X]$そのものを推定しているとは解釈しない[@angrist2002covariance;@angrist2008mostly]
+  - 典型的には、$E[Y|D,X]$を線形近似し、推定する。
   
-  - 典型的には、モデルに関心のあるパラメータを近似モデルに直接埋め込む
-
 $$E[Y|D=d,X=x]=\underbrace{\tau}_{Interest\ parameter}\times d+\underbrace{f(x)}_{Nuisance\ function}$$
   - $f(X)=\beta_0 + \beta_1 X_1 + ...+\beta_LX_L$ 
 
-- 点推定だけでなく、信頼区間も推定する。
+- $\tau$について点推定だけでなく、信頼区間も推定する。
 
-## パッケージ
+- Chapter \@ref(appliedOLS) : 前処理なしに線形モデルを推定し、信頼区間を計算する方法を紹介
+
+- Chapter \@ref(matching) : 近似モデルの定式化への依存度を下げるために、マッチング法を用いた前処理を導入
+
+- Chapter \@ref(appendix) : 推定結果の表によるまとめ、可視化、および複数の推定結果を効率的に保存する方法を紹介
+
+## パッケージ & データ
 
 ```{r}
 library(tidyverse)
 library(AER)
 library(estimatr)
 library(MatchIt)
-```
 
-
-## データ
-
-```{r}
 data("NMES1988")
 
 raw <- na.omit(NMES1988)
 ```
 
-## 線形モデルの推定
+## 線形モデルの推定 {#appliedOLS}
 
 - $\tau(x)=\tau,f(x)=\beta_0+\beta_1x_1+...+\beta_Lx_L$と特定化
 
@@ -74,7 +72,7 @@ $$E[Y|D,X]=\beta_{D}\times D+\beta_1\times X_1+...+\beta_L\times X_L$$
 
 $$+\underbrace{\beta_{1D}\times D\times X_1+...+\beta_{LD}\times D\times X_L}_{交差項}$$
 
-## マッチング法による修正
+## マッチング法による修正 {#matching}
 
 - 回帰を行う事前準備としてマッチング法を利用する
 
@@ -277,7 +275,7 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school+ married + 
           weights = weights)
 ```
 
-## 付録：推定結果の保存と表示
+## 付録：推定結果の保存と表示 {#appendix}
 
 ### 推計結果表
 
