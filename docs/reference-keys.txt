@@ -26,7 +26,6 @@ LASSO
 Ridge
 Tree
 Bagging
-RandomForest
 比較因果推論
 comparison
 問題設定
@@ -40,7 +39,7 @@ pallarel-trend
 推定の問題
 unique
 パッケージ-データ-3
-applied_OLS
+appliedOLS
 rctデータへの応用
 matching
 exact-matching
@@ -74,4 +73,4 @@ data
 識別-pallarel-trend-in-the-two-by-two-case
 推定-two-way-fixed-effect-model
 推定weighted-two-way-fixed-effect-model
-appliedOLS
+stacking

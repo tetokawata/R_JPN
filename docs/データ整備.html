@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 2 データ整備 | Rによる比較・予測・因果推論入門 ver0.1</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 2 データ整備 | Rによる比較・予測・因果推論入門 ver0.1" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-07-03" />
+<meta name="date" content="2021-09-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,8 @@
   
 <link rel="prev" href="intro.html"/>
 <link rel="next" href="可視化.html"/>
-<script src="libs/header-attrs-2.9/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -195,13 +195,12 @@ div.csl-indent {
 <li class="chapter" data-level="4.1.1" data-path="prediction.html"><a href="prediction.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>4.1.1</b> Bias-Variance tradeoff</a></li>
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="prediction.html"><a href="prediction.html#パッケージ-データ-2"><i class="fa fa-check"></i><b>4.2</b> パッケージ &amp; データ</a></li>
-<li class="chapter" data-level="4.3" data-path="prediction.html"><a href="prediction.html#samplesplit"><i class="fa fa-check"></i><b>4.3</b> データ分割</a></li>
+<li class="chapter" data-level="4.3" data-path="prediction.html"><a href="prediction.html#samplesplit"><i class="fa fa-check"></i><b>4.3</b> 事前準備</a></li>
 <li class="chapter" data-level="4.4" data-path="prediction.html"><a href="prediction.html#OLS"><i class="fa fa-check"></i><b>4.4</b> OLS</a></li>
 <li class="chapter" data-level="4.5" data-path="prediction.html"><a href="prediction.html#LASSO"><i class="fa fa-check"></i><b>4.5</b> LASSO</a></li>
 <li class="chapter" data-level="4.6" data-path="prediction.html"><a href="prediction.html#Ridge"><i class="fa fa-check"></i><b>4.6</b> Ridge</a></li>
 <li class="chapter" data-level="4.7" data-path="prediction.html"><a href="prediction.html#Tree"><i class="fa fa-check"></i><b>4.7</b> Tree</a></li>
-<li class="chapter" data-level="4.8" data-path="prediction.html"><a href="prediction.html#Bagging"><i class="fa fa-check"></i><b>4.8</b> Bagging</a></li>
-<li class="chapter" data-level="4.9" data-path="prediction.html"><a href="prediction.html#RandomForest"><i class="fa fa-check"></i><b>4.9</b> Random Forest</a></li>
+<li class="chapter" data-level="4.8" data-path="prediction.html"><a href="prediction.html#Bagging"><i class="fa fa-check"></i><b>4.8</b> Random Forest</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="比較因果推論.html"><a href="比較因果推論.html"><i class="fa fa-check"></i><b>5</b> 比較・因果推論</a>
 <ul>
@@ -220,7 +219,7 @@ div.csl-indent {
 <li class="chapter" data-level="6" data-path="unique.html"><a href="unique.html"><i class="fa fa-check"></i><b>6</b> 線形モデルの推定</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="unique.html"><a href="unique.html#パッケージ-データ-3"><i class="fa fa-check"></i><b>6.1</b> パッケージ &amp; データ</a></li>
-<li class="chapter" data-level="6.2" data-path="unique.html"><a href="unique.html#applied_OLS"><i class="fa fa-check"></i><b>6.2</b> 線形モデルの推定</a>
+<li class="chapter" data-level="6.2" data-path="unique.html"><a href="unique.html#appliedOLS"><i class="fa fa-check"></i><b>6.2</b> 線形モデルの推定</a>
 <ul>
 <li class="chapter" data-level="6.2.1" data-path="unique.html"><a href="unique.html#rctデータへの応用"><i class="fa fa-check"></i><b>6.2.1</b> RCTデータへの応用</a></li>
 </ul></li>
@@ -314,7 +313,7 @@ div.csl-indent {
 <li>mutate関数の利用</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="データ整備.html#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> </span>
-<span id="cb4-2"><a href="データ整備.html#cb4-2" aria-hidden="true" tabindex="-1"></a>  raw <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb4-2"><a href="データ整備.html#cb4-2" aria-hidden="true" tabindex="-1"></a>  raw <span class="sc">|&gt;</span> </span>
 <span id="cb4-3"><a href="データ整備.html#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_2 =</span> age<span class="sc">^</span><span class="dv">2</span>) <span class="co"># 年齢の二乗項を作成</span></span></code></pre></div>
 </div>
 <div id="select" class="section level2" number="2.3">
@@ -323,14 +322,14 @@ div.csl-indent {
 <li>select関数の利用</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="データ整備.html#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> </span>
-<span id="cb5-2"><a href="データ整備.html#cb5-2" aria-hidden="true" tabindex="-1"></a>  raw <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb5-2"><a href="データ整備.html#cb5-2" aria-hidden="true" tabindex="-1"></a>  raw <span class="sc">|&gt;</span> </span>
 <span id="cb5-3"><a href="データ整備.html#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(age,</span>
 <span id="cb5-4"><a href="データ整備.html#cb5-4" aria-hidden="true" tabindex="-1"></a>         income)</span></code></pre></div>
 <ul>
 <li>特定の変数の除外</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="データ整備.html#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> </span>
-<span id="cb6-2"><a href="データ整備.html#cb6-2" aria-hidden="true" tabindex="-1"></a>  raw <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb6-2"><a href="データ整備.html#cb6-2" aria-hidden="true" tabindex="-1"></a>  raw <span class="sc">|&gt;</span> </span>
 <span id="cb6-3"><a href="データ整備.html#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>age,</span>
 <span id="cb6-4"><a href="データ整備.html#cb6-4" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>income)</span></code></pre></div>
 </div>
@@ -340,7 +339,7 @@ div.csl-indent {
 <li>filter関数の利用</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="データ整備.html#cb7-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> </span>
-<span id="cb7-2"><a href="データ整備.html#cb7-2" aria-hidden="true" tabindex="-1"></a>  raw <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb7-2"><a href="データ整備.html#cb7-2" aria-hidden="true" tabindex="-1"></a>  raw <span class="sc">|&gt;</span> </span>
 <span id="cb7-3"><a href="データ整備.html#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(visits <span class="sc">&gt;=</span> <span class="dv">7</span>)</span></code></pre></div>
 </div>
 <div id="gtsummary" class="section level2" number="2.5">
@@ -350,19 +349,19 @@ div.csl-indent {
 <li><p>ここではgtsummaryを使用</p></li>
 <li><p>select関数で必要な変数(visits, health, medicaid)を抜き出し、insuranceごとに連続変数については中央値、カテゴリ変数については頻度を記述</p></li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="データ整備.html#cb8-1" aria-hidden="true" tabindex="-1"></a>raw <span class="sc">|</span><span class="er">&gt;</span>  <span class="co"># rawを入力とし</span></span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="データ整備.html#cb8-1" aria-hidden="true" tabindex="-1"></a>raw <span class="sc">|&gt;</span>  <span class="co"># rawを入力とし</span></span>
 <span id="cb8-2"><a href="データ整備.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(visits,</span>
 <span id="cb8-3"><a href="データ整備.html#cb8-3" aria-hidden="true" tabindex="-1"></a>         health,</span>
 <span id="cb8-4"><a href="データ整備.html#cb8-4" aria-hidden="true" tabindex="-1"></a>         medicaid,</span>
 <span id="cb8-5"><a href="データ整備.html#cb8-5" aria-hidden="true" tabindex="-1"></a>         insurance</span>
-<span id="cb8-6"><a href="データ整備.html#cb8-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">|</span><span class="er">&gt;</span> <span class="co"># 必要な変数を抜き出す</span></span>
+<span id="cb8-6"><a href="データ整備.html#cb8-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">|&gt;</span> <span class="co"># 必要な変数を抜き出す</span></span>
 <span id="cb8-7"><a href="データ整備.html#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> insurance) <span class="co"># 記述統計を計算</span></span></code></pre></div>
-<div id="mlqfleqrgm" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="djvaiohmdt" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#mlqfleqrgm .gt_table {
+#djvaiohmdt .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -387,7 +386,7 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#mlqfleqrgm .gt_heading {
+#djvaiohmdt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -399,7 +398,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#mlqfleqrgm .gt_title {
+#djvaiohmdt .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -409,23 +408,23 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#mlqfleqrgm .gt_subtitle {
+#djvaiohmdt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
   padding-top: 0;
-  padding-bottom: 4px;
+  padding-bottom: 6px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#mlqfleqrgm .gt_bottom_border {
+#djvaiohmdt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mlqfleqrgm .gt_col_headings {
+#djvaiohmdt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -440,7 +439,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#mlqfleqrgm .gt_col_heading {
+#djvaiohmdt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -460,7 +459,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#mlqfleqrgm .gt_column_spanner_outer {
+#djvaiohmdt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -472,27 +471,27 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#mlqfleqrgm .gt_column_spanner_outer:first-child {
+#djvaiohmdt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mlqfleqrgm .gt_column_spanner_outer:last-child {
+#djvaiohmdt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mlqfleqrgm .gt_column_spanner {
+#djvaiohmdt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
   vertical-align: bottom;
   padding-top: 5px;
-  padding-bottom: 6px;
+  padding-bottom: 5px;
   overflow-x: hidden;
   display: inline-block;
   width: 100%;
 }
 
-#mlqfleqrgm .gt_group_heading {
+#djvaiohmdt .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -514,7 +513,7 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#mlqfleqrgm .gt_empty_group_heading {
+#djvaiohmdt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -529,15 +528,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#mlqfleqrgm .gt_from_md > :first-child {
+#djvaiohmdt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mlqfleqrgm .gt_from_md > :last-child {
+#djvaiohmdt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mlqfleqrgm .gt_row {
+#djvaiohmdt .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -556,7 +555,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#mlqfleqrgm .gt_stub {
+#djvaiohmdt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -568,7 +567,7 @@ div.csl-indent {
   padding-left: 12px;
 }
 
-#mlqfleqrgm .gt_summary_row {
+#djvaiohmdt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -578,7 +577,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#mlqfleqrgm .gt_first_summary_row {
+#djvaiohmdt .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -588,7 +587,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#mlqfleqrgm .gt_grand_summary_row {
+#djvaiohmdt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -598,7 +597,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#mlqfleqrgm .gt_first_grand_summary_row {
+#djvaiohmdt .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -608,11 +607,11 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#mlqfleqrgm .gt_striped {
+#djvaiohmdt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#mlqfleqrgm .gt_table_body {
+#djvaiohmdt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -621,7 +620,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#mlqfleqrgm .gt_footnotes {
+#djvaiohmdt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -635,13 +634,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#mlqfleqrgm .gt_footnote {
+#djvaiohmdt .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#mlqfleqrgm .gt_sourcenotes {
+#djvaiohmdt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -655,41 +654,41 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#mlqfleqrgm .gt_sourcenote {
+#djvaiohmdt .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#mlqfleqrgm .gt_left {
+#djvaiohmdt .gt_left {
   text-align: left;
 }
 
-#mlqfleqrgm .gt_center {
+#djvaiohmdt .gt_center {
   text-align: center;
 }
 
-#mlqfleqrgm .gt_right {
+#djvaiohmdt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mlqfleqrgm .gt_font_normal {
+#djvaiohmdt .gt_font_normal {
   font-weight: normal;
 }
 
-#mlqfleqrgm .gt_font_bold {
+#djvaiohmdt .gt_font_bold {
   font-weight: bold;
 }
 
-#mlqfleqrgm .gt_font_italic {
+#djvaiohmdt .gt_font_italic {
   font-style: italic;
 }
 
-#mlqfleqrgm .gt_super {
+#djvaiohmdt .gt_super {
   font-size: 65%;
 }
 
-#mlqfleqrgm .gt_footnote_marks {
+#djvaiohmdt .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
@@ -744,21 +743,21 @@ div.csl-indent {
 <ul>
 <li>連続変数について、平均値と標準偏差を記述</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="データ整備.html#cb9-1" aria-hidden="true" tabindex="-1"></a>raw <span class="sc">|</span><span class="er">&gt;</span> </span>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="データ整備.html#cb9-1" aria-hidden="true" tabindex="-1"></a>raw <span class="sc">|&gt;</span> </span>
 <span id="cb9-2"><a href="データ整備.html#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(visits,</span>
 <span id="cb9-3"><a href="データ整備.html#cb9-3" aria-hidden="true" tabindex="-1"></a>         health,</span>
 <span id="cb9-4"><a href="データ整備.html#cb9-4" aria-hidden="true" tabindex="-1"></a>         medicaid,</span>
 <span id="cb9-5"><a href="データ整備.html#cb9-5" aria-hidden="true" tabindex="-1"></a>         insurance</span>
-<span id="cb9-6"><a href="データ整備.html#cb9-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">|</span><span class="er">&gt;</span> </span>
+<span id="cb9-6"><a href="データ整備.html#cb9-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">|&gt;</span> </span>
 <span id="cb9-7"><a href="データ整備.html#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> insurance,</span>
 <span id="cb9-8"><a href="データ整備.html#cb9-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">statistic =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">&quot;{mean} ({sd})&quot;</span>) <span class="co"># 平均と標準誤差を表示</span></span>
 <span id="cb9-9"><a href="データ整備.html#cb9-9" aria-hidden="true" tabindex="-1"></a>            )</span></code></pre></div>
-<div id="syimcuzhkg" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="fekzsnzlsq" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#syimcuzhkg .gt_table {
+#fekzsnzlsq .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -783,7 +782,7 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#syimcuzhkg .gt_heading {
+#fekzsnzlsq .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -795,7 +794,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#syimcuzhkg .gt_title {
+#fekzsnzlsq .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -805,23 +804,23 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#syimcuzhkg .gt_subtitle {
+#fekzsnzlsq .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
   padding-top: 0;
-  padding-bottom: 4px;
+  padding-bottom: 6px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#syimcuzhkg .gt_bottom_border {
+#fekzsnzlsq .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#syimcuzhkg .gt_col_headings {
+#fekzsnzlsq .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -836,7 +835,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#syimcuzhkg .gt_col_heading {
+#fekzsnzlsq .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -856,7 +855,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#syimcuzhkg .gt_column_spanner_outer {
+#fekzsnzlsq .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -868,27 +867,27 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#syimcuzhkg .gt_column_spanner_outer:first-child {
+#fekzsnzlsq .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#syimcuzhkg .gt_column_spanner_outer:last-child {
+#fekzsnzlsq .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#syimcuzhkg .gt_column_spanner {
+#fekzsnzlsq .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
   vertical-align: bottom;
   padding-top: 5px;
-  padding-bottom: 6px;
+  padding-bottom: 5px;
   overflow-x: hidden;
   display: inline-block;
   width: 100%;
 }
 
-#syimcuzhkg .gt_group_heading {
+#fekzsnzlsq .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -910,7 +909,7 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#syimcuzhkg .gt_empty_group_heading {
+#fekzsnzlsq .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -925,15 +924,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#syimcuzhkg .gt_from_md > :first-child {
+#fekzsnzlsq .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#syimcuzhkg .gt_from_md > :last-child {
+#fekzsnzlsq .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#syimcuzhkg .gt_row {
+#fekzsnzlsq .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -952,7 +951,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#syimcuzhkg .gt_stub {
+#fekzsnzlsq .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -964,7 +963,7 @@ div.csl-indent {
   padding-left: 12px;
 }
 
-#syimcuzhkg .gt_summary_row {
+#fekzsnzlsq .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -974,7 +973,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#syimcuzhkg .gt_first_summary_row {
+#fekzsnzlsq .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -984,7 +983,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#syimcuzhkg .gt_grand_summary_row {
+#fekzsnzlsq .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -994,7 +993,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#syimcuzhkg .gt_first_grand_summary_row {
+#fekzsnzlsq .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1004,11 +1003,11 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#syimcuzhkg .gt_striped {
+#fekzsnzlsq .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#syimcuzhkg .gt_table_body {
+#fekzsnzlsq .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1017,7 +1016,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#syimcuzhkg .gt_footnotes {
+#fekzsnzlsq .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1031,13 +1030,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#syimcuzhkg .gt_footnote {
+#fekzsnzlsq .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#syimcuzhkg .gt_sourcenotes {
+#fekzsnzlsq .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1051,41 +1050,41 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#syimcuzhkg .gt_sourcenote {
+#fekzsnzlsq .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#syimcuzhkg .gt_left {
+#fekzsnzlsq .gt_left {
   text-align: left;
 }
 
-#syimcuzhkg .gt_center {
+#fekzsnzlsq .gt_center {
   text-align: center;
 }
 
-#syimcuzhkg .gt_right {
+#fekzsnzlsq .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#syimcuzhkg .gt_font_normal {
+#fekzsnzlsq .gt_font_normal {
   font-weight: normal;
 }
 
-#syimcuzhkg .gt_font_bold {
+#fekzsnzlsq .gt_font_bold {
   font-weight: bold;
 }
 
-#syimcuzhkg .gt_font_italic {
+#fekzsnzlsq .gt_font_italic {
   font-style: italic;
 }
 
-#syimcuzhkg .gt_super {
+#fekzsnzlsq .gt_super {
   font-size: 65%;
 }
 
-#syimcuzhkg .gt_footnote_marks {
+#fekzsnzlsq .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
@@ -1196,6 +1195,10 @@ gitbook.start({
 "text": null
 },
 "download": ["Prediction, Comparison, and Causal inference by R.epub"],
+"search": {
+"engine": "lunr",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

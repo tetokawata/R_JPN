@@ -21,23 +21,23 @@ knitr::opts_chunk$set(echo = TRUE,
 
 - Chapter \@ref(Tree) : 予測木モデルを推定する手法を紹介
 
-- Chapter \@ref(Bagging)-\@ref(RandomForest) : 予測木モデルをモデル平均加法(Bagging, Random Forest)で推定する手法を紹介
+- Chapter \@ref(Bagging) : 予測木モデルをモデル平均加法(Bagging, Random Forest)で推定する手法を紹介
 
 ## 問題設定 {#purpose}
 
 - 事前に定義する損失関数の期待値を最小化するような、予測関数$f(X)$の推定を目指す。
 
-  - 以下ではMean squared error(MSE)を損失関数として用いる。所与の$f(X)$、母分布に従う確率変数$Y,X$についてMSEは以下のように定義される。
+  - 本ページではMean squared error(MSE)を損失関数として用いるケースを紹介する。所与の$f(X)$、母分布に従う確率変数$Y,X$についてMSEは以下のように定義される。
 
 $$MSE = E_{X,Y}[(Y_i-f(X_i))^2]$$
 
-  - 一般にMSEは以下のように書き換えられます。
+  - 一般にMSEは以下のように書き換えられる。
 
 $$MSE = \underbrace{E_{X,Y}[(Y_i-\bar{Y}(X_i))^2]}_{Irreducible\ error}+\underbrace{E_{X,Y}[(\bar{Y}(X_i)-f(X_i))^2]}_{Reducible\ error}$$
 ただし$\bar{Y}(X_i)=E[Y_i|X_i]$。
 上記式から以下が確認できる。
 
-  - 最善の予測関数は条件付き母平均$\bar{Y}(X_i)$(Reducible error = 0)
+- 最善の予測関数 $\iff$ Reducible error $=0$ $\iff$ 条件付き母平均$\bar{Y}(X_i)$
   
   - 最善の予測関数のもとでも削減不可能なエラー(Irreducible error)が存在
   
@@ -54,50 +54,54 @@ $$E_{Y,X,f(X)}[(\bar{Y}(X_i)-f(X_i))^2]$$
 $$=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E_{Y,X,f(X)}[(\bar{f}(X_i)-f(X_i))^2]}_{Variance}.$$
 ただし$\bar{f}(X_i)=f(X_i)$。
 
-- 上記式は推定される予測関数が平均的にどの程度条件付き母平均を近似できているのか(Biasがどの程度小さいのか)だけでなく、予測関数の分布がどの程度散らばっているのか（VArianceがどの程度大木のか）、についても考慮する必要性を示す。
+- 上記式は推定される予測関数が平均的にどの程度条件付き母平均を近似できているのか(Biasがどの程度小さいのか)だけでなく、予測関数の分布がどの程度散らばっているのか、についても考慮する必要性を示す。
 
   - 母平均$\bar Y(X_i)$が単純な既知の関数形に従い、かつサンプルサイズが大きい場合、OLS推定された$f(X_i)$は$Bias=0$かつ小さなVarianceを達成する。
   
   - しかしながら社会科学における多くの応用においては、$\bar Y(X_i)$は未知かつ複雑であることが予想され、その複雑さに対してサンプルサイズが小さいことが想定される。
 
-
-  - このような状況では、OLSやサブサンプル平均により推定された予測モデルは、Bias-Variance tradeoffに直面する。
+  - このような状況では、深刻なBias-Variance tradeoffに直面する。
 
   - 少ないパラメータ（短い回帰式、少ないサブサンプル分割）を推定する場合、大きなBiasを持つ
   
   - 多くのパラメータ（長い回帰式、多いサブサンプル分割）を推定する場合、大きなVarianceを持つ。
 
-- Bias-variance tradeoffを分析者が解くこと（最善のモデル設定を行うこと）は困難です。\@ref{LASSO} - \@ref(RandomForest) で紹介するLASSO/Ridge/Random Forestなどの手法は、bias-variance問題をよりデータ主導型かつ現実的な計算時間の手法で解決することを目指す。
+- Bias-variance tradeoffを分析者が解くことは一般に困難であり、\@ref{LASSO} - \@ref(RandomForest) で紹介するLASSO/Ridge/Random Forestなどの手法は、bias-variance問題をよりデータ主導型かつ現実的な計算時間の手法で解決することを目指す。
 
 ## パッケージ & データ
 
+- 利用するパッケージ
+
 ```{r}
 library(tidyverse)
-
 library(AER)
+library(SuperLearner) # 機械学習を実装するメタパッケージ
+library(rpart.plot) # 予測木の可視化
+```
 
-library(glmnet) # LASSO/Ridge
+- データ
 
-library(ranger) # Bagging/Random Forest
+  - 元データを結果変数、予測変数データに分割する必要がある
 
-library(rpart) # Tree
-
-library(rpart.plot) # Visualization with tree
-
+```{r}
 data("NMES1988")
 
-raw <- NMES1988
+Y <- NMES1988$emergency # 結果変数
+
+X <- select(NMES1988,
+            -emergency
+            ) # 予測変数
 
 set.seed(123)
 ```
 
-## データ分割 {#samplesplit}
+## 事前準備 {#samplesplit}
 
 - ここでは5個のデータに分割する。
 
 ```{r}
 group <- sample(1:5, # 1から5までの数字を発生される
-                size = nrow(raw), # サンプルサイズと同数発生される
+                size = length(Y), # サンプルサイズと同数発生される
                 replace = TRUE) # 同じ数字が発生することを許容する
 ```
 
@@ -111,30 +115,36 @@ group <- sample(1:5, # 1から5までの数字を発生される
   
 $$\min\sum_i (Y_i-f(X))^2$$
 
-```{r}
-fit <- lm(visits ~ .,
-          data = raw[group != 1,]) # 第1グループ以外を使用してOLS推定
-
-coef(fit) # モデル（係数値）を確認
-```
-
-- 訓練/テストデータについて、予測値の導出
+- SuperLeanerによる推定と推定されたモデル
 
 ```{r}
-Y.hat <- predict(fit,raw)
+fit <-
+  SuperLearner(Y = Y[group != 1],
+               X = X[group != 1,],
+               SL.library = c("SL.lm")
+               ) # 推定
+
+coef(fit$fitLibrary$SL.lm_All$object) # 係数値の表示
 ```
 
-- テストデータへの適合度を測定
+- 予測値の計算
 
 ```{r}
-mean((raw$visits - Y.hat)[group == 1]^2)
+Y.pred <- predict(fit, X)$pred
 ```
 
-- 訓練データへの適合度を測定
+- テストデータへの適合
 
 ```{r}
-mean((raw$visits - Y.hat)[group != 1]^2)
+mean((Y - Y.pred)[group == 1]^2)/var(Y[group == 1])
 ```
+
+- 訓練データ
+
+```{r}
+mean((Y - Y.pred)[group != 1]^2)/var(Y[group != 1])
+```
+
 
 ## LASSO {#LASSO}
 
@@ -148,53 +158,28 @@ $$\min\sum_i (Y_i-f(X_i))^2+\underbrace{\lambda\sum_l|\beta_l|}_{Penalty\ term}$
 
   - glmnetはdata.frameを直接の入力できず、matrix(vector)に変換する必要がある
 
-```{r}
-Y <- raw$visits # 結果変数のベクトル
-
-X <- model.matrix(visits ~ -1 + . + .^2 + 
-                    I(age^2) + I(school^2) + I(income^2) + I(nvisits^2) + I(ovisits^2) + I(hospital^2),
-                  data = raw) # 予測変数の行列
-```
-
-- Cross validationを用いたパラメータチューニング
 
 ```{r}
-cv <- cv.glmnet(x = X[group != 1,], # 予測変数
-                y = Y[group != 1], # 結果変数
-                alpha = 1) # LASSO推定であることを指定
+fit <-
+  SuperLearner(Y = Y[group != 1],
+               X = X[group != 1,],
+               SL.library = c("SL.glmnet")
+               )
+
+coef(fit$fitLibrary$SL.glmnet_All$object)
 ```
 
-- LASSO推定
-
-```{r}
-fit <- glmnet(x = X[group != 1,],
-              y = Y[group != 1],
-              alpha = 1,
-              lambda = cv$lambda.min) # 推定されたパラメータ
-```
-
-- 予測モデルの確認
-
-```{r}
-coef(fit)
-```
-
-- 予測値の導出
-
-```{r}
-Y.hat <- predict(fit,X)
-```
 
 - テストデータへの適合
 
 ```{r}
-mean((Y - Y.hat)[group == 1]^2)
+mean((Y - Y.pred)[group == 1]^2)/var(Y[group == 1])
 ```
 
-- 訓練データへの適合
+- 訓練データ
 
 ```{r}
-mean((Y - Y.hat)[group != 1]^2)
+mean((Y - Y.pred)[group != 1]^2)/var(Y[group != 1])
 ```
 
 
@@ -209,103 +194,118 @@ $$\min\sum_i (Y_i-f(X_i))^2+\underbrace{\lambda\sum_l(\beta_l)^2}_{Penalty\ term
 - 引き続きglmentパッケージ[@R-glmnet]を利用
 
 ```{r}
-cv <- cv.glmnet(x = X[group != 1,],
-                y = Y[group != 1],
-                alpha = 0) # alpha = 0ならばRidge推定
+learners = create.Learner("SL.glmnet", params = list(alpha = 0)) # glmnetのalphaを0（Ridge推定）に設定
 
-fit <- glmnet(x = X[group != 1,],
-              y = Y[group != 1],
-              alpha = 0,
-              lambda = cv$lambda.min)
+fit <-
+  SuperLearner(Y = Y,
+               X = X,
+               SL.library = c(learners$names)
+               )
+
+coef(fit$fitLibrary$SL.glmnet_1_All$object)
 ```
 
-- 予測値の導出
-
-```{r}
-Y.hat <- predict(fit,X)
-```
 
 - テストデータへの適合
 
 ```{r}
-mean((Y - Y.hat)[group == 1]^2)
+mean((Y - Y.pred)[group == 1]^2)/var(Y[group == 1])
 ```
 
-- 訓練データへの適合
+- 訓練データ
 
 ```{r}
-mean((Y - Y.hat)[group != 1]^2)
+mean((Y - Y.pred)[group != 1]^2)/var(Y[group != 1])
 ```
 
 ## Tree {#Tree}
 
+- 予測木をrpartパッケージにより推定する
+
+- 推定法は以下の通り
+
+1. ある変数$X$のある閾値$\bar X$において、サンプルを分割する
+
+  - 分割後のサブサンプル平均を暫定的予測値とする
+  
+  - 予測値と訓練データにおける結果変数の値の乖離(MSE)を最小にするように、分割に用いる変数と閾値を決定
+
+2. １回目の分割結果を所与として、２回目の分割を決定。変数と閾値は１回目と同様の基準で決定。
+
+3. 以上を繰り返す
+
+4. 推定された予測木について、pruningを実行
+
 ```{r}
-rpart(visits ~ .,
-      data = raw,
-      control = rpart.control(maxdepth = 2)
-      ) |> 
-  rpart.plot()
+fit <-
+  SuperLearner(Y = Y,
+               X = X,
+               SL.library = c("SL.rpartPrune")
+               )
+
+rpart.plot(fit$fitLibrary$SL.rpartPrune_All$object) # 予測木の可視化
 ```
 
 
-## Bagging {#Bagging}
+- テストデータへの適合
+
+```{r}
+mean((Y - Y.pred)[group == 1]^2)/var(Y[group == 1])
+```
+
+- 訓練データ
+
+```{r}
+mean((Y - Y.pred)[group != 1]^2)/var(Y[group != 1])
+```
+
+
+## Random Forest {#Bagging}
 
 - rangerパッケージ[@R-ranger]を利用
 
 ```{r}
-X <- model.matrix(visits ~ -1 + .,
-                  data = raw)
-
-fit <- ranger(x = X[group != 1,],
-              y = Y[group != 1],
-              num.trees = 2000,
-              mtry = ncol(X))
-```
-
-- 予測値の計算
-
-```{r}
-Y.hat <- predict(fit,X)$predictions
+fit <-
+  SuperLearner(Y = Y,
+               X = X,
+               SL.library = c("SL.ranger")
+               )
 ```
 
 
 - テストデータへの適合
 
 ```{r}
-mean((Y - Y.hat)[group == 1]^2)
+mean((Y - Y.pred)[group == 1]^2)/var(Y[group == 1])
 ```
 
-- 訓練データへの適合
+- 訓練データ
 
 ```{r}
-mean((Y - Y.hat)[group != 1]^2)
+mean((Y - Y.pred)[group != 1]^2)/var(Y[group != 1])
 ```
 
-## Random Forest {#RandomForest}
+## Stacking
 
-- 引き続きrangerパッケージ[@R-ranger]を利用
+- 交差検証法を用いて、複数の推定アルゴリズムの性能を比較する
 
+  - 複数の予測モデルを線型結合した予測モデル（Super learner: @van2007super）も推定し、性能評価
+  
 ```{r}
-fit <- ranger(x = X[group != 1,],
-              y = Y[group != 1],
-              num.trees = 2000)
+learners = create.Learner("SL.glmnet", params = list(alpha = 0)) # Ridge推定の定義
+
+fit <-
+  CV.SuperLearner(X = X,
+                  Y = Y,
+                  SL.library = c("SL.mean",
+                                 "SL.lm",
+                                 "SL.glmnet",
+                                 "SL.rpartPrune",
+                                 "SL.ranger",
+                                 learners$names
+                                 )
+                  ) # モデル推定 & 交差検証
+
+summary(fit)
 ```
 
-- 予測値の計算
-
-```{r}
-Y.hat <- predict(fit,X)$predictions
-```
-
-
-- テストデータへの適合
-
-```{r}
-mean((Y - Y.hat)[group == 1]^2)
-```
-
-- 訓練データへの適合
-
-```{r}
-mean((Y - Y.hat)[group != 1]^2)
-```
