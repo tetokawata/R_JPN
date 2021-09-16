@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-09-15" />
+<meta name="date" content="2021-09-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -201,6 +201,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.6" data-path="prediction.html"><a href="prediction.html#Ridge"><i class="fa fa-check"></i><b>4.6</b> Ridge</a></li>
 <li class="chapter" data-level="4.7" data-path="prediction.html"><a href="prediction.html#Tree"><i class="fa fa-check"></i><b>4.7</b> Tree</a></li>
 <li class="chapter" data-level="4.8" data-path="prediction.html"><a href="prediction.html#Bagging"><i class="fa fa-check"></i><b>4.8</b> Random Forest</a></li>
+<li class="chapter" data-level="4.9" data-path="prediction.html"><a href="prediction.html#stacking"><i class="fa fa-check"></i><b>4.9</b> Stacking</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="比較因果推論.html"><a href="比較因果推論.html"><i class="fa fa-check"></i><b>5</b> 比較・因果推論</a>
 <ul>
@@ -356,12 +357,12 @@ div.csl-indent {
 <span id="cb8-5"><a href="データ整備.html#cb8-5" aria-hidden="true" tabindex="-1"></a>         insurance</span>
 <span id="cb8-6"><a href="データ整備.html#cb8-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">|&gt;</span> <span class="co"># 必要な変数を抜き出す</span></span>
 <span id="cb8-7"><a href="データ整備.html#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> insurance) <span class="co"># 記述統計を計算</span></span></code></pre></div>
-<div id="djvaiohmdt" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="svmehdljrn" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#djvaiohmdt .gt_table {
+#svmehdljrn .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -386,7 +387,7 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#djvaiohmdt .gt_heading {
+#svmehdljrn .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -398,7 +399,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#djvaiohmdt .gt_title {
+#svmehdljrn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -408,7 +409,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#djvaiohmdt .gt_subtitle {
+#svmehdljrn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -418,13 +419,13 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#djvaiohmdt .gt_bottom_border {
+#svmehdljrn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#djvaiohmdt .gt_col_headings {
+#svmehdljrn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -439,7 +440,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#djvaiohmdt .gt_col_heading {
+#svmehdljrn .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -459,7 +460,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#djvaiohmdt .gt_column_spanner_outer {
+#svmehdljrn .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -471,15 +472,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#djvaiohmdt .gt_column_spanner_outer:first-child {
+#svmehdljrn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#djvaiohmdt .gt_column_spanner_outer:last-child {
+#svmehdljrn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#djvaiohmdt .gt_column_spanner {
+#svmehdljrn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -491,7 +492,7 @@ div.csl-indent {
   width: 100%;
 }
 
-#djvaiohmdt .gt_group_heading {
+#svmehdljrn .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -513,7 +514,7 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#djvaiohmdt .gt_empty_group_heading {
+#svmehdljrn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -528,15 +529,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#djvaiohmdt .gt_from_md > :first-child {
+#svmehdljrn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#djvaiohmdt .gt_from_md > :last-child {
+#svmehdljrn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#djvaiohmdt .gt_row {
+#svmehdljrn .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -555,7 +556,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#djvaiohmdt .gt_stub {
+#svmehdljrn .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -567,7 +568,7 @@ div.csl-indent {
   padding-left: 12px;
 }
 
-#djvaiohmdt .gt_summary_row {
+#svmehdljrn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -577,7 +578,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#djvaiohmdt .gt_first_summary_row {
+#svmehdljrn .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -587,7 +588,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#djvaiohmdt .gt_grand_summary_row {
+#svmehdljrn .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -597,7 +598,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#djvaiohmdt .gt_first_grand_summary_row {
+#svmehdljrn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -607,11 +608,11 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#djvaiohmdt .gt_striped {
+#svmehdljrn .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#djvaiohmdt .gt_table_body {
+#svmehdljrn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -620,7 +621,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#djvaiohmdt .gt_footnotes {
+#svmehdljrn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -634,13 +635,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#djvaiohmdt .gt_footnote {
+#svmehdljrn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#djvaiohmdt .gt_sourcenotes {
+#svmehdljrn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -654,41 +655,41 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#djvaiohmdt .gt_sourcenote {
+#svmehdljrn .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#djvaiohmdt .gt_left {
+#svmehdljrn .gt_left {
   text-align: left;
 }
 
-#djvaiohmdt .gt_center {
+#svmehdljrn .gt_center {
   text-align: center;
 }
 
-#djvaiohmdt .gt_right {
+#svmehdljrn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#djvaiohmdt .gt_font_normal {
+#svmehdljrn .gt_font_normal {
   font-weight: normal;
 }
 
-#djvaiohmdt .gt_font_bold {
+#svmehdljrn .gt_font_bold {
   font-weight: bold;
 }
 
-#djvaiohmdt .gt_font_italic {
+#svmehdljrn .gt_font_italic {
   font-style: italic;
 }
 
-#djvaiohmdt .gt_super {
+#svmehdljrn .gt_super {
   font-size: 65%;
 }
 
-#djvaiohmdt .gt_footnote_marks {
+#svmehdljrn .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
@@ -752,12 +753,12 @@ div.csl-indent {
 <span id="cb9-7"><a href="データ整備.html#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> insurance,</span>
 <span id="cb9-8"><a href="データ整備.html#cb9-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">statistic =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">&quot;{mean} ({sd})&quot;</span>) <span class="co"># 平均と標準誤差を表示</span></span>
 <span id="cb9-9"><a href="データ整備.html#cb9-9" aria-hidden="true" tabindex="-1"></a>            )</span></code></pre></div>
-<div id="fekzsnzlsq" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="kkguoxnbyz" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#fekzsnzlsq .gt_table {
+#kkguoxnbyz .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -782,7 +783,7 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#fekzsnzlsq .gt_heading {
+#kkguoxnbyz .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -794,7 +795,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#fekzsnzlsq .gt_title {
+#kkguoxnbyz .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -804,7 +805,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#fekzsnzlsq .gt_subtitle {
+#kkguoxnbyz .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -814,13 +815,13 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#fekzsnzlsq .gt_bottom_border {
+#kkguoxnbyz .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fekzsnzlsq .gt_col_headings {
+#kkguoxnbyz .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -835,7 +836,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#fekzsnzlsq .gt_col_heading {
+#kkguoxnbyz .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -855,7 +856,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#fekzsnzlsq .gt_column_spanner_outer {
+#kkguoxnbyz .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -867,15 +868,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#fekzsnzlsq .gt_column_spanner_outer:first-child {
+#kkguoxnbyz .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fekzsnzlsq .gt_column_spanner_outer:last-child {
+#kkguoxnbyz .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fekzsnzlsq .gt_column_spanner {
+#kkguoxnbyz .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -887,7 +888,7 @@ div.csl-indent {
   width: 100%;
 }
 
-#fekzsnzlsq .gt_group_heading {
+#kkguoxnbyz .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -909,7 +910,7 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#fekzsnzlsq .gt_empty_group_heading {
+#kkguoxnbyz .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -924,15 +925,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#fekzsnzlsq .gt_from_md > :first-child {
+#kkguoxnbyz .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fekzsnzlsq .gt_from_md > :last-child {
+#kkguoxnbyz .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fekzsnzlsq .gt_row {
+#kkguoxnbyz .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -951,7 +952,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#fekzsnzlsq .gt_stub {
+#kkguoxnbyz .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -963,7 +964,7 @@ div.csl-indent {
   padding-left: 12px;
 }
 
-#fekzsnzlsq .gt_summary_row {
+#kkguoxnbyz .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -973,7 +974,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#fekzsnzlsq .gt_first_summary_row {
+#kkguoxnbyz .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -983,7 +984,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#fekzsnzlsq .gt_grand_summary_row {
+#kkguoxnbyz .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -993,7 +994,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#fekzsnzlsq .gt_first_grand_summary_row {
+#kkguoxnbyz .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1003,11 +1004,11 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#fekzsnzlsq .gt_striped {
+#kkguoxnbyz .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fekzsnzlsq .gt_table_body {
+#kkguoxnbyz .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1016,7 +1017,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#fekzsnzlsq .gt_footnotes {
+#kkguoxnbyz .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1030,13 +1031,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#fekzsnzlsq .gt_footnote {
+#kkguoxnbyz .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#fekzsnzlsq .gt_sourcenotes {
+#kkguoxnbyz .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1050,41 +1051,41 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#fekzsnzlsq .gt_sourcenote {
+#kkguoxnbyz .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#fekzsnzlsq .gt_left {
+#kkguoxnbyz .gt_left {
   text-align: left;
 }
 
-#fekzsnzlsq .gt_center {
+#kkguoxnbyz .gt_center {
   text-align: center;
 }
 
-#fekzsnzlsq .gt_right {
+#kkguoxnbyz .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fekzsnzlsq .gt_font_normal {
+#kkguoxnbyz .gt_font_normal {
   font-weight: normal;
 }
 
-#fekzsnzlsq .gt_font_bold {
+#kkguoxnbyz .gt_font_bold {
   font-weight: bold;
 }
 
-#fekzsnzlsq .gt_font_italic {
+#kkguoxnbyz .gt_font_italic {
   font-style: italic;
 }
 
-#fekzsnzlsq .gt_super {
+#kkguoxnbyz .gt_super {
   font-size: 65%;
 }
 
-#fekzsnzlsq .gt_footnote_marks {
+#kkguoxnbyz .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;

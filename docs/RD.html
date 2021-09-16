@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-09-15" />
+<meta name="date" content="2021-09-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -201,6 +201,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.6" data-path="prediction.html"><a href="prediction.html#Ridge"><i class="fa fa-check"></i><b>4.6</b> Ridge</a></li>
 <li class="chapter" data-level="4.7" data-path="prediction.html"><a href="prediction.html#Tree"><i class="fa fa-check"></i><b>4.7</b> Tree</a></li>
 <li class="chapter" data-level="4.8" data-path="prediction.html"><a href="prediction.html#Bagging"><i class="fa fa-check"></i><b>4.8</b> Random Forest</a></li>
+<li class="chapter" data-level="4.9" data-path="prediction.html"><a href="prediction.html#stacking"><i class="fa fa-check"></i><b>4.9</b> Stacking</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="比較因果推論.html"><a href="比較因果推論.html"><i class="fa fa-check"></i><b>5</b> 比較・因果推論</a>
 <ul>
@@ -319,42 +320,42 @@ div.csl-indent {
 <li><p>outcome variable <span class="math inline">\(=\)</span> vote (選挙における得票率)</p></li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="RD.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rdrobust)</span>
-<span id="cb90-2"><a href="RD.html#cb90-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb90-3"><a href="RD.html#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb90-4"><a href="RD.html#cb90-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb90-5"><a href="RD.html#cb90-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;rdrobust_RDsenate&quot;</span>)</span>
-<span id="cb90-6"><a href="RD.html#cb90-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb90-7"><a href="RD.html#cb90-7" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> rdrobust_RDsenate</span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="RD.html#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rdrobust)</span>
+<span id="cb122-2"><a href="RD.html#cb122-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-3"><a href="RD.html#cb122-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb122-4"><a href="RD.html#cb122-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-5"><a href="RD.html#cb122-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;rdrobust_RDsenate&quot;</span>)</span>
+<span id="cb122-6"><a href="RD.html#cb122-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-7"><a href="RD.html#cb122-7" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> rdrobust_RDsenate</span></code></pre></div>
 </div>
 <div id="sharp" class="section level2" number="9.3">
 <h2><span class="header-section-number">9.3</span> Shap disconiniuity</h2>
 <ul>
 <li>推計前に<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>についての散布図を確認することを推奨</li>
 </ul>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="RD.html#cb91-1" aria-hidden="true" tabindex="-1"></a>raw <span class="sc">|&gt;</span> </span>
-<span id="cb91-2"><a href="RD.html#cb91-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> margin,</span>
-<span id="cb91-3"><a href="RD.html#cb91-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> vote)</span>
-<span id="cb91-4"><a href="RD.html#cb91-4" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">+</span></span>
-<span id="cb91-5"><a href="RD.html#cb91-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb91-6"><a href="RD.html#cb91-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>)</span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-76-1.png" width="672" /></p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="RD.html#cb123-1" aria-hidden="true" tabindex="-1"></a>raw <span class="sc">|&gt;</span> </span>
+<span id="cb123-2"><a href="RD.html#cb123-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> margin,</span>
+<span id="cb123-3"><a href="RD.html#cb123-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> vote)</span>
+<span id="cb123-4"><a href="RD.html#cb123-4" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">+</span></span>
+<span id="cb123-5"><a href="RD.html#cb123-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb123-6"><a href="RD.html#cb123-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-96-1.png" width="672" /></p>
 <ul>
 <li>初期設定では2nd oder local polynominalを利用 (<span class="citation"><a href="#ref-gelman2019whyhigh" role="doc-biblioref">Gelman and Imbens</a> (<a href="#ref-gelman2019whyhigh" role="doc-biblioref">2019</a>)</span> の推奨)</li>
 </ul>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="RD.html#cb92-1" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>vote</span>
-<span id="cb92-2"><a href="RD.html#cb92-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb92-3"><a href="RD.html#cb92-3" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> raw<span class="sc">$</span>margin</span>
-<span id="cb92-4"><a href="RD.html#cb92-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb92-5"><a href="RD.html#cb92-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rdplot</span>(<span class="at">y =</span> Y,</span>
-<span id="cb92-6"><a href="RD.html#cb92-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> X)</span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-77-1.png" width="672" /></p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="RD.html#cb124-1" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>vote</span>
+<span id="cb124-2"><a href="RD.html#cb124-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb124-3"><a href="RD.html#cb124-3" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> raw<span class="sc">$</span>margin</span>
+<span id="cb124-4"><a href="RD.html#cb124-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb124-5"><a href="RD.html#cb124-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rdplot</span>(<span class="at">y =</span> Y,</span>
+<span id="cb124-6"><a href="RD.html#cb124-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> X)</span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-97-1.png" width="672" /></p>
 <ul>
 <li>推定結果表 + 標準誤差</li>
 </ul>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="RD.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rdrobust</span>(<span class="at">y =</span> Y,</span>
-<span id="cb93-2"><a href="RD.html#cb93-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> X) <span class="sc">|&gt;</span> </span>
-<span id="cb93-3"><a href="RD.html#cb93-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="RD.html#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rdrobust</span>(<span class="at">y =</span> Y,</span>
+<span id="cb125-2"><a href="RD.html#cb125-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> X) <span class="sc">|&gt;</span> </span>
+<span id="cb125-3"><a href="RD.html#cb125-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code></pre></div>
 <pre><code>## Call: rdrobust
 ## 
 ## Number of Obs.                 1297

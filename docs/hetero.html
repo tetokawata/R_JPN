@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-09-15" />
+<meta name="date" content="2021-09-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -201,6 +201,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.6" data-path="prediction.html"><a href="prediction.html#Ridge"><i class="fa fa-check"></i><b>4.6</b> Ridge</a></li>
 <li class="chapter" data-level="4.7" data-path="prediction.html"><a href="prediction.html#Tree"><i class="fa fa-check"></i><b>4.7</b> Tree</a></li>
 <li class="chapter" data-level="4.8" data-path="prediction.html"><a href="prediction.html#Bagging"><i class="fa fa-check"></i><b>4.8</b> Random Forest</a></li>
+<li class="chapter" data-level="4.9" data-path="prediction.html"><a href="prediction.html#stacking"><i class="fa fa-check"></i><b>4.9</b> Stacking</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="比較因果推論.html"><a href="比較因果推論.html"><i class="fa fa-check"></i><b>5</b> 比較・因果推論</a>
 <ul>
@@ -293,63 +294,63 @@ div.csl-indent {
 <h1><span class="header-section-number">Chapter 8</span> 条件付き平均効果関数の推定</h1>
 <div id="パッケージ-1" class="section level2" number="8.1">
 <h2><span class="header-section-number">8.1</span> パッケージ</h2>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="hetero.html#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb83-2"><a href="hetero.html#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
-<span id="cb83-3"><a href="hetero.html#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grf)</span>
-<span id="cb83-4"><a href="hetero.html#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
-<span id="cb83-5"><a href="hetero.html#cb83-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot)</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="hetero.html#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb115-2"><a href="hetero.html#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
+<span id="cb115-3"><a href="hetero.html#cb115-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grf)</span>
+<span id="cb115-4"><a href="hetero.html#cb115-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb115-5"><a href="hetero.html#cb115-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot)</span></code></pre></div>
 </div>
 <div id="データ-1" class="section level2" number="8.2">
 <h2><span class="header-section-number">8.2</span> データ</h2>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="hetero.html#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>)</span>
-<span id="cb84-2"><a href="hetero.html#cb84-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb84-3"><a href="hetero.html#cb84-3" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(NMES1988)</span>
-<span id="cb84-4"><a href="hetero.html#cb84-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb84-5"><a href="hetero.html#cb84-5" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
-<span id="cb84-6"><a href="hetero.html#cb84-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">no_insurance =</span> <span class="fu">if_else</span>(insurance <span class="sc">==</span> <span class="st">&quot;no&quot;</span>,<span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb84-7"><a href="hetero.html#cb84-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb84-8"><a href="hetero.html#cb84-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb84-9"><a href="hetero.html#cb84-9" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>visits</span>
-<span id="cb84-10"><a href="hetero.html#cb84-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb84-11"><a href="hetero.html#cb84-11" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> raw<span class="sc">$</span>no_insurance</span>
-<span id="cb84-12"><a href="hetero.html#cb84-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb84-13"><a href="hetero.html#cb84-13" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
-<span id="cb84-14"><a href="hetero.html#cb84-14" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
-<span id="cb84-15"><a href="hetero.html#cb84-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb84-16"><a href="hetero.html#cb84-16" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="hetero.html#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>)</span>
+<span id="cb116-2"><a href="hetero.html#cb116-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-3"><a href="hetero.html#cb116-3" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(NMES1988)</span>
+<span id="cb116-4"><a href="hetero.html#cb116-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-5"><a href="hetero.html#cb116-5" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
+<span id="cb116-6"><a href="hetero.html#cb116-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">no_insurance =</span> <span class="fu">if_else</span>(insurance <span class="sc">==</span> <span class="st">&quot;no&quot;</span>,<span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb116-7"><a href="hetero.html#cb116-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-8"><a href="hetero.html#cb116-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-9"><a href="hetero.html#cb116-9" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>visits</span>
+<span id="cb116-10"><a href="hetero.html#cb116-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-11"><a href="hetero.html#cb116-11" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> raw<span class="sc">$</span>no_insurance</span>
+<span id="cb116-12"><a href="hetero.html#cb116-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-13"><a href="hetero.html#cb116-13" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
+<span id="cb116-14"><a href="hetero.html#cb116-14" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
+<span id="cb116-15"><a href="hetero.html#cb116-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-16"><a href="hetero.html#cb116-16" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span></code></pre></div>
 </div>
 <div id="casual-forest" class="section level2" number="8.3">
 <h2><span class="header-section-number">8.3</span> Casual Forest</h2>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="hetero.html#cb85-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">regression_forest</span>(<span class="at">X =</span> X,</span>
-<span id="cb85-2"><a href="hetero.html#cb85-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Y =</span> Y)</span>
-<span id="cb85-3"><a href="hetero.html#cb85-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-4"><a href="hetero.html#cb85-4" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit)<span class="sc">$</span>predictions</span>
-<span id="cb85-5"><a href="hetero.html#cb85-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-6"><a href="hetero.html#cb85-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">regression_forest</span>(<span class="at">X =</span> X,</span>
-<span id="cb85-7"><a href="hetero.html#cb85-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Y =</span> D)</span>
-<span id="cb85-8"><a href="hetero.html#cb85-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-9"><a href="hetero.html#cb85-9" aria-hidden="true" tabindex="-1"></a>D.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit)<span class="sc">$</span>predictions</span>
-<span id="cb85-10"><a href="hetero.html#cb85-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-11"><a href="hetero.html#cb85-11" aria-hidden="true" tabindex="-1"></a>fit.CF <span class="ot">&lt;-</span> <span class="fu">causal_forest</span>(<span class="at">X =</span> X,</span>
-<span id="cb85-12"><a href="hetero.html#cb85-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">W =</span> D,</span>
-<span id="cb85-13"><a href="hetero.html#cb85-13" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Y =</span> Y,</span>
-<span id="cb85-14"><a href="hetero.html#cb85-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Y.hat =</span> Y.hat,</span>
-<span id="cb85-15"><a href="hetero.html#cb85-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">W.hat =</span> D.hat)</span>
-<span id="cb85-16"><a href="hetero.html#cb85-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-17"><a href="hetero.html#cb85-17" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
-<span id="cb85-18"><a href="hetero.html#cb85-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">tau.grf =</span> <span class="fu">predict</span>(fit.CF)<span class="sc">$</span>predictions)</span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="hetero.html#cb117-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">regression_forest</span>(<span class="at">X =</span> X,</span>
+<span id="cb117-2"><a href="hetero.html#cb117-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Y =</span> Y)</span>
+<span id="cb117-3"><a href="hetero.html#cb117-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-4"><a href="hetero.html#cb117-4" aria-hidden="true" tabindex="-1"></a>Y.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit)<span class="sc">$</span>predictions</span>
+<span id="cb117-5"><a href="hetero.html#cb117-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-6"><a href="hetero.html#cb117-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">regression_forest</span>(<span class="at">X =</span> X,</span>
+<span id="cb117-7"><a href="hetero.html#cb117-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Y =</span> D)</span>
+<span id="cb117-8"><a href="hetero.html#cb117-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-9"><a href="hetero.html#cb117-9" aria-hidden="true" tabindex="-1"></a>D.hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit)<span class="sc">$</span>predictions</span>
+<span id="cb117-10"><a href="hetero.html#cb117-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-11"><a href="hetero.html#cb117-11" aria-hidden="true" tabindex="-1"></a>fit.CF <span class="ot">&lt;-</span> <span class="fu">causal_forest</span>(<span class="at">X =</span> X,</span>
+<span id="cb117-12"><a href="hetero.html#cb117-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">W =</span> D,</span>
+<span id="cb117-13"><a href="hetero.html#cb117-13" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Y =</span> Y,</span>
+<span id="cb117-14"><a href="hetero.html#cb117-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Y.hat =</span> Y.hat,</span>
+<span id="cb117-15"><a href="hetero.html#cb117-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">W.hat =</span> D.hat)</span>
+<span id="cb117-16"><a href="hetero.html#cb117-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-17"><a href="hetero.html#cb117-17" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(raw,</span>
+<span id="cb117-18"><a href="hetero.html#cb117-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">tau.grf =</span> <span class="fu">predict</span>(fit.CF)<span class="sc">$</span>predictions)</span></code></pre></div>
 </div>
 <div id="distribution-of-predicted-individual-effects" class="section level2" number="8.4">
 <h2><span class="header-section-number">8.4</span> Distribution of predicted individual effects</h2>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="hetero.html#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df,</span>
-<span id="cb86-2"><a href="hetero.html#cb86-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> tau.grf)</span>
-<span id="cb86-3"><a href="hetero.html#cb86-3" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
-<span id="cb86-4"><a href="hetero.html#cb86-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-71-1.png" width="672" /></p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="hetero.html#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df,</span>
+<span id="cb118-2"><a href="hetero.html#cb118-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> tau.grf)</span>
+<span id="cb118-3"><a href="hetero.html#cb118-3" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb118-4"><a href="hetero.html#cb118-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-91-1.png" width="672" /></p>
 </div>
 <div id="best-linear-predictors" class="section level2" number="8.5">
 <h2><span class="header-section-number">8.5</span> Best linear predictors</h2>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="hetero.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">best_linear_projection</span>(fit.CF,X)</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="hetero.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">best_linear_projection</span>(fit.CF,X)</span></code></pre></div>
 <pre><code>## 
 ## Best linear projection of the conditional average treatment effect.
 ## Confidence intervals are cluster- and heteroskedasticity-robust (HC3):
@@ -368,14 +369,14 @@ div.csl-indent {
 </div>
 <div id="tree-presentation" class="section level2" number="8.6">
 <h2><span class="header-section-number">8.6</span> Tree presentation</h2>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="hetero.html#cb89-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rpart</span>(tau.grf <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> medicaid,</span>
-<span id="cb89-2"><a href="hetero.html#cb89-2" aria-hidden="true" tabindex="-1"></a>             df,</span>
-<span id="cb89-3"><a href="hetero.html#cb89-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">control =</span> <span class="fu">rpart.control</span>(<span class="at">cp =</span> <span class="dv">0</span>,</span>
-<span id="cb89-4"><a href="hetero.html#cb89-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">maxdepth =</span> <span class="dv">2</span>)</span>
-<span id="cb89-5"><a href="hetero.html#cb89-5" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb89-6"><a href="hetero.html#cb89-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb89-7"><a href="hetero.html#cb89-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(fit)</span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-73-1.png" width="672" /></p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="hetero.html#cb121-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rpart</span>(tau.grf <span class="sc">~</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> medicaid,</span>
+<span id="cb121-2"><a href="hetero.html#cb121-2" aria-hidden="true" tabindex="-1"></a>             df,</span>
+<span id="cb121-3"><a href="hetero.html#cb121-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">control =</span> <span class="fu">rpart.control</span>(<span class="at">cp =</span> <span class="dv">0</span>,</span>
+<span id="cb121-4"><a href="hetero.html#cb121-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">maxdepth =</span> <span class="dv">2</span>)</span>
+<span id="cb121-5"><a href="hetero.html#cb121-5" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb121-6"><a href="hetero.html#cb121-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-7"><a href="hetero.html#cb121-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(fit)</span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-93-1.png" width="672" /></p>
 
 </div>
 </div>

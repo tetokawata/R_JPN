@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-09-15" />
+<meta name="date" content="2021-09-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -201,6 +201,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.6" data-path="prediction.html"><a href="prediction.html#Ridge"><i class="fa fa-check"></i><b>4.6</b> Ridge</a></li>
 <li class="chapter" data-level="4.7" data-path="prediction.html"><a href="prediction.html#Tree"><i class="fa fa-check"></i><b>4.7</b> Tree</a></li>
 <li class="chapter" data-level="4.8" data-path="prediction.html"><a href="prediction.html#Bagging"><i class="fa fa-check"></i><b>4.8</b> Random Forest</a></li>
+<li class="chapter" data-level="4.9" data-path="prediction.html"><a href="prediction.html#stacking"><i class="fa fa-check"></i><b>4.9</b> Stacking</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="比較因果推論.html"><a href="比較因果推論.html"><i class="fa fa-check"></i><b>5</b> 比較・因果推論</a>
 <ul>
@@ -305,21 +306,21 @@ div.csl-indent {
 </ul>
 <div id="パッケージ" class="section level2" number="7.1">
 <h2><span class="header-section-number">7.1</span> パッケージ</h2>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="general.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb72-2"><a href="general.html#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
-<span id="cb72-3"><a href="general.html#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdm)</span>
-<span id="cb72-4"><a href="general.html#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoubleML)</span>
-<span id="cb72-5"><a href="general.html#cb72-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3)</span>
-<span id="cb72-6"><a href="general.html#cb72-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3learners)</span>
-<span id="cb72-7"><a href="general.html#cb72-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="general.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb104-2"><a href="general.html#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
+<span id="cb104-3"><a href="general.html#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdm)</span>
+<span id="cb104-4"><a href="general.html#cb104-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoubleML)</span>
+<span id="cb104-5"><a href="general.html#cb104-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3)</span>
+<span id="cb104-6"><a href="general.html#cb104-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3learners)</span>
+<span id="cb104-7"><a href="general.html#cb104-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span></code></pre></div>
 </div>
 <div id="データ" class="section level2" number="7.2">
 <h2><span class="header-section-number">7.2</span> データ</h2>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="general.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>)</span>
-<span id="cb73-2"><a href="general.html#cb73-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-3"><a href="general.html#cb73-3" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(NMES1988)</span>
-<span id="cb73-4"><a href="general.html#cb73-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-5"><a href="general.html#cb73-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="general.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;NMES1988&quot;</span>)</span>
+<span id="cb105-2"><a href="general.html#cb105-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-3"><a href="general.html#cb105-3" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(NMES1988)</span>
+<span id="cb105-4"><a href="general.html#cb105-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-5"><a href="general.html#cb105-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span></code></pre></div>
 </div>
 <div id="double-selection-rlassoeffect-hdm" class="section level2" number="7.3">
 <h2><span class="header-section-number">7.3</span> Double selection: rlassoEffect (hdm)</h2>
@@ -331,27 +332,27 @@ div.csl-indent {
 </ul></li>
 <li><p>hdmパッケージ<span class="citation">(<a href="#ref-R-hdm" role="doc-biblioref">Spindler, Chernozhukov, and Hansen 2019</a>)</span>を利用</p></li>
 </ul>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="general.html#cb74-1" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>visits</span>
-<span id="cb74-2"><a href="general.html#cb74-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-3"><a href="general.html#cb74-3" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">if_else</span>(raw<span class="sc">$</span>insurance <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
-<span id="cb74-4"><a href="general.html#cb74-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-5"><a href="general.html#cb74-5" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> </span>
-<span id="cb74-6"><a href="general.html#cb74-6" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(school<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb74-7"><a href="general.html#cb74-7" aria-hidden="true" tabindex="-1"></a>                    region<span class="sc">:</span>age <span class="sc">+</span> region<span class="sc">:</span>afam <span class="sc">+</span> region<span class="sc">:</span>gender <span class="sc">+</span> region<span class="sc">:</span>school <span class="sc">+</span></span>
-<span id="cb74-8"><a href="general.html#cb74-8" aria-hidden="true" tabindex="-1"></a>                    age<span class="sc">:</span>afam <span class="sc">+</span> age<span class="sc">:</span>gender <span class="sc">+</span> age<span class="sc">:</span>school <span class="sc">+</span></span>
-<span id="cb74-9"><a href="general.html#cb74-9" aria-hidden="true" tabindex="-1"></a>                    afam<span class="sc">:</span>gender <span class="sc">+</span> afam<span class="sc">:</span>school <span class="sc">+</span></span>
-<span id="cb74-10"><a href="general.html#cb74-10" aria-hidden="true" tabindex="-1"></a>                    gender<span class="sc">:</span>school,</span>
-<span id="cb74-11"><a href="general.html#cb74-11" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
-<span id="cb74-12"><a href="general.html#cb74-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-13"><a href="general.html#cb74-13" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
-<span id="cb74-14"><a href="general.html#cb74-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rlassoEffect</span>(<span class="at">x =</span> X,</span>
-<span id="cb74-15"><a href="general.html#cb74-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> Y,</span>
-<span id="cb74-16"><a href="general.html#cb74-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">d =</span> D,</span>
-<span id="cb74-17"><a href="general.html#cb74-17" aria-hidden="true" tabindex="-1"></a>               <span class="at">method =</span> <span class="st">&quot;double selection&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="general.html#cb106-1" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> raw<span class="sc">$</span>visits</span>
+<span id="cb106-2"><a href="general.html#cb106-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-3"><a href="general.html#cb106-3" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">if_else</span>(raw<span class="sc">$</span>insurance <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb106-4"><a href="general.html#cb106-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-5"><a href="general.html#cb106-5" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school <span class="sc">+</span> </span>
+<span id="cb106-6"><a href="general.html#cb106-6" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(school<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb106-7"><a href="general.html#cb106-7" aria-hidden="true" tabindex="-1"></a>                    region<span class="sc">:</span>age <span class="sc">+</span> region<span class="sc">:</span>afam <span class="sc">+</span> region<span class="sc">:</span>gender <span class="sc">+</span> region<span class="sc">:</span>school <span class="sc">+</span></span>
+<span id="cb106-8"><a href="general.html#cb106-8" aria-hidden="true" tabindex="-1"></a>                    age<span class="sc">:</span>afam <span class="sc">+</span> age<span class="sc">:</span>gender <span class="sc">+</span> age<span class="sc">:</span>school <span class="sc">+</span></span>
+<span id="cb106-9"><a href="general.html#cb106-9" aria-hidden="true" tabindex="-1"></a>                    afam<span class="sc">:</span>gender <span class="sc">+</span> afam<span class="sc">:</span>school <span class="sc">+</span></span>
+<span id="cb106-10"><a href="general.html#cb106-10" aria-hidden="true" tabindex="-1"></a>                    gender<span class="sc">:</span>school,</span>
+<span id="cb106-11"><a href="general.html#cb106-11" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
+<span id="cb106-12"><a href="general.html#cb106-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-13"><a href="general.html#cb106-13" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
+<span id="cb106-14"><a href="general.html#cb106-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rlassoEffect</span>(<span class="at">x =</span> X,</span>
+<span id="cb106-15"><a href="general.html#cb106-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> Y,</span>
+<span id="cb106-16"><a href="general.html#cb106-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">d =</span> D,</span>
+<span id="cb106-17"><a href="general.html#cb106-17" aria-hidden="true" tabindex="-1"></a>               <span class="at">method =</span> <span class="st">&quot;double selection&quot;</span>)</span></code></pre></div>
 <ul>
 <li>推定結果</li>
 </ul>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="general.html#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="general.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
 <pre><code>## [1] &quot;Estimates and significance testing of the effect of target variables&quot;
 ##    Estimate. Std. Error t value Pr(&gt;|t|)    
 ## d1    0.8642     0.2452   3.524 0.000425 ***
@@ -360,7 +361,7 @@ div.csl-indent {
 <ul>
 <li>選択されたコントロール変数</li>
 </ul>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="general.html#cb77-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>selection.index</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="general.html#cb109-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>selection.index</span></code></pre></div>
 <pre><code>##            regionnortheast              regionmidwest 
 ##                      FALSE                       TRUE 
 ##                 regionwest                regionother 
@@ -397,62 +398,62 @@ div.csl-indent {
 <li><p>なんらかの方法（例、OLS、ランダムフォレスト、LASSO）で<span class="math inline">\(E[Y|X],E[D|X]\)</span>の予測関数<span class="math inline">\(f_Y(X),f_D(X)\)</span>を推定し、予測誤差を単回帰</p></li>
 <li><p>DoubleMLパッケージ<span class="citation">(<a href="#ref-R-DoubleML" role="doc-biblioref">Bach et al. 2021</a>)</span>を利用</p></li>
 </ul>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="general.html#cb79-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
-<span id="cb79-2"><a href="general.html#cb79-2" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
-<span id="cb79-3"><a href="general.html#cb79-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-4"><a href="general.html#cb79-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-5"><a href="general.html#cb79-5" aria-hidden="true" tabindex="-1"></a>learner <span class="ot">&lt;-</span> </span>
-<span id="cb79-6"><a href="general.html#cb79-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lrn</span>(<span class="st">&quot;regr.ranger&quot;</span>, </span>
-<span id="cb79-7"><a href="general.html#cb79-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">num.trees =</span> <span class="dv">100</span>) <span class="co"># Require bigger num.trees in practice</span></span>
-<span id="cb79-8"><a href="general.html#cb79-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-9"><a href="general.html#cb79-9" aria-hidden="true" tabindex="-1"></a>ml_g <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
-<span id="cb79-10"><a href="general.html#cb79-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-11"><a href="general.html#cb79-11" aria-hidden="true" tabindex="-1"></a>ml_m <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
-<span id="cb79-12"><a href="general.html#cb79-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-13"><a href="general.html#cb79-13" aria-hidden="true" tabindex="-1"></a>obj_dml_data <span class="ot">&lt;-</span> </span>
-<span id="cb79-14"><a href="general.html#cb79-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">double_ml_data_from_matrix</span>(<span class="at">X =</span> X,</span>
-<span id="cb79-15"><a href="general.html#cb79-15" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> <span class="fu">as.numeric</span>(Y),</span>
-<span id="cb79-16"><a href="general.html#cb79-16" aria-hidden="true" tabindex="-1"></a>                             <span class="at">d =</span> <span class="fu">as.numeric</span>(D))</span>
-<span id="cb79-17"><a href="general.html#cb79-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-18"><a href="general.html#cb79-18" aria-hidden="true" tabindex="-1"></a>dml_plr_obj <span class="ot">&lt;-</span> </span>
-<span id="cb79-19"><a href="general.html#cb79-19" aria-hidden="true" tabindex="-1"></a>  DoubleMLPLR<span class="sc">$</span><span class="fu">new</span>(obj_dml_data, </span>
-<span id="cb79-20"><a href="general.html#cb79-20" aria-hidden="true" tabindex="-1"></a>                  ml_g, </span>
-<span id="cb79-21"><a href="general.html#cb79-21" aria-hidden="true" tabindex="-1"></a>                  ml_m, </span>
-<span id="cb79-22"><a href="general.html#cb79-22" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dml_procedure=</span><span class="st">&quot;dml1&quot;</span>, </span>
-<span id="cb79-23"><a href="general.html#cb79-23" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_rep =</span> <span class="dv">3</span>)</span>
-<span id="cb79-24"><a href="general.html#cb79-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-25"><a href="general.html#cb79-25" aria-hidden="true" tabindex="-1"></a>dml_plr_obj<span class="sc">$</span><span class="fu">fit</span>()</span></code></pre></div>
-<pre><code>## INFO  [18:48:15.321] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [18:48:15.399] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [18:48:15.460] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [18:48:15.519] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [18:48:15.575] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [18:48:15.669] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
-## INFO  [18:48:15.731] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [18:48:15.788] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [18:48:15.846] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [18:48:15.905] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
-## INFO  [18:48:16.116] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [18:48:16.175] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [18:48:16.233] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [18:48:16.291] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [18:48:16.349] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [18:48:16.436] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [18:48:16.493] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [18:48:16.548] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [18:48:16.605] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
-## INFO  [18:48:16.661] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
-## INFO  [18:48:16.751] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
-## INFO  [18:48:16.809] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
-## INFO  [18:48:16.867] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
-## INFO  [18:48:16.923] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
-## INFO  [18:48:16.980] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
-## INFO  [18:48:17.067] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
-## INFO  [18:48:17.124] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
-## INFO  [18:48:17.181] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
-## INFO  [18:48:17.237] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
-## INFO  [18:48:17.294] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5)</code></pre>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="general.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dml_plr_obj)</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="general.html#cb111-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">+</span> region <span class="sc">+</span> age <span class="sc">+</span> afam <span class="sc">+</span> gender <span class="sc">+</span> school,</span>
+<span id="cb111-2"><a href="general.html#cb111-2" aria-hidden="true" tabindex="-1"></a>                  raw)</span>
+<span id="cb111-3"><a href="general.html#cb111-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-4"><a href="general.html#cb111-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-5"><a href="general.html#cb111-5" aria-hidden="true" tabindex="-1"></a>learner <span class="ot">&lt;-</span> </span>
+<span id="cb111-6"><a href="general.html#cb111-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lrn</span>(<span class="st">&quot;regr.ranger&quot;</span>, </span>
+<span id="cb111-7"><a href="general.html#cb111-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">num.trees =</span> <span class="dv">100</span>) <span class="co"># Require bigger num.trees in practice</span></span>
+<span id="cb111-8"><a href="general.html#cb111-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-9"><a href="general.html#cb111-9" aria-hidden="true" tabindex="-1"></a>ml_g <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
+<span id="cb111-10"><a href="general.html#cb111-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-11"><a href="general.html#cb111-11" aria-hidden="true" tabindex="-1"></a>ml_m <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">clone</span>()</span>
+<span id="cb111-12"><a href="general.html#cb111-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-13"><a href="general.html#cb111-13" aria-hidden="true" tabindex="-1"></a>obj_dml_data <span class="ot">&lt;-</span> </span>
+<span id="cb111-14"><a href="general.html#cb111-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">double_ml_data_from_matrix</span>(<span class="at">X =</span> X,</span>
+<span id="cb111-15"><a href="general.html#cb111-15" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> <span class="fu">as.numeric</span>(Y),</span>
+<span id="cb111-16"><a href="general.html#cb111-16" aria-hidden="true" tabindex="-1"></a>                             <span class="at">d =</span> <span class="fu">as.numeric</span>(D))</span>
+<span id="cb111-17"><a href="general.html#cb111-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-18"><a href="general.html#cb111-18" aria-hidden="true" tabindex="-1"></a>dml_plr_obj <span class="ot">&lt;-</span> </span>
+<span id="cb111-19"><a href="general.html#cb111-19" aria-hidden="true" tabindex="-1"></a>  DoubleMLPLR<span class="sc">$</span><span class="fu">new</span>(obj_dml_data, </span>
+<span id="cb111-20"><a href="general.html#cb111-20" aria-hidden="true" tabindex="-1"></a>                  ml_g, </span>
+<span id="cb111-21"><a href="general.html#cb111-21" aria-hidden="true" tabindex="-1"></a>                  ml_m, </span>
+<span id="cb111-22"><a href="general.html#cb111-22" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dml_procedure=</span><span class="st">&quot;dml1&quot;</span>, </span>
+<span id="cb111-23"><a href="general.html#cb111-23" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_rep =</span> <span class="dv">3</span>)</span>
+<span id="cb111-24"><a href="general.html#cb111-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-25"><a href="general.html#cb111-25" aria-hidden="true" tabindex="-1"></a>dml_plr_obj<span class="sc">$</span><span class="fu">fit</span>()</span></code></pre></div>
+<pre><code>## INFO  [17:02:27.267] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [17:02:27.338] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [17:02:27.399] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [17:02:27.458] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [17:02:27.516] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [17:02:27.611] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [17:02:27.669] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [17:02:27.725] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [17:02:27.782] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [17:02:27.839] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [17:02:27.956] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [17:02:28.013] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [17:02:28.070] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [17:02:28.128] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [17:02:28.186] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [17:02:28.276] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [17:02:28.333] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [17:02:28.389] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [17:02:28.446] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [17:02:28.502] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5) 
+## INFO  [17:02:28.708] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/5) 
+## INFO  [17:02:28.766] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 5/5) 
+## INFO  [17:02:28.822] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/5) 
+## INFO  [17:02:28.877] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/5) 
+## INFO  [17:02:28.935] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 4/5) 
+## INFO  [17:02:29.021] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 4/5) 
+## INFO  [17:02:29.078] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 1/5) 
+## INFO  [17:02:29.134] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 5/5) 
+## INFO  [17:02:29.190] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 3/5) 
+## INFO  [17:02:29.247] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_m&#39; (iter 2/5)</code></pre>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="general.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dml_plr_obj)</span></code></pre></div>
 <pre><code>## ================= DoubleMLPLR Object ==================
 ## 
 ## 

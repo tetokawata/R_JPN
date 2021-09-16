@@ -69,7 +69,22 @@ $$=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E
 - Bias-variance tradeoffを分析者が解くことは一般に困難であり、\@ref{LASSO} - \@ref(RandomForest) で紹介するLASSO/Ridge/Random Forestなどの手法は、bias-variance問題をよりデータ主導型かつ現実的な計算時間の手法で解決することを目指す。
 
 ## パッケージ & データ
+- Rによる教師付き学習実装法には、大きく二つの有力な選択肢が存在する
 
+  - 個別の推定法を実装するパッケージ (例：LASSO & Ridge $=$ glmnet, Random Forest $=$ ranger) を使用
+  
+    - dependencyを減らすことができ、パッケージの更新にも迅速に対応できる
+  
+  - 個別パッケージで実装される手法を”共通”の文法で使用するメタパッケージ(例： caret, mlr3, tidymodels, **SuerLeaner**)を使用
+  
+    - 初学者が色々な手法を試すことが容易
+  
+- 本ページでは、SuperLearnerの利用を前提にしている
+
+  - 他のメタパッケージに比べて”自由度”が低いが、コーディングに慣れていない読者にとっても比較的用意に使える（かも。。。）
+  
+  - 後述するStacking法の実装を主目的としており、母集団への先見的知見が少ない社会科学において実用的
+  
 - 利用するパッケージ
 
 ```{r}
@@ -78,6 +93,8 @@ library(AER)
 library(SuperLearner) # 機械学習を実装するメタパッケージ
 library(rpart.plot) # 予測木の可視化
 ```
+
+
 
 - データ
 
@@ -121,30 +138,41 @@ $$\min\sum_i (Y_i-f(X))^2$$
 fit <-
   SuperLearner(Y = Y[group != 1],
                X = X[group != 1,],
-               SL.library = c("SL.lm")
+               SL.library = c("SL.lm"),
+               cvControl = list(V = 20L)
                ) # 推定
 
 coef(fit$fitLibrary$SL.lm_All$object) # 係数値の表示
 ```
 
-- 予測値の計算
+- 元データ全体への予測値の計算
 
 ```{r}
-Y.pred <- predict(fit, X)$pred
+Y.pred <- predict(fit,X)$pred
 ```
+
 
 - テストデータへの適合
 
 ```{r}
-mean((Y - Y.pred)[group == 1]^2)/var(Y[group == 1])
+mean((Y - Y.pred)[group == 1]^2)
 ```
 
-- 訓練データ
+- 訓練データへの適合
 
 ```{r}
-mean((Y - Y.pred)[group != 1]^2)/var(Y[group != 1])
+mean((Y - Y.pred)[group != 1]^2)
 ```
 
+- デフォルトの設定では、訓練データのみを用いた交差検証（10分割）の結果も自動的に計算されている
+
+```{r}
+fit
+```
+
+- Risk $=$ 交差検証法で推定されたMSE
+
+- Coef $=$ 後述するStackingモデルにおけるOLSによる予測値へのweight
 
 ## LASSO {#LASSO}
 
@@ -169,17 +197,30 @@ fit <-
 coef(fit$fitLibrary$SL.glmnet_All$object)
 ```
 
+- 元データ全体への予測値の計算
+
+```{r}
+Y.pred <- predict(fit,X)$pred
+```
+
 
 - テストデータへの適合
 
 ```{r}
-mean((Y - Y.pred)[group == 1]^2)/var(Y[group == 1])
+mean((Y - Y.pred)[group == 1]^2)
 ```
 
-- 訓練データ
+- 訓練データへの適合
 
 ```{r}
-mean((Y - Y.pred)[group != 1]^2)/var(Y[group != 1])
+mean((Y - Y.pred)[group != 1]^2)
+```
+
+
+- 交差検証
+
+```{r}
+fit
 ```
 
 
@@ -206,21 +247,36 @@ coef(fit$fitLibrary$SL.glmnet_1_All$object)
 ```
 
 
+- 元データ全体への予測値の計算
+
+```{r}
+Y.pred <- predict(fit,X)$pred
+```
+
+
 - テストデータへの適合
 
 ```{r}
-mean((Y - Y.pred)[group == 1]^2)/var(Y[group == 1])
+mean((Y - Y.pred)[group == 1]^2)
 ```
 
-- 訓練データ
+- 訓練データへの適合
 
 ```{r}
-mean((Y - Y.pred)[group != 1]^2)/var(Y[group != 1])
+mean((Y - Y.pred)[group != 1]^2)
 ```
+
+
+- 交差検証
+
+```{r}
+fit
+```
+
 
 ## Tree {#Tree}
 
-- 予測木をrpartパッケージにより推定する
+- 予測木を推定する
 
 - 推定法は以下の通り
 
@@ -247,22 +303,44 @@ rpart.plot(fit$fitLibrary$SL.rpartPrune_All$object) # 予測木の可視化
 ```
 
 
+- 元データ全体への予測値の計算
+
+```{r}
+Y.pred <- predict(fit,X)$pred
+```
+
 - テストデータへの適合
 
 ```{r}
-mean((Y - Y.pred)[group == 1]^2)/var(Y[group == 1])
+mean((Y - Y.pred)[group == 1]^2)
 ```
 
-- 訓練データ
+- 訓練データへの適合
 
 ```{r}
-mean((Y - Y.pred)[group != 1]^2)/var(Y[group != 1])
+mean((Y - Y.pred)[group != 1]^2)
 ```
 
+
+- 交差検証
+
+```{r}
+fit
+```
 
 ## Random Forest {#Bagging}
 
-- rangerパッケージ[@R-ranger]を利用
+- Random Forestを推定する
+
+  - 多数の予測木を推定し、各予測値の平均値を最終予測値とする
+  
+    - 平均を取ることで、予測値の分散削減が期待できる
+    
+  - 予測木におけるサンプル分割において、ランダムに予測変数の部分集合を選ぶ
+  
+    - 部分集合の中から、訓練データへの適合度が最大になるように分割を行う
+    
+    - 各予測木の予測値の相関を減らし、平均化による分散削減を促進する
 
 ```{r}
 fit <-
@@ -273,39 +351,81 @@ fit <-
 ```
 
 
+- 元データ全体への予測値の計算
+
+```{r}
+Y.pred <- predict(fit,X)$pred
+```
+
+
 - テストデータへの適合
 
 ```{r}
-mean((Y - Y.pred)[group == 1]^2)/var(Y[group == 1])
+mean((Y - Y.pred)[group == 1]^2)
 ```
 
-- 訓練データ
+- 訓練データへの適合
 
 ```{r}
-mean((Y - Y.pred)[group != 1]^2)/var(Y[group != 1])
+mean((Y - Y.pred)[group != 1]^2)
+```
+
+
+- 交差検証
+
+```{r}
+fit
 ```
 
 ## Stacking
 
-- 交差検証法を用いて、複数の推定アルゴリズムの性能を比較する
+- SuperLearner関数の主目的は、複数の予測モデルを線型結合した予測モデル（Super learner: @van2007super）の推定
 
-  - 複数の予測モデルを線型結合した予測モデル（Super learner: @van2007super）も推定し、性能評価
+  - $f_k(x)$をアルゴリズム$k$ (例：LASSO, Ridge, Random Forest)により推定された予測値とすると、SuperLearnerは以下のように定義される
   
+$$f_{SL}(x)=\beta_1 f_1(x)+...+\beta_K f_{K}(x)$$
+
+ただし, $\beta_k \in [0,1]$かつ$\beta_1+...+\beta_K=1$
+
 ```{r}
 learners = create.Learner("SL.glmnet", params = list(alpha = 0)) # Ridge推定の定義
 
 fit <-
-  CV.SuperLearner(X = X,
-                  Y = Y,
-                  SL.library = c("SL.mean",
-                                 "SL.lm",
-                                 "SL.glmnet",
-                                 "SL.rpartPrune",
-                                 "SL.ranger",
-                                 learners$names
-                                 )
-                  ) # モデル推定 & 交差検証
+  SuperLearner(X = X[group != 1,],
+               Y = Y[group != 1],
+               SL.library = c("SL.mean",
+                              "SL.lm",
+                              "SL.glmnet",
+                              "SL.rpartPrune",
+                              "SL.ranger",
+                              learners$names
+                              )
+               ) # モデル推定 & 交差検証
 
-summary(fit)
+fit
 ```
 
+- Coef $= \beta_k$
+
+  - 訓練データ内の交差検証では、glmnetにより実装されたLASSOによる予測値の性能が最もいいことが確認できる
+
+  - Stackingモデルにおいて、最もweightが大きいのはLASSO、続いてrangerであることが確認できる
+  
+- Stackingモデルの予測値  
+
+```{r}
+Y.pred <- predict(fit,X)$pred
+```
+
+
+- テストデータへの適合
+
+```{r}
+mean((Y - Y.pred)[group == 1]^2)
+```
+
+- 訓練データへの適合
+
+```{r}
+mean((Y - Y.pred)[group != 1]^2)
+```

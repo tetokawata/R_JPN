@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-09-15" />
+<meta name="date" content="2021-09-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -353,7 +353,23 @@ div.csl-indent {
 <div id="パッケージ-データ-2" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> パッケージ &amp; データ</h2>
 <ul>
-<li>利用するパッケージ</li>
+<li><p>Rによる教師付き学習実装法には、大きく二つの有力な選択肢が存在する</p>
+<ul>
+<li><p>個別の推定法を実装するパッケージ (例：LASSO &amp; Ridge <span class="math inline">\(=\)</span> glmnet, Random Forest <span class="math inline">\(=\)</span> ranger) を使用</p>
+<ul>
+<li>dependencyを減らすことができ、パッケージの更新にも迅速に対応できる</li>
+</ul></li>
+<li><p>個別パッケージで実装される手法を”共通”の文法で使用するメタパッケージ(例： caret, mlr3, tidymodels, <strong>SuerLeaner</strong>)を使用</p>
+<ul>
+<li>初学者が色々な手法を試すことが容易</li>
+</ul></li>
+</ul></li>
+<li><p>本ページでは、SuperLearnerの利用を前提にしている</p>
+<ul>
+<li><p>他のメタパッケージに比べて”自由度”が低いが、コーディングに慣れていない読者にとっても比較的用意に使える（かも。。。）</p></li>
+<li><p>後述するStacking法の実装を主目的としており、母集団への先見的知見が少ない社会科学において実用的</p></li>
+</ul></li>
+<li><p>利用するパッケージ</p></li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="prediction.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="prediction.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
@@ -402,10 +418,11 @@ div.csl-indent {
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="prediction.html#cb4-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
 <span id="cb4-2"><a href="prediction.html#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SuperLearner</span>(<span class="at">Y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
 <span id="cb4-3"><a href="prediction.html#cb4-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">X =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
-<span id="cb4-4"><a href="prediction.html#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">SL.library =</span> <span class="fu">c</span>(<span class="st">&quot;SL.lm&quot;</span>)</span>
-<span id="cb4-5"><a href="prediction.html#cb4-5" aria-hidden="true" tabindex="-1"></a>               ) <span class="co"># 推定</span></span>
-<span id="cb4-6"><a href="prediction.html#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="prediction.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit<span class="sc">$</span>fitLibrary<span class="sc">$</span>SL.lm_All<span class="sc">$</span>object) <span class="co"># 係数値の表示</span></span></code></pre></div>
+<span id="cb4-4"><a href="prediction.html#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">SL.library =</span> <span class="fu">c</span>(<span class="st">&quot;SL.lm&quot;</span>),</span>
+<span id="cb4-5"><a href="prediction.html#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">cvControl =</span> <span class="fu">list</span>(<span class="at">V =</span> 20L)</span>
+<span id="cb4-6"><a href="prediction.html#cb4-6" aria-hidden="true" tabindex="-1"></a>               ) <span class="co"># 推定</span></span>
+<span id="cb4-7"><a href="prediction.html#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="prediction.html#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit<span class="sc">$</span>fitLibrary<span class="sc">$</span>SL.lm_All<span class="sc">$</span>object) <span class="co"># 係数値の表示</span></span></code></pre></div>
 <pre><code>##     (Intercept)          visits         nvisits         ovisits        novisits 
 ##    0.1377112926    0.0036552347    0.0009715062    0.0032976320   -0.0031689963 
 ##        hospital      healthpoor healthexcellent         chronic      adllimited 
@@ -417,19 +434,35 @@ div.csl-indent {
 ##    insuranceyes     medicaidyes 
 ##   -0.0117301335    0.0295738407</code></pre>
 <ul>
-<li>予測値の計算</li>
+<li>元データ全体への予測値の計算</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="prediction.html#cb6-1" aria-hidden="true" tabindex="-1"></a>Y.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit, X)<span class="sc">$</span>pred</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="prediction.html#cb6-1" aria-hidden="true" tabindex="-1"></a>Y.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>pred</span></code></pre></div>
 <ul>
 <li>テストデータへの適合</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="prediction.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">var</span>(Y[group <span class="sc">==</span> <span class="dv">1</span>])</span></code></pre></div>
-<pre><code>## [1] 0.7421171</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="prediction.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.3133464</code></pre>
 <ul>
-<li>訓練データ</li>
+<li>訓練データへの適合</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="prediction.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">var</span>(Y[group <span class="sc">!=</span> <span class="dv">1</span>])</span></code></pre></div>
-<pre><code>## [1] 0.7545414</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="prediction.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.3875598</code></pre>
+<ul>
+<li>デフォルトの設定では、訓練データのみを用いた交差検証（10分割）の結果も自動的に計算されている</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="prediction.html#cb11-1" aria-hidden="true" tabindex="-1"></a>fit</span></code></pre></div>
+<pre><code>## 
+## Call:  
+## SuperLearner(Y = Y[group != 1], X = X[group != 1, ], SL.library = c(&quot;SL.lm&quot;),  
+##     cvControl = list(V = 20L)) 
+## 
+## 
+##               Risk Coef
+## SL.lm_All 0.396557    1</code></pre>
+<ul>
+<li><p>Risk <span class="math inline">\(=\)</span> 交差検証法で推定されたMSE</p></li>
+<li><p>Coef <span class="math inline">\(=\)</span> 後述するStackingモデルにおけるOLSによる予測値へのweight</p></li>
+</ul>
 </div>
 <div id="LASSO" class="section level2" number="4.5">
 <h2><span class="header-section-number">4.5</span> LASSO</h2>
@@ -444,13 +477,13 @@ div.csl-indent {
 <li>glmnetはdata.frameを直接の入力できず、matrix(vector)に変換する必要がある</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="prediction.html#cb11-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
-<span id="cb11-2"><a href="prediction.html#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SuperLearner</span>(<span class="at">Y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
-<span id="cb11-3"><a href="prediction.html#cb11-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">X =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
-<span id="cb11-4"><a href="prediction.html#cb11-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">SL.library =</span> <span class="fu">c</span>(<span class="st">&quot;SL.glmnet&quot;</span>)</span>
-<span id="cb11-5"><a href="prediction.html#cb11-5" aria-hidden="true" tabindex="-1"></a>               )</span>
-<span id="cb11-6"><a href="prediction.html#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="prediction.html#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit<span class="sc">$</span>fitLibrary<span class="sc">$</span>SL.glmnet_All<span class="sc">$</span>object)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="prediction.html#cb13-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
+<span id="cb13-2"><a href="prediction.html#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SuperLearner</span>(<span class="at">Y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
+<span id="cb13-3"><a href="prediction.html#cb13-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">X =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
+<span id="cb13-4"><a href="prediction.html#cb13-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">SL.library =</span> <span class="fu">c</span>(<span class="st">&quot;SL.glmnet&quot;</span>)</span>
+<span id="cb13-5"><a href="prediction.html#cb13-5" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb13-6"><a href="prediction.html#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="prediction.html#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit<span class="sc">$</span>fitLibrary<span class="sc">$</span>SL.glmnet_All<span class="sc">$</span>object)</span></code></pre></div>
 <pre><code>## 23 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                        s1
 ## (Intercept)     0.2267243
@@ -477,15 +510,31 @@ div.csl-indent {
 ## insuranceyes    .        
 ## medicaidyes     .</code></pre>
 <ul>
+<li>元データ全体への予測値の計算</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="prediction.html#cb15-1" aria-hidden="true" tabindex="-1"></a>Y.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>pred</span></code></pre></div>
+<ul>
 <li>テストデータへの適合</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="prediction.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">var</span>(Y[group <span class="sc">==</span> <span class="dv">1</span>])</span></code></pre></div>
-<pre><code>## [1] 0.7421171</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="prediction.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.3148209</code></pre>
 <ul>
-<li>訓練データ</li>
+<li>訓練データへの適合</li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="prediction.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">var</span>(Y[group <span class="sc">!=</span> <span class="dv">1</span>])</span></code></pre></div>
-<pre><code>## [1] 0.7545414</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="prediction.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.3894155</code></pre>
+<ul>
+<li>交差検証</li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="prediction.html#cb20-1" aria-hidden="true" tabindex="-1"></a>fit</span></code></pre></div>
+<pre><code>## 
+## Call:  
+## SuperLearner(Y = Y[group != 1], X = X[group != 1, ], SL.library = c(&quot;SL.glmnet&quot;)) 
+## 
+## 
+## 
+##                    Risk Coef
+## SL.glmnet_All 0.3933422    1</code></pre>
 </div>
 <div id="Ridge" class="section level2" number="4.6">
 <h2><span class="header-section-number">4.6</span> Ridge</h2>
@@ -497,15 +546,15 @@ div.csl-indent {
 <li><p><span class="math inline">\(\lambda\)</span> : チューニングパラメタ、Cross-validationを用いて設定可能</p></li>
 <li><p>引き続きglmentパッケージ<span class="citation">(<a href="#ref-R-glmnet" role="doc-biblioref">Friedman et al. 2021</a>)</span>を利用</p></li>
 </ul>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="prediction.html#cb17-1" aria-hidden="true" tabindex="-1"></a>learners <span class="ot">=</span> <span class="fu">create.Learner</span>(<span class="st">&quot;SL.glmnet&quot;</span>, <span class="at">params =</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>)) <span class="co"># glmnetのalphaを0（Ridge推定）に設定</span></span>
-<span id="cb17-2"><a href="prediction.html#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="prediction.html#cb17-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
-<span id="cb17-4"><a href="prediction.html#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SuperLearner</span>(<span class="at">Y =</span> Y,</span>
-<span id="cb17-5"><a href="prediction.html#cb17-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">X =</span> X,</span>
-<span id="cb17-6"><a href="prediction.html#cb17-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">SL.library =</span> <span class="fu">c</span>(learners<span class="sc">$</span>names)</span>
-<span id="cb17-7"><a href="prediction.html#cb17-7" aria-hidden="true" tabindex="-1"></a>               )</span>
-<span id="cb17-8"><a href="prediction.html#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="prediction.html#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit<span class="sc">$</span>fitLibrary<span class="sc">$</span>SL.glmnet_1_All<span class="sc">$</span>object)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="prediction.html#cb22-1" aria-hidden="true" tabindex="-1"></a>learners <span class="ot">=</span> <span class="fu">create.Learner</span>(<span class="st">&quot;SL.glmnet&quot;</span>, <span class="at">params =</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>)) <span class="co"># glmnetのalphaを0（Ridge推定）に設定</span></span>
+<span id="cb22-2"><a href="prediction.html#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="prediction.html#cb22-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
+<span id="cb22-4"><a href="prediction.html#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SuperLearner</span>(<span class="at">Y =</span> Y,</span>
+<span id="cb22-5"><a href="prediction.html#cb22-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">X =</span> X,</span>
+<span id="cb22-6"><a href="prediction.html#cb22-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">SL.library =</span> <span class="fu">c</span>(learners<span class="sc">$</span>names)</span>
+<span id="cb22-7"><a href="prediction.html#cb22-7" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb22-8"><a href="prediction.html#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="prediction.html#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit<span class="sc">$</span>fitLibrary<span class="sc">$</span>SL.glmnet_1_All<span class="sc">$</span>object)</span></code></pre></div>
 <pre><code>## 23 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                            s1
 ## (Intercept)      1.393051e-01
@@ -532,20 +581,34 @@ div.csl-indent {
 ## insuranceyes    -1.372911e-02
 ## medicaidyes      3.394999e-02</code></pre>
 <ul>
+<li>元データ全体への予測値の計算</li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="prediction.html#cb24-1" aria-hidden="true" tabindex="-1"></a>Y.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>pred</span></code></pre></div>
+<ul>
 <li>テストデータへの適合</li>
 </ul>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="prediction.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">var</span>(Y[group <span class="sc">==</span> <span class="dv">1</span>])</span></code></pre></div>
-<pre><code>## [1] 0.7421171</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="prediction.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.3093827</code></pre>
 <ul>
-<li>訓練データ</li>
+<li>訓練データへの適合</li>
 </ul>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="prediction.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">var</span>(Y[group <span class="sc">!=</span> <span class="dv">1</span>])</span></code></pre></div>
-<pre><code>## [1] 0.7545414</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="prediction.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.3881482</code></pre>
+<ul>
+<li>交差検証</li>
+</ul>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="prediction.html#cb29-1" aria-hidden="true" tabindex="-1"></a>fit</span></code></pre></div>
+<pre><code>## 
+## Call:  SuperLearner(Y = Y, X = X, SL.library = c(learners$names)) 
+## 
+## 
+##                      Risk Coef
+## SL.glmnet_1_All 0.3814595    1</code></pre>
 </div>
 <div id="Tree" class="section level2" number="4.7">
 <h2><span class="header-section-number">4.7</span> Tree</h2>
 <ul>
-<li><p>予測木をrpartパッケージにより推定する</p></li>
+<li><p>予測木を推定する</p></li>
 <li><p>推定法は以下の通り</p></li>
 </ul>
 <ol style="list-style-type: decimal">
@@ -560,87 +623,142 @@ div.csl-indent {
 <li><p>以上を繰り返す</p></li>
 <li><p>推定された予測木について、pruningを実行</p></li>
 </ol>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="prediction.html#cb23-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
-<span id="cb23-2"><a href="prediction.html#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SuperLearner</span>(<span class="at">Y =</span> Y,</span>
-<span id="cb23-3"><a href="prediction.html#cb23-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">X =</span> X,</span>
-<span id="cb23-4"><a href="prediction.html#cb23-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">SL.library =</span> <span class="fu">c</span>(<span class="st">&quot;SL.rpartPrune&quot;</span>)</span>
-<span id="cb23-5"><a href="prediction.html#cb23-5" aria-hidden="true" tabindex="-1"></a>               )</span>
-<span id="cb23-6"><a href="prediction.html#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="prediction.html#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(fit<span class="sc">$</span>fitLibrary<span class="sc">$</span>SL.rpartPrune_All<span class="sc">$</span>object) <span class="co"># 予測木の可視化</span></span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="prediction.html#cb31-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
+<span id="cb31-2"><a href="prediction.html#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SuperLearner</span>(<span class="at">Y =</span> Y,</span>
+<span id="cb31-3"><a href="prediction.html#cb31-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">X =</span> X,</span>
+<span id="cb31-4"><a href="prediction.html#cb31-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">SL.library =</span> <span class="fu">c</span>(<span class="st">&quot;SL.rpartPrune&quot;</span>)</span>
+<span id="cb31-5"><a href="prediction.html#cb31-5" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb31-6"><a href="prediction.html#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="prediction.html#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(fit<span class="sc">$</span>fitLibrary<span class="sc">$</span>SL.rpartPrune_All<span class="sc">$</span>object) <span class="co"># 予測木の可視化</span></span></code></pre></div>
+<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<ul>
+<li>元データ全体への予測値の計算</li>
+</ul>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="prediction.html#cb32-1" aria-hidden="true" tabindex="-1"></a>Y.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>pred</span></code></pre></div>
 <ul>
 <li>テストデータへの適合</li>
 </ul>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="prediction.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">var</span>(Y[group <span class="sc">==</span> <span class="dv">1</span>])</span></code></pre></div>
-<pre><code>## [1] 0.7421171</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="prediction.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.3357048</code></pre>
 <ul>
-<li>訓練データ</li>
+<li>訓練データへの適合</li>
 </ul>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="prediction.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">var</span>(Y[group <span class="sc">!=</span> <span class="dv">1</span>])</span></code></pre></div>
-<pre><code>## [1] 0.7545414</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="prediction.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.400284</code></pre>
+<ul>
+<li>交差検証</li>
+</ul>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="prediction.html#cb37-1" aria-hidden="true" tabindex="-1"></a>fit</span></code></pre></div>
+<pre><code>## 
+## Call:  SuperLearner(Y = Y, X = X, SL.library = c(&quot;SL.rpartPrune&quot;)) 
+## 
+## 
+##                        Risk Coef
+## SL.rpartPrune_All 0.4048552    1</code></pre>
 </div>
 <div id="Bagging" class="section level2" number="4.8">
 <h2><span class="header-section-number">4.8</span> Random Forest</h2>
 <ul>
-<li>rangerパッケージ<span class="citation">(<a href="#ref-R-ranger" role="doc-biblioref">Wright, Wager, and Probst 2021</a>)</span>を利用</li>
+<li><p>Random Forestを推定する</p>
+<ul>
+<li><p>多数の予測木を推定し、各予測値の平均値を最終予測値とする</p>
+<ul>
+<li>平均を取ることで、予測値の分散削減が期待できる</li>
+</ul></li>
+<li><p>予測木におけるサンプル分割において、ランダムに予測変数の部分集合を選ぶ</p>
+<ul>
+<li><p>部分集合の中から、訓練データへの適合度が最大になるように分割を行う</p></li>
+<li><p>各予測木の予測値の相関を減らし、平均化による分散削減を促進する</p></li>
+</ul></li>
+</ul></li>
 </ul>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="prediction.html#cb28-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
-<span id="cb28-2"><a href="prediction.html#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SuperLearner</span>(<span class="at">Y =</span> Y,</span>
-<span id="cb28-3"><a href="prediction.html#cb28-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">X =</span> X,</span>
-<span id="cb28-4"><a href="prediction.html#cb28-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">SL.library =</span> <span class="fu">c</span>(<span class="st">&quot;SL.ranger&quot;</span>)</span>
-<span id="cb28-5"><a href="prediction.html#cb28-5" aria-hidden="true" tabindex="-1"></a>               )</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="prediction.html#cb39-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
+<span id="cb39-2"><a href="prediction.html#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SuperLearner</span>(<span class="at">Y =</span> Y,</span>
+<span id="cb39-3"><a href="prediction.html#cb39-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">X =</span> X,</span>
+<span id="cb39-4"><a href="prediction.html#cb39-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">SL.library =</span> <span class="fu">c</span>(<span class="st">&quot;SL.ranger&quot;</span>)</span>
+<span id="cb39-5"><a href="prediction.html#cb39-5" aria-hidden="true" tabindex="-1"></a>               )</span></code></pre></div>
+<ul>
+<li>元データ全体への予測値の計算</li>
+</ul>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="prediction.html#cb40-1" aria-hidden="true" tabindex="-1"></a>Y.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>pred</span></code></pre></div>
 <ul>
 <li>テストデータへの適合</li>
 </ul>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="prediction.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">var</span>(Y[group <span class="sc">==</span> <span class="dv">1</span>])</span></code></pre></div>
-<pre><code>## [1] 0.7421171</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="prediction.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.09084756</code></pre>
 <ul>
-<li>訓練データ</li>
+<li>訓練データへの適合</li>
 </ul>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="prediction.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">var</span>(Y[group <span class="sc">!=</span> <span class="dv">1</span>])</span></code></pre></div>
-<pre><code>## [1] 0.7545414</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="prediction.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.1132188</code></pre>
+<ul>
+<li>交差検証</li>
+</ul>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="prediction.html#cb45-1" aria-hidden="true" tabindex="-1"></a>fit</span></code></pre></div>
+<pre><code>## 
+## Call:  SuperLearner(Y = Y, X = X, SL.library = c(&quot;SL.ranger&quot;)) 
+## 
+## 
+##                   Risk Coef
+## SL.ranger_All 0.389305    1</code></pre>
 </div>
 <div id="stacking" class="section level2" number="4.9">
 <h2><span class="header-section-number">4.9</span> Stacking</h2>
 <ul>
-<li><p>交差検証法を用いて、複数の推定アルゴリズムの性能を比較する</p>
+<li><p>SuperLearner関数の主目的は、複数の予測モデルを線型結合した予測モデル（Super learner: <span class="citation"><a href="#ref-van2007super" role="doc-biblioref">Van der Laan, Polley, and Hubbard</a> (<a href="#ref-van2007super" role="doc-biblioref">2007</a>)</span>）の推定</p>
 <ul>
-<li>複数の予測モデルを線型結合した予測モデル（Super learner: <span class="citation"><a href="#ref-van2007super" role="doc-biblioref">Van der Laan, Polley, and Hubbard</a> (<a href="#ref-van2007super" role="doc-biblioref">2007</a>)</span>）も推定し、性能評価</li>
+<li><span class="math inline">\(f_k(x)\)</span>をアルゴリズム<span class="math inline">\(k\)</span> (例：LASSO, Ridge, Random Forest)により推定された予測値とすると、SuperLearnerは以下のように定義される</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="prediction.html#cb33-1" aria-hidden="true" tabindex="-1"></a>learners <span class="ot">=</span> <span class="fu">create.Learner</span>(<span class="st">&quot;SL.glmnet&quot;</span>, <span class="at">params =</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>)) <span class="co"># Ridge推定の定義</span></span>
-<span id="cb33-2"><a href="prediction.html#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="prediction.html#cb33-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
-<span id="cb33-4"><a href="prediction.html#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">CV.SuperLearner</span>(<span class="at">X =</span> X,</span>
-<span id="cb33-5"><a href="prediction.html#cb33-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Y =</span> Y,</span>
-<span id="cb33-6"><a href="prediction.html#cb33-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">SL.library =</span> <span class="fu">c</span>(<span class="st">&quot;SL.mean&quot;</span>,</span>
-<span id="cb33-7"><a href="prediction.html#cb33-7" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;SL.lm&quot;</span>,</span>
-<span id="cb33-8"><a href="prediction.html#cb33-8" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;SL.glmnet&quot;</span>,</span>
-<span id="cb33-9"><a href="prediction.html#cb33-9" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;SL.rpartPrune&quot;</span>,</span>
-<span id="cb33-10"><a href="prediction.html#cb33-10" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;SL.ranger&quot;</span>,</span>
-<span id="cb33-11"><a href="prediction.html#cb33-11" aria-hidden="true" tabindex="-1"></a>                                 learners<span class="sc">$</span>names</span>
-<span id="cb33-12"><a href="prediction.html#cb33-12" aria-hidden="true" tabindex="-1"></a>                                 )</span>
-<span id="cb33-13"><a href="prediction.html#cb33-13" aria-hidden="true" tabindex="-1"></a>                  ) <span class="co"># モデル推定 &amp; 交差検証</span></span>
-<span id="cb33-14"><a href="prediction.html#cb33-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-15"><a href="prediction.html#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<p><span class="math display">\[f_{SL}(x)=\beta_1 f_1(x)+...+\beta_K f_{K}(x)\]</span></p>
+<p>ただし, <span class="math inline">\(\beta_k \in [0,1]\)</span>かつ<span class="math inline">\(\beta_1+...+\beta_K=1\)</span></p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="prediction.html#cb47-1" aria-hidden="true" tabindex="-1"></a>learners <span class="ot">=</span> <span class="fu">create.Learner</span>(<span class="st">&quot;SL.glmnet&quot;</span>, <span class="at">params =</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>)) <span class="co"># Ridge推定の定義</span></span>
+<span id="cb47-2"><a href="prediction.html#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="prediction.html#cb47-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span></span>
+<span id="cb47-4"><a href="prediction.html#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SuperLearner</span>(<span class="at">X =</span> X[group <span class="sc">!=</span> <span class="dv">1</span>,],</span>
+<span id="cb47-5"><a href="prediction.html#cb47-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">Y =</span> Y[group <span class="sc">!=</span> <span class="dv">1</span>],</span>
+<span id="cb47-6"><a href="prediction.html#cb47-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">SL.library =</span> <span class="fu">c</span>(<span class="st">&quot;SL.mean&quot;</span>,</span>
+<span id="cb47-7"><a href="prediction.html#cb47-7" aria-hidden="true" tabindex="-1"></a>                              <span class="st">&quot;SL.lm&quot;</span>,</span>
+<span id="cb47-8"><a href="prediction.html#cb47-8" aria-hidden="true" tabindex="-1"></a>                              <span class="st">&quot;SL.glmnet&quot;</span>,</span>
+<span id="cb47-9"><a href="prediction.html#cb47-9" aria-hidden="true" tabindex="-1"></a>                              <span class="st">&quot;SL.rpartPrune&quot;</span>,</span>
+<span id="cb47-10"><a href="prediction.html#cb47-10" aria-hidden="true" tabindex="-1"></a>                              <span class="st">&quot;SL.ranger&quot;</span>,</span>
+<span id="cb47-11"><a href="prediction.html#cb47-11" aria-hidden="true" tabindex="-1"></a>                              learners<span class="sc">$</span>names</span>
+<span id="cb47-12"><a href="prediction.html#cb47-12" aria-hidden="true" tabindex="-1"></a>                              )</span>
+<span id="cb47-13"><a href="prediction.html#cb47-13" aria-hidden="true" tabindex="-1"></a>               ) <span class="co"># モデル推定 &amp; 交差検証</span></span>
+<span id="cb47-14"><a href="prediction.html#cb47-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-15"><a href="prediction.html#cb47-15" aria-hidden="true" tabindex="-1"></a>fit</span></code></pre></div>
 <pre><code>## 
 ## Call:  
-## CV.SuperLearner(Y = Y, X = X, SL.library = c(&quot;SL.mean&quot;, &quot;SL.lm&quot;, &quot;SL.glmnet&quot;,  
-##     &quot;SL.rpartPrune&quot;, &quot;SL.ranger&quot;, learners$names)) 
+## SuperLearner(Y = Y[group != 1], X = X[group != 1, ], SL.library = c(&quot;SL.mean&quot;,  
+##     &quot;SL.lm&quot;, &quot;SL.glmnet&quot;, &quot;SL.rpartPrune&quot;, &quot;SL.ranger&quot;, learners$names)) 
 ## 
-## Risk is based on: Mean Squared Error
 ## 
-## All risk estimates are based on V =  10 
-## 
-##          Algorithm     Ave       se     Min     Max
-##      Super Learner 0.38212 0.038569 0.25563 0.69386
-##        Discrete SL 0.37908 0.037237 0.25803 0.65788
-##        SL.mean_All 0.49535 0.052140 0.33259 0.96410
-##          SL.lm_All 0.37958 0.036531 0.26094 0.64812
-##      SL.glmnet_All 0.37895 0.037248 0.25803 0.65788
-##  SL.rpartPrune_All 0.42689 0.043130 0.25465 0.76707
-##      SL.ranger_All 0.39119 0.040852 0.26127 0.76885
-##    SL.glmnet_1_All 0.37935 0.036874 0.25972 0.65549</code></pre>
+##                        Risk      Coef
+## SL.mean_All       0.5138474 0.0000000
+## SL.lm_All         0.3988573 0.0000000
+## SL.glmnet_All     0.3964502 0.5834839
+## SL.rpartPrune_All 0.4076422 0.2763088
+## SL.ranger_All     0.4119626 0.1402073
+## SL.glmnet_1_All   0.3989486 0.0000000</code></pre>
+<ul>
+<li><p>Coef <span class="math inline">\(= \beta_k\)</span></p>
+<ul>
+<li><p>訓練データ内の交差検証では、glmnetにより実装されたLASSOによる予測値の性能が最もいいことが確認できる</p></li>
+<li><p>Stackingモデルにおいて、最もweightが大きいのはLASSO、続いてrangerであることが確認できる</p></li>
+</ul></li>
+<li><p>Stackingモデルの予測値</p></li>
+</ul>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="prediction.html#cb49-1" aria-hidden="true" tabindex="-1"></a>Y.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit,X)<span class="sc">$</span>pred</span></code></pre></div>
+<ul>
+<li>テストデータへの適合</li>
+</ul>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="prediction.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">==</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.3163745</code></pre>
+<ul>
+<li>訓練データへの適合</li>
+</ul>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="prediction.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Y <span class="sc">-</span> Y.pred)[group <span class="sc">!=</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.3381296</code></pre>
 
 </div>
 </div>
@@ -651,9 +769,6 @@ Friedman, Jerome, Trevor Hastie, Rob Tibshirani, Balasubramanian Narasimhan, Ken
 </div>
 <div id="ref-van2007super" class="csl-entry">
 Van der Laan, Mark J, Eric C Polley, and Alan E Hubbard. 2007. <span>“Super Learner.”</span> <em>Statistical Applications in Genetics and Molecular Biology</em> 6 (1).
-</div>
-<div id="ref-R-ranger" class="csl-entry">
-Wright, Marvin N., Stefan Wager, and Philipp Probst. 2021. <em>Ranger: A Fast Implementation of Random Forests</em>. <a href="https://github.com/imbs-hl/ranger">https://github.com/imbs-hl/ranger</a>.
 </div>
 </div>
             </section>

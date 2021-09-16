@@ -26,6 +26,7 @@ LASSO
 Ridge
 Tree
 Bagging
+stacking
 比較因果推論
 comparison
 問題設定
@@ -73,4 +74,3 @@ data
 識別-pallarel-trend-in-the-two-by-two-case
 推定-two-way-fixed-effect-model
 推定weighted-two-way-fixed-effect-model
-stacking
