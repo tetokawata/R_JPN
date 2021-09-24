@@ -66,7 +66,9 @@ $$=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E
   
   - 多くのパラメータ（長い回帰式、多いサブサンプル分割）を推定する場合、大きなVarianceを持つ。
 
-- Bias-variance tradeoffを分析者が解くことは一般に困難であり、\@ref{LASSO} - \@ref(RandomForest) で紹介するLASSO/Ridge/Random Forestなどの手法は、bias-variance問題をよりデータ主導型かつ現実的な計算時間の手法で解決することを目指す。
+- Bias-variance tradeoffを分析者が先見的に解決することは一般に困難
+
+  - \@ref{LASSO} - \@ref(RandomForest) で紹介するLASSO/Ridge/Random Forestなどの手法は、bias-variance問題をよりデータ主導型かつ現実的な計算時間の手法で解決することを目指す。
 
 ## パッケージ & データ
 - Rによる教師付き学習実装法には、大きく二つの有力な選択肢が存在する

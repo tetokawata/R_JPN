@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-09-16" />
+<meta name="date" content="2021-09-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -305,31 +305,27 @@ div.csl-indent {
 <li><p>条件付きの比較：変数<span class="math inline">\(D_i\)</span>の値が異なる集団間において、結果変数<span class="math inline">\(Y_i\)</span>の分布がどの程度異なっているのか、推定する。
 その際に、直接的な関心ではない変数群<span class="math inline">\(X_i\)</span>を”一定”とする。</p></li>
 <li><p>以下の議論では<span class="math inline">\(Y_i\)</span>の平均値に焦点を当て、<span class="math inline">\(E[Y_i|D_i=d,X_i]-E[Y_i|D_i=d&#39;,X_i]\)</span>の推定を目指す。
-またこの際に点推定量のみならず、信頼区間の推定も行います。</p></li>
+またこの際に点推定量のみならず、信頼区間の推定も行う。</p></li>
 </ul>
 </div>
 <div id="推定上の問題" class="section level3" number="5.1.2">
 <h3><span class="header-section-number">5.1.2</span> 推定上の問題</h3>
 <ul>
 <li><p>有限のサンプルを用いて、多数の<span class="math inline">\(X_i,D_i\)</span>で条件づけた平均値を推定するためには、なんらかの工夫が必要</p></li>
-<li><p>依然として広く用いられている手法は、研究者により設定された線形モデルを重回帰で推定する方法</p></li>
+<li><p>広く用いられてきた手法は、研究者により設定された線形モデルを重回帰で推定する方法</p></li>
 </ul>
 <p><span class="math display">\[E[Y_i|D_i=d,X_i=x]=\underbrace{\beta_d\times d + \beta_0 + \beta_1\times x_1+...+\beta_L \times x_L}_{線形モデル}\]</span></p>
 <ul>
-<li><p>設定された線形モデル重回帰の推定目標を条件付き平均値の線形近似と見做す“Agnostic view” <span class="citation">(<a href="#ref-angrist2002covariance" role="doc-biblioref">J. Angrist and Imbens 2002</a>; <a href="#ref-angrist2008mostly" role="doc-biblioref">J. D. Angrist and Pischke 2008</a>)</span>が、重回帰を利用する説得的な理由となっている。</p>
+<li><p>設定された線形モデル重回帰の推定目標を条件付き平均値の線形近似と見做す“Agnostic view” <span class="citation">(<a href="#ref-angrist2002covariance" role="doc-biblioref">J. Angrist and Imbens 2002</a>; <a href="#ref-angrist2008mostly" role="doc-biblioref">J. D. Angrist and Pischke 2008</a>)</span>が、重回帰を利用する説得的な理由となりうる。</p>
 <ul>
-<li>”正しい”回帰モデルの定式化が難しい社会科学分野においては、条件付き平均値の”真”のモデルを設定することは事実上不可能であるため</li>
+<li>”正しい”回帰モデルの定式化が難しい社会科学分野においては、条件付き平均値の”真”のモデルを設定することは事実上不可能であり、線形モデルを母集団上で定義された（真の条件付き平均値）の近似モデルとみなす方が妥当であるため</li>
 </ul></li>
-<li><p>しかしながら以下のような場合、深刻な問題が生じることが知られている。</p></li>
-</ul>
-<ol style="list-style-type: decimal">
-<li><p>異なる<span class="math inline">\(D\)</span>グループ間で、<span class="math inline">\(X\)</span>の分布が異なる。</p></li>
-<li><p>多数の<span class="math inline">\(X\)</span>について、条件づける必要がある。</p></li>
-</ol>
+<li><p>しかしながら「異なる<span class="math inline">\(D\)</span>グループ間で、<span class="math inline">\(X\)</span>の分布が異なる」場合、<span class="math inline">\(\beta_D\)</span>の推計値が近似モデルの定式化に深刻に依存してしまう。</p>
 <ul>
-<li><p>1の問題を緩和するために、推定の前処理としてマッチングを行うことが有力な方法となる。</p></li>
-<li><p>2の問題が深刻な場合、伝統的なマッチングの手法の有効性は失われる。
+<li><p>定式化への依存を緩和するために、推定の前処理としてマッチングを行うことが有力な方法となる。</p></li>
+<li><p><span class="math inline">\(X\)</span>の数が多い場合、伝統的なマッチング手法の有効性は失われる。
 この問題を回避するためにChapter <a href="general.html#general">7</a> では、LASSOやRandom Forestなどの予測手法の応用を紹介する。</p></li>
+</ul></li>
 </ul>
 </div>
 </div>
@@ -357,7 +353,7 @@ div.csl-indent {
 <div id="selection-on-observable" class="section level4" number="5.2.2.1">
 <h4><span class="header-section-number">5.2.2.1</span> Selection-on-observable</h4>
 <ul>
-<li><p>Chapter <a href="unique.html#unique">6</a> - <a href="hetero.html#hetero">8</a>では以下の仮定に基づき議論していきます。</p>
+<li><p>Chapter <a href="unique.html#unique">6</a> - <a href="hetero.html#hetero">8</a>では以下の仮定に基づき議論する。</p>
 <ul>
 <li><p><span class="math inline">\(0&lt;\Pr[D_i=d|X_i]&lt;1\)</span>: サブグループにおいても、原因変数の値にバリエーションが存在する。</p></li>
 <li><p><span class="math inline">\(X\)</span>で条件づけた場合、潜在結果関数と原因変数の実現値が独立している<span class="math inline">\(Y_i(d)\perp D_i|X_i=x\)</span></p>
@@ -402,8 +398,11 @@ div.csl-indent {
 <div id="推定の問題" class="section level3" number="5.2.3">
 <h3><span class="header-section-number">5.2.3</span> 推定の問題</h3>
 <ul>
-<li><p>Selection-on-observableに基づく推定では、比較と同じような推定上の問題を抱え、その解決策も共有する。</p></li>
-<li><p>Regression discontinuityでは、<span class="math inline">\(\lim_{x\uparrow c}E[Y_i|X_i=x]\)</span>、<span class="math inline">\(\lim_{x\downarrow c}E[Y_i|X_i=x]\)</span>を以下に推定するかが問題となる。Chapter <a href="panel.html#panel">10</a> ではもっとも標準的な局所的な外挿による推定法を紹介する</p></li>
+<li><p>識別できたとしても、推定が困難な場合がある。</p>
+<ul>
+<li>Selection-on-observableに基づく推定では、しばしば大量の<span class="math inline">\(X\)</span>をコントロールする必要がある。この場合、比較と同じような推定上の問題を抱え、その解決策も共有する。</li>
+</ul></li>
+<li><p>Regression discontinuityでは、<span class="math inline">\(\lim_{x\uparrow c}E[Y_i|X_i=x]\)</span>、<span class="math inline">\(\lim_{x\downarrow c}E[Y_i|X_i=x]\)</span>を以下に推定するかが問題となる。Chapter <a href="panel.html#panel">10</a> ではもっとも標準的な局所的外挿による推定法を紹介する</p></li>
 </ul>
 
 </div>
