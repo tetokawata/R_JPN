@@ -4,3 +4,4 @@ language:
   ui:
     chapter_name: "Chapter "
 output_dir: "docs"
+rmd_files: ["index.Rmd","concept.Rmd","prediction.Rmd","parameter_estimation.Rmd","parameter_estimation_general.Rmd","heteroteneity.Rmd","Panel_data.Rmd","Regression_Discontinuity.Rmd","data.Rmd","visualization.Rmd","references.Rmd"]
