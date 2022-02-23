@@ -30,9 +30,8 @@ library(AER)
 library(estimatr)
 library(MatchIt)
 
-data("NMES1988")
+data("PSID1982")
 
-raw <- na.omit(NMES1988)
 ```
 
 ## 線形モデルの推定 {#appliedOLS}
@@ -46,8 +45,8 @@ raw <- na.omit(NMES1988)
 - lm_robust関数で推定
 
 ```{r}
-lm_robust(visits ~ insurance + region + age + afam + gender + school + income + employed + married,
-          data = raw)
+lm_robust(log(wage) ~ occupation  + education + south + smsa + gender + ethnicity + industry + weeks,
+          data = PSID1982)
 ```
 
 - 線形モデルによる推定は、いくつかの問題がある
@@ -89,8 +88,8 @@ $$+\underbrace{\beta_{1D}\times D\times X_1+...+\beta_{LD}\times D\times X_L}_{�
 - 原因変数の分布に偏りがある場合（本例ではコントロールグループが少ない）、少ないグループ内での平均効果(Average treatment effect for treat または control)の推定を目指すことでマッチできないサンプルを減らすことが期待できる。
 
 ```{r}
-fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + employed,
-                 data = raw,
+fit.m <- matchit(occupation ~ education + south + smsa + gender + ethnicity + industry + weeks,
+                 data = PSID1982,
                  method = "exact",
                  estimand = "ATC"
                  )
@@ -101,7 +100,7 @@ fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + em
 - マッチング結果の表示
 
 ```{r}
-summary(fit.m)
+fit.m
 ```
 
 - Sample sizesにて、マッチングできなかったサンプル数（985のコントロールグループ中、667サンプルがマッチングできなかった）が確認できる
@@ -130,7 +129,7 @@ df <- match.data(fit.m)
   - 新たに作成されるweight (defaltではweights)を用いた、加重推定で実装
 
 ```{r}
-lm_robust(visits ~ insurance,
+lm_robust(log(wage) ~ occupation,
           df,
           weights = weights)
 ```
@@ -143,8 +142,8 @@ lm_robust(visits ~ insurance,
   - 連続変数をカテゴリー変数化することで、マッチングできるサンプルサイズを増やすことが期待できる
 
 ```{r}
-fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + employed + income,
-                 data = raw,
+fit.m <- matchit(occupation ~ education + south + smsa + gender + ethnicity + industry + weeks,
+                 data = PSID1982,
                  method = "cem",
                  estimand = "ATC")
 ```
@@ -152,7 +151,7 @@ fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + em
 - マッチング結果
 
 ```{r}
-summary(fit.m)
+fit.m
 ```
 
 - 可視化
@@ -170,7 +169,7 @@ fit.m |>
 ```{r}
 df <- match.data(fit.m)
 
-lm_robust(visits ~ insurance + region + age + afam + gender + school+ married + employed + income,
+lm_robust(log(wage) ~ occupation + education + south + smsa + gender + ethnicity + industry + weeks,
           df,
           weights = weights)
 ```
@@ -199,8 +198,8 @@ $$p_d(X)\equiv \Pr[D=d|X]$$
   -　ロジットにて傾向スコアを推定
 
 ```{r}
-fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + employed + income,
-                 data = raw,
+fit.m <- matchit(occupation ~ education + south + smsa + gender + ethnicity + industry + weeks,
+                 data = PSID1982,
                  method = "subclass",
                  estimand = "ATC"
                  )
@@ -209,7 +208,7 @@ fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + em
 - マッチング結果
 
 ```{r}
-summary(fit.m)
+fit.m
 ```
 
 - マッチング結果の図示
@@ -225,7 +224,7 @@ fit.m |>
 ```{r}
 df <- match.data(fit.m) # マッチング結果を含んだ
 
-lm_robust(visits ~ insurance + region + age + afam + gender + school+ married + employed,
+lm_robust(log(wage) ~ occupation + education + south + smsa + gender + ethnicity + industry + weeks,
           df,
           weights = weights)
 ```
@@ -240,8 +239,8 @@ lm_robust(visits ~ insurance + region + age + afam + gender + school+ married + 
   - デフォルトでは、Replacement無しのマッチングを行う
 
 ```{r}
-fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + employed + income,
-                 data = raw,
+fit.m <- matchit(occupation ~ education + south + smsa + gender + ethnicity + industry + weeks,
+                 data = PSID1982,
                  method = "nearest",
                  estimand = "ATC"
                  )
@@ -250,7 +249,7 @@ fit.m <- matchit(insurance ~ region + age + afam + gender + school+ married + em
 - マッチング結果
 
 ```{r}
-summary(fit.m)
+fit.m
 ```
 
 
@@ -269,146 +268,8 @@ fit.m |>
 ```{r}
 df <- match.data(fit.m) # マッチング結果を含んだ
 
-lm_robust(visits ~ insurance + region + age + afam + gender + school+ married + employed + income,
+lm_robust(log(wage) ~ occupation + education + south + smsa + gender + ethnicity + industry + weeks,
           df,
           clusters = subclass,
           weights = weights)
 ```
-
-## 付録：推定結果の保存と表示 {#appendix}
-
-### 推計結果表
-
-- tidy関数により推定結果data.frameに変化することで、kable関数(knitrパッケージ)による推計結果表の整形、geom_pointrange関数による可視化が可能
-
-- 点推定値(estimate)、標準誤差(std.error)のみを残した推計結果表
-
-```{r}
-library(knitr)
-
-lm_robust(visits ~ insurance + region + age + afam + gender + school,
-            data = raw
-            ) |> 
-  tidy() |> 
-  select(term, estimate, std.error) |> 
-  kable(digits = 2)
-```
-
-```{r}
-lm_robust(visits ~ insurance + region + age + afam + gender + school,
-            data = raw
-            ) |> 
-  tidy() |> 
-  select(term, estimate, std.error) |> 
-  filter(term == "insuranceyes") |> 
-  kable(digits = 2)
-```
-
-
-### Dot-and-Whisker plotによる可視化
-
-- Dot-and-Whisker図により点推定量と信頼区間を可視化
-
-```{r}
-lm_robust(visits ~ insurance + region + age + afam + gender + school,
-            data = raw) |> 
-  tidy() |> 
-  filter(term != "(Intercept)"
-         ) |> 
-  ggplot(aes(y = term,
-             x = estimate,
-             xmin = conf.low,
-             xmax = conf.high)
-         ) +
-  geom_pointrange() +
-  geom_vline(xintercept = 0)
-```
-
-
-### サブサンプル分析結果の整理と可視化
-
-- 条件付き平均効果$=E[Y_i(d)-Y_i(d')|X_i=x]$
-
-  - 因果効果の異質性を議論する上で、有力な要約値
-  
-  - 少数の$x$を分析者が事前設定する場合、$x$についてサブサンプルを作成し、推定すればOK
-  
-- tidyverseパッケージに含まれるnest/unnest関数を用いれば、整理したサブサンプル分析が可能でかつ、容易に可視化/表化できる
-
-  - 推定結果を入子リスト形式に保存し、通常のデータフレーム形式に展開、可視化/表化する手順踏む
-  
-  - 関数をリストの構成要素に逐次適用する汎関数(map)を利用することで、同じデータフレーム内に結果を保存できる
-  
-- 以下では"region"ごとに条件付き平均効果を推定する
-
-```{r}
-regression <-
-  function(df){
-    lm_robust(visits ~ insurance + age + afam + gender + school + income + employed + married,
-              data = df) |> 
-      tidy() |> 
-      filter(term == "insuranceyes")
-  } # 推計し、関心のあるパラメータのみからなるデータフレーム化する関数
-
-result <- 
-  raw |> 
-  group_by(region) |> # regoinごとにサブグループ化
-  nest() |> # regionごとに入子データを作成
-  mutate(model = map(data,regression)) |> # 推定し、モデルとして結果をほぞpン
-  unnest() |> # 入子構造を解消
-  distinct(region,
-           estimate,
-           conf.low,
-           conf.high) # regionごとの結果表を作成
-```
-
-- データフレームなので、容易に可視化できる
-
-```{r}
-result |> 
-  ggplot(aes(x = estimate,
-             y = region,
-             xmin = conf.low,
-             xmax = conf.high)
-         ) +
-  geom_pointrange() +
-  geom_vline(xintercept = 0)
-```
-
-
-### 複数の推定結果の整理と可視化
-
-- listで保存し、data.frameに展開、という手順はより一般に複数の推定結果を整理することに使える
-
-```{r}
-list <- list() # 空のリストを作成
-
-list[[1]] <- 
-  lm_robust(visits ~ insurance + age + afam + gender + school + income + employed + married +region,
-            data = raw) |> 
-  tidy() |> 
-  filter(term == "insuranceyes") # 推定結果をリストに保存
-
-list[[2]] <- 
-  lm_robust(nvisits ~ insurance + age + afam + gender + school + income + employed + married +region,
-            data = raw) |> 
-  tidy() |> 
-  filter(term == "insuranceyes") # 別の結果を保存
-
-names(list) <- c("visits","nvisits") # 名づけ
-
-result <-
-  enframe(list) |> 
-  unnest() # データフレーム化
-
-result |> 
-  ggplot(aes(y = name,
-             x = estimate,
-             xmin = conf.low,
-             xmax = conf.high
-             )
-         ) +
-  geom_pointrange() # 可視化
-```
-
-

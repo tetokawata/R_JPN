@@ -1,14 +1,4 @@
-# 準備 {#intro}
-
-- 本ページでは、tidyverseパッケージの利用を前提とし、pipe演算子を用いたコード例を示す
-
-## tidyverse
-
-- データ整備・可視化等の関数群を提供する（メタ）パッケージ
-
-  - [公式ページ](https://www.tidyverse.org/learn/)
-
-## nativeなpipe演算子
+# パイプ演算子 {#pipe}
 
 - R version 4.1からpipe演算子が、追加パッケージなしで利用可能になった
 
@@ -34,3 +24,4 @@ hist(n)　# nを用いてヒストグラムを描画
 rnorm(100) |> 
   hist()
 ```
+

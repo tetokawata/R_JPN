@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 準備 | Rによる比較・予測・因果推論入門 ver0.1</title>
+  <title>Chapter 1 概念整理 | Rによる比較・予測・因果推論入門 ver0.2</title>
   <meta name="description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
-  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 準備 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta property="og:title" content="Chapter 1 概念整理 | Rによる比較・予測・因果推論入門 ver0.2" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 準備 | Rによる比較・予測・因果推論入門 ver0.1" />
+  <meta name="twitter:title" content="Chapter 1 概念整理 | Rによる比較・予測・因果推論入門 ver0.2" />
   
   <meta name="twitter:description" content="Rによる比較、予測、因果推論についての簡単な紹介です" />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2021-09-24" />
+<meta name="date" content="2022-02-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,9 +32,10 @@
   
   
 <link rel="prev" href="index.html"/>
-<link rel="next" href="データ整備.html"/>
-<script src="libs/header-attrs-2.10/header-attrs.js"></script>
+<link rel="next" href="prediction.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -42,7 +43,6 @@
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
 
 
 
@@ -160,114 +160,109 @@ div.csl-indent {
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>はじめに</a></li>
-<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 準備</a>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 概念整理</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#tidyverse"><i class="fa fa-check"></i><b>1.1</b> tidyverse</a></li>
-<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#nativeなpipe演算子"><i class="fa fa-check"></i><b>1.2</b> nativeなpipe演算子</a></li>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#推定のゴール"><i class="fa fa-check"></i><b>1.1</b> 推定のゴール</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#応用方法"><i class="fa fa-check"></i><b>1.2</b> 応用方法</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>2</b> データ整備</a>
+<li class="chapter" data-level="2" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>2</b> 予測</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="データ整備.html"><a href="データ整備.html#パッケージ-データ"><i class="fa fa-check"></i><b>2.1</b> パッケージ &amp; データ</a></li>
-<li class="chapter" data-level="2.2" data-path="データ整備.html"><a href="データ整備.html#mutate"><i class="fa fa-check"></i><b>2.2</b> 新しい変数の作成</a></li>
-<li class="chapter" data-level="2.3" data-path="データ整備.html"><a href="データ整備.html#select"><i class="fa fa-check"></i><b>2.3</b> 変数の限定</a></li>
-<li class="chapter" data-level="2.4" data-path="データ整備.html"><a href="データ整備.html#filter"><i class="fa fa-check"></i><b>2.4</b> サンプルの除外</a></li>
-<li class="chapter" data-level="2.5" data-path="データ整備.html"><a href="データ整備.html#gtsummary"><i class="fa fa-check"></i><b>2.5</b> 記述統計表の作成</a></li>
+<li class="chapter" data-level="2.1" data-path="prediction.html"><a href="prediction.html#purpose"><i class="fa fa-check"></i><b>2.1</b> 問題設定</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="prediction.html"><a href="prediction.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>2.1.1</b> Bias-Variance tradeoff</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="可視化.html"><a href="可視化.html"><i class="fa fa-check"></i><b>3</b> 可視化</a>
+<li class="chapter" data-level="2.2" data-path="prediction.html"><a href="prediction.html#パッケージ-データ"><i class="fa fa-check"></i><b>2.2</b> パッケージ &amp; データ</a></li>
+<li class="chapter" data-level="2.3" data-path="prediction.html"><a href="prediction.html#samplesplit"><i class="fa fa-check"></i><b>2.3</b> 事前準備</a></li>
+<li class="chapter" data-level="2.4" data-path="prediction.html"><a href="prediction.html#OLS"><i class="fa fa-check"></i><b>2.4</b> 線形予測モデル</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="可視化.html"><a href="可視化.html#パッケージ-データ-1"><i class="fa fa-check"></i><b>3.1</b> パッケージ &amp; データ</a></li>
-<li class="chapter" data-level="3.2" data-path="可視化.html"><a href="可視化.html#category"><i class="fa fa-check"></i><b>3.2</b> 連続-カテゴリのケース</a>
-<ul>
-<li class="chapter" data-level="3.2.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム"><i class="fa fa-check"></i><b>3.2.1</b> ヒストグラム</a></li>
-<li class="chapter" data-level="3.2.2" data-path="可視化.html"><a href="可視化.html#密度"><i class="fa fa-check"></i><b>3.2.2</b> 密度</a></li>
-<li class="chapter" data-level="3.2.3" data-path="可視化.html"><a href="可視化.html#boxplot"><i class="fa fa-check"></i><b>3.2.3</b> Boxplot</a></li>
+<li class="chapter" data-level="2.4.1" data-path="prediction.html"><a href="prediction.html#ols"><i class="fa fa-check"></i><b>2.4.1</b> OLS</a></li>
+<li class="chapter" data-level="2.4.2" data-path="prediction.html"><a href="prediction.html#lasso"><i class="fa fa-check"></i><b>2.4.2</b> LASSO</a></li>
+<li class="chapter" data-level="2.4.3" data-path="prediction.html"><a href="prediction.html#ridge"><i class="fa fa-check"></i><b>2.4.3</b> Ridge</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="可視化.html"><a href="可視化.html#continous"><i class="fa fa-check"></i><b>3.3</b> 連続-連続のケース</a>
+<li class="chapter" data-level="2.5" data-path="prediction.html"><a href="prediction.html#Tree"><i class="fa fa-check"></i><b>2.5</b> 予測木モデル</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="可視化.html"><a href="可視化.html#散布図"><i class="fa fa-check"></i><b>3.3.1</b> 散布図</a></li>
-<li class="chapter" data-level="3.3.2" data-path="可視化.html"><a href="可視化.html#ヒートマップ"><i class="fa fa-check"></i><b>3.3.2</b> ヒートマップ</a></li>
+<li class="chapter" data-level="2.5.1" data-path="prediction.html"><a href="prediction.html#tree"><i class="fa fa-check"></i><b>2.5.1</b> Tree</a></li>
+<li class="chapter" data-level="2.5.2" data-path="prediction.html"><a href="prediction.html#random-forest"><i class="fa fa-check"></i><b>2.5.2</b> Random Forest</a></li>
 </ul></li>
+<li class="chapter" data-level="2.6" data-path="prediction.html"><a href="prediction.html#stacking"><i class="fa fa-check"></i><b>2.6</b> Stacking</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>4</b> 予測</a>
+<li class="chapter" data-level="3" data-path="unique.html"><a href="unique.html"><i class="fa fa-check"></i><b>3</b> 線形モデルの推定</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="prediction.html"><a href="prediction.html#purpose"><i class="fa fa-check"></i><b>4.1</b> 問題設定</a>
+<li class="chapter" data-level="3.1" data-path="unique.html"><a href="unique.html#パッケージ-データ-1"><i class="fa fa-check"></i><b>3.1</b> パッケージ &amp; データ</a></li>
+<li class="chapter" data-level="3.2" data-path="unique.html"><a href="unique.html#appliedOLS"><i class="fa fa-check"></i><b>3.2</b> 線形モデルの推定</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="prediction.html"><a href="prediction.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>4.1.1</b> Bias-Variance tradeoff</a></li>
+<li class="chapter" data-level="3.2.1" data-path="unique.html"><a href="unique.html#rctデータへの応用"><i class="fa fa-check"></i><b>3.2.1</b> RCTデータへの応用</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="prediction.html"><a href="prediction.html#パッケージ-データ-2"><i class="fa fa-check"></i><b>4.2</b> パッケージ &amp; データ</a></li>
-<li class="chapter" data-level="4.3" data-path="prediction.html"><a href="prediction.html#samplesplit"><i class="fa fa-check"></i><b>4.3</b> 事前準備</a></li>
-<li class="chapter" data-level="4.4" data-path="prediction.html"><a href="prediction.html#OLS"><i class="fa fa-check"></i><b>4.4</b> OLS</a></li>
-<li class="chapter" data-level="4.5" data-path="prediction.html"><a href="prediction.html#LASSO"><i class="fa fa-check"></i><b>4.5</b> LASSO</a></li>
-<li class="chapter" data-level="4.6" data-path="prediction.html"><a href="prediction.html#Ridge"><i class="fa fa-check"></i><b>4.6</b> Ridge</a></li>
-<li class="chapter" data-level="4.7" data-path="prediction.html"><a href="prediction.html#Tree"><i class="fa fa-check"></i><b>4.7</b> Tree</a></li>
-<li class="chapter" data-level="4.8" data-path="prediction.html"><a href="prediction.html#Bagging"><i class="fa fa-check"></i><b>4.8</b> Random Forest</a></li>
-<li class="chapter" data-level="4.9" data-path="prediction.html"><a href="prediction.html#stacking"><i class="fa fa-check"></i><b>4.9</b> Stacking</a></li>
-</ul></li>
-<li class="chapter" data-level="5" data-path="比較因果推論.html"><a href="比較因果推論.html"><i class="fa fa-check"></i><b>5</b> 比較・因果推論</a>
+<li class="chapter" data-level="3.3" data-path="unique.html"><a href="unique.html#matching"><i class="fa fa-check"></i><b>3.3</b> マッチング法による修正</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="比較因果推論.html"><a href="比較因果推論.html#comparison"><i class="fa fa-check"></i><b>5.1</b> 比較</a>
-<ul>
-<li class="chapter" data-level="5.1.1" data-path="比較因果推論.html"><a href="比較因果推論.html#問題設定"><i class="fa fa-check"></i><b>5.1.1</b> 問題設定</a></li>
-<li class="chapter" data-level="5.1.2" data-path="比較因果推論.html"><a href="比較因果推論.html#推定上の問題"><i class="fa fa-check"></i><b>5.1.2</b> 推定上の問題</a></li>
-</ul></li>
-<li class="chapter" data-level="5.2" data-path="比較因果推論.html"><a href="比較因果推論.html#causal"><i class="fa fa-check"></i><b>5.2</b> 因果効果</a>
-<ul>
-<li class="chapter" data-level="5.2.1" data-path="比較因果推論.html"><a href="比較因果推論.html#問題設定-1"><i class="fa fa-check"></i><b>5.2.1</b> 問題設定</a></li>
-<li class="chapter" data-level="5.2.2" data-path="比較因果推論.html"><a href="比較因果推論.html#識別の問題"><i class="fa fa-check"></i><b>5.2.2</b> 識別の問題</a></li>
-<li class="chapter" data-level="5.2.3" data-path="比較因果推論.html"><a href="比較因果推論.html#推定の問題"><i class="fa fa-check"></i><b>5.2.3</b> 推定の問題</a></li>
+<li class="chapter" data-level="3.3.1" data-path="unique.html"><a href="unique.html#exact-matching"><i class="fa fa-check"></i><b>3.3.1</b> Exact matching</a></li>
+<li class="chapter" data-level="3.3.2" data-path="unique.html"><a href="unique.html#coarsened-exact-matching"><i class="fa fa-check"></i><b>3.3.2</b> Coarsened exact matching</a></li>
+<li class="chapter" data-level="3.3.3" data-path="unique.html"><a href="unique.html#propensity-score-with-subclassification"><i class="fa fa-check"></i><b>3.3.3</b> Propensity score with subclassification</a></li>
+<li class="chapter" data-level="3.3.4" data-path="unique.html"><a href="unique.html#nearest-neighbor-matching"><i class="fa fa-check"></i><b>3.3.4</b> Nearest neighbor matching</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="unique.html"><a href="unique.html"><i class="fa fa-check"></i><b>6</b> 線形モデルの推定</a>
+<li class="chapter" data-level="4" data-path="general.html"><a href="general.html"><i class="fa fa-check"></i><b>4</b> 平均差の推定</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="unique.html"><a href="unique.html#パッケージ-データ-3"><i class="fa fa-check"></i><b>6.1</b> パッケージ &amp; データ</a></li>
-<li class="chapter" data-level="6.2" data-path="unique.html"><a href="unique.html#appliedOLS"><i class="fa fa-check"></i><b>6.2</b> 線形モデルの推定</a>
+<li class="chapter" data-level="4.1" data-path="general.html"><a href="general.html#概念整理"><i class="fa fa-check"></i><b>4.1</b> 概念整理</a>
 <ul>
-<li class="chapter" data-level="6.2.1" data-path="unique.html"><a href="unique.html#rctデータへの応用"><i class="fa fa-check"></i><b>6.2.1</b> RCTデータへの応用</a></li>
+<li class="chapter" data-level="4.1.1" data-path="general.html"><a href="general.html#robinson推定"><i class="fa fa-check"></i><b>4.1.1</b> Robinson推定</a></li>
+<li class="chapter" data-level="4.1.2" data-path="general.html"><a href="general.html#argument-inverse-propensity-score"><i class="fa fa-check"></i><b>4.1.2</b> Argument Inverse Propensity Score</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="unique.html"><a href="unique.html#matching"><i class="fa fa-check"></i><b>6.3</b> マッチング法による修正</a>
+<li class="chapter" data-level="4.2" data-path="general.html"><a href="general.html#パッケージ"><i class="fa fa-check"></i><b>4.2</b> パッケージ</a></li>
+<li class="chapter" data-level="4.3" data-path="general.html"><a href="general.html#データ"><i class="fa fa-check"></i><b>4.3</b> データ</a></li>
+<li class="chapter" data-level="4.4" data-path="general.html"><a href="general.html#robinsons推定-superlearner"><i class="fa fa-check"></i><b>4.4</b> Robinsons推定 (SuperLearner)</a></li>
+<li class="chapter" data-level="4.5" data-path="general.html"><a href="general.html#robinson推定-doubleml"><i class="fa fa-check"></i><b>4.5</b> Robinson推定 (DoubleML)</a></li>
+<li class="chapter" data-level="4.6" data-path="general.html"><a href="general.html#aipw-aipw"><i class="fa fa-check"></i><b>4.6</b> AIPW (AIPW)</a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="unique.html"><a href="unique.html#exact-matching"><i class="fa fa-check"></i><b>6.3.1</b> Exact matching</a></li>
-<li class="chapter" data-level="6.3.2" data-path="unique.html"><a href="unique.html#coarsened-exact-matching"><i class="fa fa-check"></i><b>6.3.2</b> Coarsened exact matching</a></li>
-<li class="chapter" data-level="6.3.3" data-path="unique.html"><a href="unique.html#propensity-score-with-subclassification"><i class="fa fa-check"></i><b>6.3.3</b> Propensity score with subclassification</a></li>
-<li class="chapter" data-level="6.3.4" data-path="unique.html"><a href="unique.html#nearest-neighbor-matching"><i class="fa fa-check"></i><b>6.3.4</b> Nearest neighbor matching</a></li>
-</ul></li>
-<li class="chapter" data-level="6.4" data-path="unique.html"><a href="unique.html#appendix"><i class="fa fa-check"></i><b>6.4</b> 付録：推定結果の保存と表示</a>
-<ul>
-<li class="chapter" data-level="6.4.1" data-path="unique.html"><a href="unique.html#推計結果表"><i class="fa fa-check"></i><b>6.4.1</b> 推計結果表</a></li>
-<li class="chapter" data-level="6.4.2" data-path="unique.html"><a href="unique.html#dot-and-whisker-plotによる可視化"><i class="fa fa-check"></i><b>6.4.2</b> Dot-and-Whisker plotによる可視化</a></li>
-<li class="chapter" data-level="6.4.3" data-path="unique.html"><a href="unique.html#サブサンプル分析結果の整理と可視化"><i class="fa fa-check"></i><b>6.4.3</b> サブサンプル分析結果の整理と可視化</a></li>
-<li class="chapter" data-level="6.4.4" data-path="unique.html"><a href="unique.html#複数の推定結果の整理と可視化"><i class="fa fa-check"></i><b>6.4.4</b> 複数の推定結果の整理と可視化</a></li>
+<li class="chapter" data-level="4.6.1" data-path="general.html"><a href="general.html#balance-check"><i class="fa fa-check"></i><b>4.6.1</b> Balance check</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="general.html"><a href="general.html"><i class="fa fa-check"></i><b>7</b> 部分線形モデルの推定</a>
+<li class="chapter" data-level="5" data-path="hetero.html"><a href="hetero.html"><i class="fa fa-check"></i><b>5</b> 条件付き平均効果関数の推定</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="general.html"><a href="general.html#パッケージ"><i class="fa fa-check"></i><b>7.1</b> パッケージ</a></li>
-<li class="chapter" data-level="7.2" data-path="general.html"><a href="general.html#データ"><i class="fa fa-check"></i><b>7.2</b> データ</a></li>
-<li class="chapter" data-level="7.3" data-path="general.html"><a href="general.html#double-selection-rlassoeffect-hdm"><i class="fa fa-check"></i><b>7.3</b> Double selection: rlassoEffect (hdm)</a></li>
-<li class="chapter" data-level="7.4" data-path="general.html"><a href="general.html#double-machine-learning-doubleml"><i class="fa fa-check"></i><b>7.4</b> Double Machine Learning (DoubleML)</a></li>
+<li class="chapter" data-level="5.1" data-path="hetero.html"><a href="hetero.html#問題設定"><i class="fa fa-check"></i><b>5.1</b> 問題設定</a></li>
+<li class="chapter" data-level="5.2" data-path="hetero.html"><a href="hetero.html#パッケージ-1"><i class="fa fa-check"></i><b>5.2</b> パッケージ</a></li>
+<li class="chapter" data-level="5.3" data-path="hetero.html"><a href="hetero.html#データ-1"><i class="fa fa-check"></i><b>5.3</b> データ</a></li>
+<li class="chapter" data-level="5.4" data-path="hetero.html"><a href="hetero.html#casual-forest"><i class="fa fa-check"></i><b>5.4</b> Casual Forest</a></li>
+<li class="chapter" data-level="5.5" data-path="hetero.html"><a href="hetero.html#best-linear-predictors"><i class="fa fa-check"></i><b>5.5</b> Best linear predictors</a></li>
+<li class="chapter" data-level="5.6" data-path="hetero.html"><a href="hetero.html#distribution-of-predicted-individual-effects"><i class="fa fa-check"></i><b>5.6</b> Distribution of predicted individual effects</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="hetero.html"><a href="hetero.html"><i class="fa fa-check"></i><b>8</b> 条件付き平均効果関数の推定</a>
+<li class="chapter" data-level="6" data-path="panel.html"><a href="panel.html"><i class="fa fa-check"></i><b>6</b> Panel data</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="hetero.html"><a href="hetero.html#パッケージ-1"><i class="fa fa-check"></i><b>8.1</b> パッケージ</a></li>
-<li class="chapter" data-level="8.2" data-path="hetero.html"><a href="hetero.html#データ-1"><i class="fa fa-check"></i><b>8.2</b> データ</a></li>
-<li class="chapter" data-level="8.3" data-path="hetero.html"><a href="hetero.html#casual-forest"><i class="fa fa-check"></i><b>8.3</b> Casual Forest</a></li>
-<li class="chapter" data-level="8.4" data-path="hetero.html"><a href="hetero.html#distribution-of-predicted-individual-effects"><i class="fa fa-check"></i><b>8.4</b> Distribution of predicted individual effects</a></li>
-<li class="chapter" data-level="8.5" data-path="hetero.html"><a href="hetero.html#best-linear-predictors"><i class="fa fa-check"></i><b>8.5</b> Best linear predictors</a></li>
-<li class="chapter" data-level="8.6" data-path="hetero.html"><a href="hetero.html#tree-presentation"><i class="fa fa-check"></i><b>8.6</b> Tree presentation</a></li>
+<li class="chapter" data-level="6.1" data-path="panel.html"><a href="panel.html#パッケージ-2"><i class="fa fa-check"></i><b>6.1</b> パッケージ</a></li>
+<li class="chapter" data-level="6.2" data-path="panel.html"><a href="panel.html#data"><i class="fa fa-check"></i><b>6.2</b> Data</a></li>
+<li class="chapter" data-level="6.3" data-path="panel.html"><a href="panel.html#識別-pallarel-trend-in-the-two-by-two-case"><i class="fa fa-check"></i><b>6.3</b> 識別: Pallarel trend in the two-by-two case</a></li>
+<li class="chapter" data-level="6.4" data-path="panel.html"><a href="panel.html#推定-two-way-fixed-effect-model"><i class="fa fa-check"></i><b>6.4</b> 推定: Two-way fixed effect model</a></li>
+<li class="chapter" data-level="6.5" data-path="panel.html"><a href="panel.html#推定weighted-two-way-fixed-effect-model"><i class="fa fa-check"></i><b>6.5</b> 推定:Weighted two-way fixed effect model</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="RD.html"><a href="RD.html"><i class="fa fa-check"></i><b>9</b> Regression-discontinuity</a>
+<li class="chapter" data-level="7" data-path="RD.html"><a href="RD.html"><i class="fa fa-check"></i><b>7</b> Regression-discontinuity</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="RD.html"><a href="RD.html#motivation"><i class="fa fa-check"></i><b>9.1</b> 問題意識</a></li>
-<li class="chapter" data-level="9.2" data-path="RD.html"><a href="RD.html#パッケージ-データ-4"><i class="fa fa-check"></i><b>9.2</b> パッケージ &amp; データ</a></li>
-<li class="chapter" data-level="9.3" data-path="RD.html"><a href="RD.html#sharp"><i class="fa fa-check"></i><b>9.3</b> Shap disconiniuity</a></li>
+<li class="chapter" data-level="7.1" data-path="RD.html"><a href="RD.html#motivation"><i class="fa fa-check"></i><b>7.1</b> 問題意識</a></li>
+<li class="chapter" data-level="7.2" data-path="RD.html"><a href="RD.html#パッケージ-データ-2"><i class="fa fa-check"></i><b>7.2</b> パッケージ &amp; データ</a></li>
+<li class="chapter" data-level="7.3" data-path="RD.html"><a href="RD.html#sharp"><i class="fa fa-check"></i><b>7.3</b> Shap disconiniuity</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="panel.html"><a href="panel.html"><i class="fa fa-check"></i><b>10</b> Panel data</a>
+<li class="chapter" data-level="8" data-path="pipe.html"><a href="pipe.html"><i class="fa fa-check"></i><b>8</b> パイプ演算子</a></li>
+<li class="chapter" data-level="9" data-path="データ整備.html"><a href="データ整備.html"><i class="fa fa-check"></i><b>9</b> データ整備</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="panel.html"><a href="panel.html#パッケージ-2"><i class="fa fa-check"></i><b>10.1</b> パッケージ</a></li>
-<li class="chapter" data-level="10.2" data-path="panel.html"><a href="panel.html#data"><i class="fa fa-check"></i><b>10.2</b> Data</a></li>
-<li class="chapter" data-level="10.3" data-path="panel.html"><a href="panel.html#識別-pallarel-trend-in-the-two-by-two-case"><i class="fa fa-check"></i><b>10.3</b> 識別: Pallarel trend in the two-by-two case</a></li>
-<li class="chapter" data-level="10.4" data-path="panel.html"><a href="panel.html#推定-two-way-fixed-effect-model"><i class="fa fa-check"></i><b>10.4</b> 推定: Two-way fixed effect model</a></li>
-<li class="chapter" data-level="10.5" data-path="panel.html"><a href="panel.html#推定weighted-two-way-fixed-effect-model"><i class="fa fa-check"></i><b>10.5</b> 推定:Weighted two-way fixed effect model</a></li>
+<li class="chapter" data-level="9.1" data-path="データ整備.html"><a href="データ整備.html#パッケージ-データ-3"><i class="fa fa-check"></i><b>9.1</b> パッケージ &amp; データ</a></li>
+<li class="chapter" data-level="9.2" data-path="データ整備.html"><a href="データ整備.html#mutate"><i class="fa fa-check"></i><b>9.2</b> 新しい変数の作成</a></li>
+<li class="chapter" data-level="9.3" data-path="データ整備.html"><a href="データ整備.html#select"><i class="fa fa-check"></i><b>9.3</b> 変数の限定</a></li>
+<li class="chapter" data-level="9.4" data-path="データ整備.html"><a href="データ整備.html#filter"><i class="fa fa-check"></i><b>9.4</b> サンプルの除外</a></li>
+<li class="chapter" data-level="9.5" data-path="データ整備.html"><a href="データ整備.html#gtsummary"><i class="fa fa-check"></i><b>9.5</b> 記述統計表の作成</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="可視化.html"><a href="可視化.html"><i class="fa fa-check"></i><b>10</b> 可視化</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="可視化.html"><a href="可視化.html#パッケージ-データ-4"><i class="fa fa-check"></i><b>10.1</b> パッケージ &amp; データ</a></li>
+<li class="chapter" data-level="10.2" data-path="可視化.html"><a href="可視化.html#category"><i class="fa fa-check"></i><b>10.2</b> 連続-カテゴリのケース</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="可視化.html"><a href="可視化.html#ヒストグラム"><i class="fa fa-check"></i><b>10.2.1</b> ヒストグラム</a></li>
+<li class="chapter" data-level="10.2.2" data-path="可視化.html"><a href="可視化.html#密度"><i class="fa fa-check"></i><b>10.2.2</b> 密度</a></li>
+<li class="chapter" data-level="10.2.3" data-path="可視化.html"><a href="可視化.html#boxplot"><i class="fa fa-check"></i><b>10.2.3</b> Boxplot</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="可視化.html"><a href="可視化.html#continous"><i class="fa fa-check"></i><b>10.3</b> 連続-連続のケース</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="可視化.html"><a href="可視化.html#散布図"><i class="fa fa-check"></i><b>10.3.1</b> 散布図</a></li>
+<li class="chapter" data-level="10.3.2" data-path="可視化.html"><a href="可視化.html#ヒートマップ"><i class="fa fa-check"></i><b>10.3.2</b> ヒートマップ</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -282,7 +277,7 @@ div.csl-indent {
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Rによる比較・予測・因果推論入門 ver0.1</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Rによる比較・予測・因果推論入門 ver0.2</a>
           </h1>
         </div>
 
@@ -291,41 +286,51 @@ div.csl-indent {
 
             <section class="normal" id="section-">
 <div id="intro" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> 準備</h1>
+<h1><span class="header-section-number">Chapter 1</span> 概念整理</h1>
 <ul>
-<li>本ページでは、tidyverseパッケージの利用を前提とし、pipe演算子を用いたコード例を示す</li>
+<li><p>本稿では条件付き母平均関数の推定とその応用に焦点を絞る</p></li>
+<li><p>条件付き母平均関数は以下で定義される</p></li>
 </ul>
-<div id="tidyverse" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> tidyverse</h2>
+<p><span class="math display">\[\mu(w)=E[Y_i|W_i=w]\]</span></p>
 <ul>
-<li><p>データ整備・可視化等の関数群を提供する（メタ）パッケージ</p>
+<li>一般にデータから、条件付き母平均関数を”完璧”に推定することは不可能である。このため”妥協を伴う”ゴールを適切に設定する必要がある</li>
+</ul>
+<div id="推定のゴール" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> 推定のゴール</h2>
 <ul>
-<li><a href="https://www.tidyverse.org/learn/">公式ページ</a></li>
+<li><p>大きく二つのゴールがある</p>
+<ul>
+<li><p>条件付き母平均関数 <span class="math inline">\(\mu(w)\)</span> の近似： 平均二乗誤差 <span class="math inline">\(E[(\mu(w) - f(w))^2]\)</span> を可能な限り削減する様に <span class="math inline">\(f(w)\)</span> を推定</p></li>
+<li><p>関心のある変数 <span class="math inline">\(d\)</span> について、記述モデルを推定: <span class="math inline">\(\tau(d,d&#39;,x)=\mu(d,x)-\mu(d&#39;,x)\)</span> の重要な”特徴”を捉える単純化されたモデルを推定する</p></li>
 </ul></li>
 </ul>
 </div>
-<div id="nativeなpipe演算子" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> nativeなpipe演算子</h2>
+<div id="応用方法" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> 応用方法</h2>
 <ul>
-<li><p>R version 4.1からpipe演算子が、追加パッケージなしで利用可能になった</p>
+<li><p>推定結果は以下のように応用できる</p></li>
+<li><p><span class="math inline">\(f(w)\)</span> の応用:</p>
 <ul>
-<li><p>Tools -&gt; Global option -&gt; Code -&gt; “Use native pipe operator” をチェックする</p></li>
-<li><p>Ctr + Shift + mがショートカット</p></li>
-<li><p>現状、magrittrパッケージが提供するpipe (%&gt;%)に比べて、機能が限定されている</p></li>
+<li><span class="math inline">\(Y\)</span> の予測：データと同じ母集団から抽出された新たにサンプリ <span class="math inline">\(i\)</span> について、 <span class="math inline">\(W_i\)</span> から <span class="math inline">\(Y_i\)</span> を予測するる。予測精度を平均二乗誤差で測定するのであれば母平均関数 <span class="math inline">\(\mu(w)\)</span> が最善の予測関数となり、その近似関数 <span class="math inline">\(f(w)\)</span> が現実的な予測値となる</li>
 </ul></li>
-<li><p>pipe演算子：二つの入力X1,X2から出力Yを得る関数fについて、pipe演算子を用いると、Y &lt;- X1 |&gt; f(X2)と書き換えられる</p></li>
-<li><p>pipe演算子を使わない場合、ある出力結果を入力として用いるためには、複数のobjectを作成する必要があり煩雑</p></li>
-</ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="intro.html#cb1-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>) <span class="co"># 標準正規分布から100個値を取得し、nと名付ける</span></span>
-<span id="cb1-2"><a href="intro.html#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="intro.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(n)　<span class="co"># nを用いてヒストグラムを描画</span></span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<li><p><span class="math inline">\(\tau(x)\)</span> の応用:</p>
 <ul>
-<li>pipe演算子を使うと以下のようになる</li>
+<li><p><span class="math inline">\(D\)</span> が異なるグループ間での <span class="math inline">\(Y\)</span> についての”格差”：変数<span class="math inline">\(D_i\)</span>の値が異なる集団間において、結果変数<span class="math inline">\(Y_i\)</span>の分布がどの程度異なっているのか、推定する。またこの際に、直接的な関心ではない変数群<span class="math inline">\(X_i\)</span>を”一定”としたもとで、比較したいとする。全ての変数 <span class="math inline">\(W\)</span> を考慮する訳ではないので、 <span class="math inline">\(\tau(d,d&#39;,x)\)</span> を適切に推定する必要がある</p></li>
+<li><p><span class="math inline">\(D\)</span> が <span class="math inline">\(Y\)</span> に与える因果効果：ある集団の変数<span class="math inline">\(D\)</span>を変化させた場合、結果変数<span class="math inline">\(Y\)</span>の分布がどのように変化するのか、因果効果を推定する。</p>
+<ul>
+<li>注意:因果効果を推定する際には、識別を議論する必要がある。 <span class="math inline">\(\tau(d,d&#39;,x)\)</span> は以下の識別の仮定の下で、<span class="math inline">\(X_i=x\)</span> を満たす集団内での平均因果効果と一致する</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="intro.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb2-2"><a href="intro.html#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>()</span></code></pre></div>
-<p><img src="Prediction,-Comparison,-and-Causal-inference-by-R_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(0&lt;\Pr[D_i=d|X_i]&lt;1\)</span>: サブグループにおいても、原因変数の値にバリエーションが存在する。</p></li>
+<li><p><span class="math inline">\(X\)</span>で条件づけた場合、潜在結果関数と原因変数の実現値が独立している<span class="math inline">\(Y_i(d)\perp D_i|X_i=x\)</span></p></li>
+</ol>
+<ul>
+<li><p>十分条件：同じ<span class="math inline">\(X\)</span>グループ内では、<span class="math inline">\(D\)</span>の値がランダムに決定されている</p></li>
+<li><p>上記の仮定は、“selection-on-observable” と呼ばれ、多くの実践で用いられている。 この仮定の下では、<span class="math inline">\(\tau(d,d&#39;,x)\)</span> を適切に推定する必要がある。
+E[Y_i|X_i=x]-_{xc}E[Y_i|X_i=x]$$</p></li>
+</ul></li>
+</ul></li>
+</ul>
 
 </div>
 </div>
@@ -335,11 +340,10 @@ div.csl-indent {
         </div>
       </div>
 <a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="データ整備.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="prediction.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -380,7 +384,7 @@ gitbook.start({
 },
 "download": ["Prediction, Comparison, and Causal inference by R.epub"],
 "search": {
-"engine": "lunr",
+"engine": "fuse",
 "options": null
 },
 "toc": {

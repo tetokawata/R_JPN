@@ -7,21 +7,22 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
-- データと同じ母集団から新しくランダムサンプリングされ、$X$のみが観察できるサンプルについて$Y$の値を予測する。
+- 条件つき母平均 $E[Y|X]$ の近似関数 $f(X)$ を推定する
 
-  - データ分割を用いたモデル評価を行う
+  - $E[(E[Y|X]-f(X))^2]$ を削減
+
+  - データと同じ母集団から新しくランダムサンプリングされた $Y$ についての優れた予測関数
+
+  - データ分割を用いたモデル評価も紹介する
 
 - Chapter \@ref(purpose) : 予測問題の論点を紹介
 
 - Chapter \@ref(samplesplit) : データ分割
 
-- Chapter \@ref(OLS) : 線形モデルをOLSで推定する手法を紹介
+- Chapter \@ref(OLS) : 線形モデルをOLS及び罰則付き回帰(LASSO, Ridge)で推定する手法を紹介
 
-- Chapter \@ref(LASSO)-\@ref(Ridge) : 線形モデルを罰則付き回帰(LASSO, Ridge)で推定する手法を紹介
+- Chapter \@ref(Tree) : 予測木モデル、及びモデル平均加法(Bagging, Random Forest)を紹介
 
-- Chapter \@ref(Tree) : 予測木モデルを推定する手法を紹介
-
-- Chapter \@ref(Bagging) : 予測木モデルをモデル平均加法(Bagging, Random Forest)で推定する手法を紹介
 
 ## 問題設定 {#purpose}
 
@@ -41,7 +42,7 @@ $$MSE = \underbrace{E_{X,Y}[(Y_i-\bar{Y}(X_i))^2]}_{Irreducible\ error}+\underbr
   
   - 最善の予測関数のもとでも削減不可能なエラー(Irreducible error)が存在
   
-  - 予測関数の推定 $=$ Reducible errorの削減 $=$ 条件付き母平均との乖離(MSE)の削減
+  - 予測関数の推定 $=$ Reducible errorの削減を要求 $=$ 条件付き母平均との乖離(MSE)の削減を要求
 
 ### Bias-Variance tradeoff
 
@@ -58,7 +59,7 @@ $$=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E
 
   - 母平均$\bar Y(X_i)$が単純な既知の関数形に従い、かつサンプルサイズが大きい場合、OLS推定された$f(X_i)$は$Bias=0$かつ小さなVarianceを達成する。
   
-  - しかしながら社会科学における多くの応用においては、$\bar Y(X_i)$は未知かつ複雑であることが予想され、その複雑さに対してサンプルサイズが小さいことが想定される。
+  - 社会科学における多くの応用においては、$\bar Y(X_i)$は未知かつ複雑であることが予想され、その複雑さに対してサンプルサイズが小さいことが想定される。
 
   - このような状況では、深刻なBias-Variance tradeoffに直面する。
 
@@ -71,6 +72,7 @@ $$=\underbrace{(E_{Y,X,f(X)}[\bar{Y}(X_i)-\bar{f}(X_i)])^2}_{Bias}+\underbrace{E
   - \@ref{LASSO} - \@ref(RandomForest) で紹介するLASSO/Ridge/Random Forestなどの手法は、bias-variance問題をよりデータ主導型かつ現実的な計算時間の手法で解決することを目指す。
 
 ## パッケージ & データ
+
 - Rによる教師付き学習実装法には、大きく二つの有力な選択肢が存在する
 
   - 個別の推定法を実装するパッケージ (例：LASSO & Ridge $=$ glmnet, Random Forest $=$ ranger) を使用
@@ -94,22 +96,29 @@ library(tidyverse)
 library(AER)
 library(SuperLearner) # 機械学習を実装するメタパッケージ
 library(rpart.plot) # 予測木の可視化
+library(recipes)
 ```
-
-
 
 - データ
 
   - 元データを結果変数、予測変数データに分割する必要がある
 
 ```{r}
-data("NMES1988")
+data("PSID1982")
 
-Y <- NMES1988$emergency # 結果変数
+Y <- PSID1982$wage |> log() # 結果変数
 
-X <- select(NMES1988,
-            -emergency
-            ) # 予測変数
+X <- recipe(~ experience + education + industry + south + smsa + married + union + ethnicity + gender,
+            PSID1982) |> 
+  step_other(all_nominal_predictors(),
+             other = "others") |> 
+  step_unknown(all_nominal_predictors()) |> 
+  step_indicate_na(all_numeric_predictors()) |> 
+  step_impute_median(all_numeric_predictors()) |> 
+  step_dummy(all_nominal_predictors()) |> 
+  step_zv(all_numeric_predictors()) |> 
+  prep() |> 
+  bake(PSID1982)
 
 set.seed(123)
 ```
@@ -126,20 +135,33 @@ group <- sample(1:5, # 1から5までの数字を発生される
 
 - 第1データをテストデータ、2－5データを訓練データとして使用する
 
-## OLS {#OLS}
+## 線形予測モデル {#OLS}
 
 - 線形予測関数$f(X)=\beta_0 + \beta_1X_1+...+\beta_LX_L$を想定
 
-  - $\beta_0,...,\beta_L$を最小二乗法にて推定
+- OLS: $\beta_0,...,\beta_L$を最小二乗法にて推定
   
 $$\min\sum_i (Y_i-f(X))^2$$
 
-- SuperLeanerによる推定と推定されたモデル
+- LASSO推定：線形モデルを以下の最適化問題の解として推定
+
+$$\min\sum_i (Y_i-f(X_i))^2+\underbrace{\lambda\sum_l|\beta_l|}_{Penalty\ term}$$
+
+  - $\lambda$ : チューニングパラメタ、Cross-validationを用いて設定可能
+
+- Ridge推定：線形モデルを以下の最適化問題の解として推定
+
+$$\min\sum_i (Y_i-f(X_i))^2+\underbrace{\lambda\sum_l(\beta_l)^2}_{Penalty\ term}$$
+
+  - $\lambda$ : チューニングパラメタ、Cross-validationを用いて設定可能
+
+### OLS
 
 ```{r}
 fit <-
   SuperLearner(Y = Y[group != 1],
                X = X[group != 1,],
+               newX = X,
                SL.library = c("SL.lm"),
                cvControl = list(V = 20L)
                ) # 推定
@@ -150,7 +172,7 @@ coef(fit$fitLibrary$SL.lm_All$object) # 係数値の表示
 - 元データ全体への予測値の計算
 
 ```{r}
-Y.pred <- predict(fit,X)$pred
+Y.pred <- fit$SL.predict[,1]
 ```
 
 
@@ -160,11 +182,6 @@ Y.pred <- predict(fit,X)$pred
 mean((Y - Y.pred)[group == 1]^2)
 ```
 
-- 訓練データへの適合
-
-```{r}
-mean((Y - Y.pred)[group != 1]^2)
-```
 
 - デフォルトの設定では、訓練データのみを用いた交差検証（10分割）の結果も自動的に計算されている
 
@@ -176,13 +193,7 @@ fit
 
 - Coef $=$ 後述するStackingモデルにおけるOLSによる予測値へのweight
 
-## LASSO {#LASSO}
-
-- LASSO推定：線形モデルを以下の最適化問題の解として推定
-
-$$\min\sum_i (Y_i-f(X_i))^2+\underbrace{\lambda\sum_l|\beta_l|}_{Penalty\ term}$$
-
-  - $\lambda$ : チューニングパラメタ、Cross-validationを用いて設定可能
+### LASSO
 
 - glmentパッケージ[@R-glmnet]を利用
 
@@ -193,6 +204,7 @@ $$\min\sum_i (Y_i-f(X_i))^2+\underbrace{\lambda\sum_l|\beta_l|}_{Penalty\ term}$
 fit <-
   SuperLearner(Y = Y[group != 1],
                X = X[group != 1,],
+               newX = X,
                SL.library = c("SL.glmnet")
                )
 
@@ -202,7 +214,7 @@ coef(fit$fitLibrary$SL.glmnet_All$object)
 - 元データ全体への予測値の計算
 
 ```{r}
-Y.pred <- predict(fit,X)$pred
+Y.pred <- fit$SL.predict[,1]
 ```
 
 
@@ -212,13 +224,6 @@ Y.pred <- predict(fit,X)$pred
 mean((Y - Y.pred)[group == 1]^2)
 ```
 
-- 訓練データへの適合
-
-```{r}
-mean((Y - Y.pred)[group != 1]^2)
-```
-
-
 - 交差検証
 
 ```{r}
@@ -226,22 +231,15 @@ fit
 ```
 
 
-## Ridge {#Ridge}
-
-- Ridge推定：線形モデルを以下の最適化問題の解として推定
-
-$$\min\sum_i (Y_i-f(X_i))^2+\underbrace{\lambda\sum_l(\beta_l)^2}_{Penalty\ term}$$
-
-  - $\lambda$ : チューニングパラメタ、Cross-validationを用いて設定可能
-
-- 引き続きglmentパッケージ[@R-glmnet]を利用
+### Ridge
 
 ```{r}
 learners = create.Learner("SL.glmnet", params = list(alpha = 0)) # glmnetのalphaを0（Ridge推定）に設定
 
 fit <-
-  SuperLearner(Y = Y,
-               X = X,
+  SuperLearner(Y = Y[group != 1],
+               X = X[group != 1,],
+               newX = X,
                SL.library = c(learners$names)
                )
 
@@ -252,7 +250,7 @@ coef(fit$fitLibrary$SL.glmnet_1_All$object)
 - 元データ全体への予測値の計算
 
 ```{r}
-Y.pred <- predict(fit,X)$pred
+Y.pred <-fit$SL.predict[,1]
 ```
 
 
@@ -262,13 +260,6 @@ Y.pred <- predict(fit,X)$pred
 mean((Y - Y.pred)[group == 1]^2)
 ```
 
-- 訓練データへの適合
-
-```{r}
-mean((Y - Y.pred)[group != 1]^2)
-```
-
-
 - 交差検証
 
 ```{r}
@@ -276,7 +267,9 @@ fit
 ```
 
 
-## Tree {#Tree}
+## 予測木モデル {#Tree}
+
+### Tree
 
 - 予測木を推定する
 
@@ -296,8 +289,9 @@ fit
 
 ```{r}
 fit <-
-  SuperLearner(Y = Y,
-               X = X,
+  SuperLearner(Y = Y[group != 1],
+               X = X[group != 1,],
+               newX = X,
                SL.library = c("SL.rpartPrune")
                )
 
@@ -308,7 +302,7 @@ rpart.plot(fit$fitLibrary$SL.rpartPrune_All$object) # 予測木の可視化
 - 元データ全体への予測値の計算
 
 ```{r}
-Y.pred <- predict(fit,X)$pred
+Y.pred <- fit$SL.predict[,1]
 ```
 
 - テストデータへの適合
@@ -317,20 +311,13 @@ Y.pred <- predict(fit,X)$pred
 mean((Y - Y.pred)[group == 1]^2)
 ```
 
-- 訓練データへの適合
-
-```{r}
-mean((Y - Y.pred)[group != 1]^2)
-```
-
-
 - 交差検証
 
 ```{r}
 fit
 ```
 
-## Random Forest {#Bagging}
+### Random Forest
 
 - Random Forestを推定する
 
@@ -346,8 +333,9 @@ fit
 
 ```{r}
 fit <-
-  SuperLearner(Y = Y,
-               X = X,
+  SuperLearner(Y = Y[group != 1],
+               X = X[group != 1,],
+               newX = X,
                SL.library = c("SL.ranger")
                )
 ```
@@ -356,7 +344,7 @@ fit <-
 - 元データ全体への予測値の計算
 
 ```{r}
-Y.pred <- predict(fit,X)$pred
+Y.pred <- fit$SL.predict[,1]
 ```
 
 
@@ -365,13 +353,6 @@ Y.pred <- predict(fit,X)$pred
 ```{r}
 mean((Y - Y.pred)[group == 1]^2)
 ```
-
-- 訓練データへの適合
-
-```{r}
-mean((Y - Y.pred)[group != 1]^2)
-```
-
 
 - 交差検証
 
@@ -395,6 +376,7 @@ learners = create.Learner("SL.glmnet", params = list(alpha = 0)) # Ridge推定�
 fit <-
   SuperLearner(X = X[group != 1,],
                Y = Y[group != 1],
+               newX = X,
                SL.library = c("SL.mean",
                               "SL.lm",
                               "SL.glmnet",
@@ -416,7 +398,7 @@ fit
 - Stackingモデルの予測値  
 
 ```{r}
-Y.pred <- predict(fit,X)$pred
+Y.pred <- fit$SL.predict[,1]
 ```
 
 
@@ -424,10 +406,4 @@ Y.pred <- predict(fit,X)$pred
 
 ```{r}
 mean((Y - Y.pred)[group == 1]^2)
-```
-
-- 訓練データへの適合
-
-```{r}
-mean((Y - Y.pred)[group != 1]^2)
 ```
