@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2022-02-19" />
+<meta name="date" content="2022-02-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -120,6 +120,28 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -279,29 +301,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>大きく二つのゴールがある</p>
 <ul>
 <li><p>条件付き母平均関数 <span class="math inline">\(\mu(w)\)</span> の近似： 平均二乗誤差 <span class="math inline">\(E[(\mu(w) - f(w))^2]\)</span> を可能な限り削減する様に <span class="math inline">\(f(w)\)</span> を推定</p></li>
-<li><p>関心のある変数 <span class="math inline">\(d\)</span> についての特徴を推定: <span class="math inline">\(\tau(d,d&#39;,x)=\mu(d,x)-\mu(d&#39;,x)\)</span> の”特徴”を推定する</p></li>
+<li><p>関心のある変数 <span class="math inline">\(d\)</span> について、記述モデルを推定: <span class="math inline">\(\tau(d,d&#39;,x)=\mu(d,x)-\mu(d&#39;,x)\)</span> の重要な”特徴”を捉える単純化されたモデルを推定する</p></li>
 </ul></li>
 </ul>
 </div>
 <div id="応用方法" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> 応用方法</h2>
 <ul>
-<li><p>大きく３つの応用がある</p></li>
-<li><p><span class="math inline">\(Y\)</span> の予測 <span class="math inline">\(\rightarrow f(w)\)</span> の推定：データと同じ母集団から抽出された新たにサンプリ <span class="math inline">\(i\)</span> について、 <span class="math inline">\(W_i\)</span> から <span class="math inline">\(Y_i\)</span> を予測するる。予測精度を平均二乗誤差で測定するのであれば母平均関数 <span class="math inline">\(\mu(w)\)</span> が最善の予測関数となり、その近似関数 <span class="math inline">\(f(w)\)</span> が現実的な予測値となる</p></li>
-<li><p><span class="math inline">\(D\)</span> が異なるグループ間での <span class="math inline">\(Y\)</span> についての”格差" <span class="math inline">\(\rightarrow \tau(d,x)\)</span> の推定：変数<span class="math inline">\(D_i\)</span>の値が異なる集団間において、結果変数<span class="math inline">\(Y_i\)</span>の分布がどの程度異なっているのか、推定する。またこの際に、直接的な関心ではない変数群<span class="math inline">\(X_i\)</span>を”一定”としたもとで、比較したいとする。全ての変数 <span class="math inline">\(W\)</span> を考慮する訳ではないので、 <span class="math inline">\(\tau(d,d&#39;,x)\)</span> を適切に推定する必要がある</p></li>
-<li><p><span class="math inline">\(D\)</span> が <span class="math inline">\(Y\)</span> に与える因果効果 <span class="math inline">\(\rightarrow \tau(d,x)\)</span> の推定：ある集団の変数<span class="math inline">\(D\)</span>を変化させた場合、結果変数<span class="math inline">\(Y\)</span>の分布がどのように変化するのか、因果効果を推定する。</p>
+<li><p>推定結果は以下のように応用できる</p></li>
+<li><p><span class="math inline">\(f(w)\)</span> の応用:</p>
 <ul>
-<li>因果効果を推定する際には、識別を議論する必要がある。 <span class="math inline">\(\tau(d,d&#39;,x)\)</span> は以下の識別の仮定の下で、<span class="math inline">\(X_i=x\)</span> を満たす集団内での平均因果効果と一致する</li>
+<li><span class="math inline">\(Y\)</span> の予測：データと同じ母集団から抽出された新たにサンプリ <span class="math inline">\(i\)</span> について、 <span class="math inline">\(W_i\)</span> から <span class="math inline">\(Y_i\)</span> を予測するる。予測精度を平均二乗誤差で測定するのであれば母平均関数 <span class="math inline">\(\mu(w)\)</span> が最善の予測関数となり、その近似関数 <span class="math inline">\(f(w)\)</span> が現実的な予測値となる</li>
+</ul></li>
+<li><p><span class="math inline">\(\tau(x)\)</span> の応用:</p>
+<ul>
+<li><p><span class="math inline">\(D\)</span> が異なるグループ間での <span class="math inline">\(Y\)</span> についての”格差”：変数<span class="math inline">\(D_i\)</span>の値が異なる集団間において、結果変数<span class="math inline">\(Y_i\)</span>の分布がどの程度異なっているのか、推定する。またこの際に、直接的な関心ではない変数群<span class="math inline">\(X_i\)</span>を”一定”としたもとで、比較したいとする。全ての変数 <span class="math inline">\(W\)</span> を考慮する訳ではないので、 <span class="math inline">\(\tau(d,d&#39;,x)\)</span> を適切に推定する必要がある</p></li>
+<li><p><span class="math inline">\(D\)</span> が <span class="math inline">\(Y\)</span> に与える因果効果：ある集団の変数<span class="math inline">\(D\)</span>を変化させた場合、結果変数<span class="math inline">\(Y\)</span>の分布がどのように変化するのか、因果効果を推定する。</p>
+<ul>
+<li>注意:因果効果を推定する際には、識別を議論する必要がある。 <span class="math inline">\(\tau(d,d&#39;,x)\)</span> は以下の識別の仮定の下で、<span class="math inline">\(X_i=x\)</span> を満たす集団内での平均因果効果と一致する</li>
 </ul>
 <ol style="list-style-type: decimal">
 <li><p><span class="math inline">\(0&lt;\Pr[D_i=d|X_i]&lt;1\)</span>: サブグループにおいても、原因変数の値にバリエーションが存在する。</p></li>
 <li><p><span class="math inline">\(X\)</span>で条件づけた場合、潜在結果関数と原因変数の実現値が独立している<span class="math inline">\(Y_i(d)\perp D_i|X_i=x\)</span></p></li>
 </ol>
 <ul>
-<li>十分条件：同じ<span class="math inline">\(X\)</span>グループ内では、<span class="math inline">\(D\)</span>の値がランダムに決定されている</li>
-</ul></li>
+<li><p>十分条件：同じ<span class="math inline">\(X\)</span>グループ内では、<span class="math inline">\(D\)</span>の値がランダムに決定されている</p></li>
 <li><p>上記の仮定は、“selection-on-observable” と呼ばれ、多くの実践で用いられている。 この仮定の下では、<span class="math inline">\(\tau(d,d&#39;,x)\)</span> を適切に推定する必要がある。
 E[Y_i|X_i=x]-_{xc}E[Y_i|X_i=x]$$</p></li>
+</ul></li>
+</ul></li>
 </ul>
 
 </div>

@@ -26,12 +26,6 @@ knitr::opts_chunk$set(echo = TRUE,
   
   - Causal Forest algorismは例外的に漸近正規性に基づく信頼区間の近似計算を提供
 
-- Causal Forest [@wager2018estimation; @athey2019generalized] を基盤とした推定方法を紹介
-
-  - $\tau(X)$ は以下の一般化された部分線形モデルで定義
-  
-$$E[Y|D,X]=\tau(X)\times D + f(X)$$
-
 ## パッケージ
 
 ```{r}
@@ -72,6 +66,14 @@ set.seed(123)
 ```
 
 ## Casual Forest
+
+- Causal Forest [@wager2018estimation; @athey2019generalized] を基盤とした推定方法を紹介
+
+  - $\tau(X)$ は以下の一般化された部分線形モデルで定義
+  
+$$E[Y|D,X]=\tau(X)\times D + f(X)$$
+
+- Random Forest をベースに $\tau(X)$ の近似関数を推定
 
 ```{r}
 fit <- regression_forest(X = X,

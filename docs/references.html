@@ -24,7 +24,7 @@
 <meta name="author" content="川田恵介" />
 
 
-<meta name="date" content="2022-02-19" />
+<meta name="date" content="2022-02-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,17 +162,8 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>はじめに</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 概念整理</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#comparison"><i class="fa fa-check"></i><b>1.1</b> 比較</a>
-<ul>
-<li class="chapter" data-level="1.1.1" data-path="intro.html"><a href="intro.html#問題設定"><i class="fa fa-check"></i><b>1.1.1</b> 問題設定</a></li>
-<li class="chapter" data-level="1.1.2" data-path="intro.html"><a href="intro.html#推定上の問題"><i class="fa fa-check"></i><b>1.1.2</b> 推定上の問題</a></li>
-</ul></li>
-<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#causal"><i class="fa fa-check"></i><b>1.2</b> 因果効果</a>
-<ul>
-<li class="chapter" data-level="1.2.1" data-path="intro.html"><a href="intro.html#問題設定-1"><i class="fa fa-check"></i><b>1.2.1</b> 問題設定</a></li>
-<li class="chapter" data-level="1.2.2" data-path="intro.html"><a href="intro.html#識別の問題"><i class="fa fa-check"></i><b>1.2.2</b> 識別の問題</a></li>
-<li class="chapter" data-level="1.2.3" data-path="intro.html"><a href="intro.html#推定の問題"><i class="fa fa-check"></i><b>1.2.3</b> 推定の問題</a></li>
-</ul></li>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#推定のゴール"><i class="fa fa-check"></i><b>1.1</b> 推定のゴール</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#応用方法"><i class="fa fa-check"></i><b>1.2</b> 応用方法</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>2</b> 予測</a>
 <ul>
@@ -228,7 +219,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="5" data-path="hetero.html"><a href="hetero.html"><i class="fa fa-check"></i><b>5</b> 条件付き平均効果関数の推定</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="hetero.html"><a href="hetero.html#問題設定-2"><i class="fa fa-check"></i><b>5.1</b> 問題設定</a></li>
+<li class="chapter" data-level="5.1" data-path="hetero.html"><a href="hetero.html#問題設定"><i class="fa fa-check"></i><b>5.1</b> 問題設定</a></li>
 <li class="chapter" data-level="5.2" data-path="hetero.html"><a href="hetero.html#パッケージ-1"><i class="fa fa-check"></i><b>5.2</b> パッケージ</a></li>
 <li class="chapter" data-level="5.3" data-path="hetero.html"><a href="hetero.html#データ-1"><i class="fa fa-check"></i><b>5.3</b> データ</a></li>
 <li class="chapter" data-level="5.4" data-path="hetero.html"><a href="hetero.html#casual-forest"><i class="fa fa-check"></i><b>5.4</b> Casual Forest</a></li>
@@ -302,13 +293,7 @@ div.csl-indent {
 Abadie, Alberto, and Jann Spiess. 2021. <span>“Robust Post-Matching Inference.”</span> <em>Journal of the American Statistical Association</em>, 1–13.
 </div>
 <div class="csl-entry">
-Angrist, J, and G Imbens. 2002. <span>“[Covariance Adjustment in Randomized Experiments and Observational Studies]: Comment.”</span> <em>Statistical Science</em> 17 (3): 304–7.
-</div>
-<div class="csl-entry">
-Angrist, Joshua D, and Jörn-Steffen Pischke. 2008. <em>Mostly Harmless Econometrics: An Empiricist’s Companion</em>. Princeton university press.
-</div>
-<div class="csl-entry">
-Athey, Susan, Julie Tibshirani, Stefan Wager, and others. 2019. <span>“Generalized Random Forests.”</span> <em>Annals of Statistics</em> 47 (2): 1148–78.
+Athey, Susan, Julie Tibshirani, Stefan Wager, et al. 2019. <span>“Generalized Random Forests.”</span> <em>Annals of Statistics</em> 47 (2): 1148–78.
 </div>
 <div class="csl-entry">
 Bach, Philipp, Victor Chernozhukov, Malte S. Kurz, and Martin Spindler. 2021. <em>DoubleML: Double Machine Learning in r</em>. <a href="https://CRAN.R-project.org/package=DoubleML">https://CRAN.R-project.org/package=DoubleML</a>.
@@ -338,10 +323,10 @@ Cattaneo, Matias D, Nicolás Idrobo, and Rocı́o Titiunik. 2019a. <em>A Practic
 Chernozhukov, Victor, Denis Chetverikov, Mert Demirer, Esther Duflo, Christian Hansen, Whitney Newey, and James Robins. 2018. <span>“Double/Debiased Machine Learning for Treatment and Structural Parameters: Double/Debiased Machine Learning.”</span> <em>The Econometrics Journal</em> 21 (1).
 </div>
 <div class="csl-entry">
-Freedman, David A. 2008. <span>“On Regression Adjustments to Experimental Data.”</span> <em>Advances in Applied Mathematics</em> 40 (2): 180–93.
+Freedman, David A et al. 2008. <span>“On Regression Adjustments in Experiments with Several Treatments.”</span> <em>Annals of Applied Statistics</em> 2 (1): 176–96.
 </div>
 <div class="csl-entry">
-Freedman, David A, and others. 2008. <span>“On Regression Adjustments in Experiments with Several Treatments.”</span> <em>Annals of Applied Statistics</em> 2 (1): 176–96.
+Freedman, David A. 2008. <span>“On Regression Adjustments to Experimental Data.”</span> <em>Advances in Applied Mathematics</em> 40 (2): 180–93.
 </div>
 <div class="csl-entry">
 Friedman, Jerome, Trevor Hastie, Rob Tibshirani, Balasubramanian Narasimhan, Kenneth Tay, Noah Simon, and James Yang. 2021. <em>Glmnet: Lasso and Elastic-Net Regularized Generalized Linear Models</em>. <a href="https://CRAN.R-project.org/package=glmnet">https://CRAN.R-project.org/package=glmnet</a>.
@@ -362,7 +347,10 @@ Iacus, Stefano M, Gary King, and Giuseppe Porro. 2012. <span>“Causal Inference
 Kleiber, Christian, and Achim Zeileis. 2008. <em>Applied Econometrics with <span>R</span></em>. New York: Springer-Verlag. <a href="https://CRAN.R-project.org/package=AER">https://CRAN.R-project.org/package=AER</a>.
 </div>
 <div class="csl-entry">
-Lin, Winston, and others. 2013. <span>“Agnostic Notes on Regression Adjustments to Experimental Data: Reexamining Freedman’s Critique.”</span> <em>Annals of Applied Statistics</em> 7 (1): 295–318.
+Lin, Winston et al. 2013. <span>“Agnostic Notes on Regression Adjustments to Experimental Data: Reexamining Freedman’s Critique.”</span> <em>Annals of Applied Statistics</em> 7 (1): 295–318.
+</div>
+<div class="csl-entry">
+Robins, James M, and Andrea Rotnitzky. 1995. <span>“Semiparametric Efficiency in Multivariate Regression Models with Missing Data.”</span> <em>Journal of the American Statistical Association</em> 90 (429): 122–29.
 </div>
 <div class="csl-entry">
 Robinson, Peter. 1988. <span>“Root-n-Consistent Semiparametric Regression.”</span> <em>Econometrica</em> 56 (4): 931–54.

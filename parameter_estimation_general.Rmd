@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 ### Robinson推定
 
-- 部分線形モデル [@robinson1988root] 上で $\tau$
+- 部分線形モデル [@robinson1988root] 上で $\tau$ を定義
 
 $$E[Y|D=d,X=x]=\underbrace{\tau}_{Interest\ parameter}\times d+\underbrace{f(x)}_{Nuisance\ function}$$
 
@@ -38,7 +38,7 @@ $$Y_i-\underbrace{E[Y_i|X_i]}_{Nuisance\ term}=\tau\times [D_i-\underbrace{E[D_i
 
 - 2値の原因変数 $D_i=\{0,1\}$ を想定
 
-- Double robust score $\phi$ を用いて推定
+- Double robust score [@robins1995semiparametric] $\phi$ を用いて推定
 
 $$\phi_i(\tilde \mu_{1i},\tilde \mu_{0i},\tilde \mu_{Di})=\tilde \mu_{1i} - \tilde \mu_{0i} + \frac{D_i\times (Y_i-\tilde \mu_{1i})}{\tilde \mu_{Di}} + \frac{(1-D_i)\times (Y_i-\tilde \mu_{0i})}{1-\tilde \mu_{Di}}$$
 
