@@ -1,6 +1,6 @@
 --- 
 title: "Rによる比較・予測・因果推論入門 ver0.2"
-author: "川田恵介"
+author: "[川田恵介](https://tetokawata.github.io/) (東京大学)"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
