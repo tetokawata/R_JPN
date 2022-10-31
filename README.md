@@ -1,6 +1,8 @@
 - Rによる比較・因果推論・予測についてのRによるチュートリアルです。
 
-  - 簡単な解説付きコード集として、[Rによる比較・予測・因果推論入門](https://tetokawata.github.io/R_JPN/)を作成中です。
+  - 改訂版を[新しいrepository](https://github.com/tetokawata/BookEmiricalSocialML)にて作成中です。
+
+  - 旧バージョンの簡単な解説付きコード集として、[Rによる比較・予測・因果推論入門](https://tetokawata.github.io/R_JPN/)
 
 - Rについての基本的知識（R/Rstudio/パッケージのインストール方法、基本的な関数とobjectの使い方）を前提としています。
 
